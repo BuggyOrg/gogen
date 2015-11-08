@@ -1,0 +1,1 @@
+[ "def", "main", ["then", "stdout!'Hello World'", ["then", "STOP"]]]
