@@ -16,6 +16,7 @@ func stdoutProcess(output chan string) {
     if more {
       fmt.Println(str)
     } else {
+      wg.Done()
       return
     }
   }
@@ -24,12 +25,12 @@ func stdoutProcess(output chan string) {
 func stdinProcess(input chan string) {
   for {
     inputStr := ""
+    fmt.Println("waiting for Input")
     _,err := fmt.Scanln(&inputStr)
     if err == nil {
+      fmt.Println("got Input")
+      fmt.Println(inputStr)
       input <- inputStr
-    } else {
-      wg.Done()
-      return
     }
   }
 }
@@ -78,8 +79,8 @@ func main() {
   stdout := make(chan string)
   stdin := make(chan string)
 
-  go stdoutProcess(stdout)
   wg.Add(1)
+  go stdoutProcess(stdout)
   go stdinProcess(stdin)
 
   c2 := make(chan int) // string_to_int >> inc
@@ -88,6 +89,8 @@ func main() {
   go string_to_int_process(stdin, c2)
   go incProcess(c2, c3)
   go int_to_string_process(c3, stdout)
+
+  //stdou.close()
 
   wg.Wait()
 }
