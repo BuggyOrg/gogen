@@ -1,12 +1,6 @@
-import {readFileSync} from 'fs'
 import {Graph} from 'graphlib'
 
 var api = {
-  gatherAtomic: function (path) {
-    var atomicString = readFileSync(path, 'utf8')
-    console.log(atomicString)
-    return atomicString
-  },
 
   networkGraphFromAST: function (ast) {
     var g = new Graph({ compound: true })
