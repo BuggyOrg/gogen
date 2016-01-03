@@ -2,24 +2,21 @@
 
 package main
 
-import "fmt"
-
-func stdoutProcess(output chan string) {
-  for {
-    str, more := <- output
-    if more {
-      fmt.Println(str)
-    } else {
-      return
-    }
-  }
-}
+import "sync"
+import "../lib/io"
 
 func main(){
   stdout := make(chan string)
 
-  go stdoutProcess(stdout)
+  var wg sync.WaitGroup
+  wg.Add(1)
+  go io.Stdout(stdout, wg)
 
   stdout <- "Hello World"
-  close(stdout)
+  
+  wg.Done()
+  
+  //close(stdout)
+  
+  wg.Wait()
 }
