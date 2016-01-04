@@ -46,7 +46,6 @@ func Divide(input1 chan int, input2 chan int, output chan int) {
       break
     }
     
-    fmt.Println("Divide!", i1, i2)
     output <- i1 / i2
   }
   close(output)
@@ -57,7 +56,7 @@ type constantProcess  func(chan int)
 func Constant(c int) constantProcess{
   return func(output chan int) {
     for {
-      fmt.Println("constant!!", c)
+      fmt.Println("constant : " , c)
       output <- c
     }
   }
@@ -90,6 +89,21 @@ func Greater(input1 chan int, input2 chan int, output chan bool) {
       break
     }
     output <- (i1 > i2)
+  }
+  close(output)
+}
+
+func GreaterEqual(input1 chan int, input2 chan int, output chan bool) {
+  for {
+    i1,ok1 := <- input1
+    if !ok1 {
+      break
+    }
+    i2,ok2 := <- input2
+    if !ok2 {
+      break
+    }
+    output <- (i1 >= i2)
   }
   close(output)
 }

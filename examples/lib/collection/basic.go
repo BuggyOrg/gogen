@@ -1,6 +1,8 @@
 
 package collection
 
+import "fmt"
+
 func Unpack(input chan []int, output chan chan int) {
   for {
     arr := <- input
@@ -24,6 +26,7 @@ func UnpackFull(input chan []int, item chan chan int, idx chan chan int, lenStr 
     item <- itemCh
     idx <- idxCh
     lenStr <- lenCh
+    fmt.Println("Splitting: " , arr)
     go func() {
       length := len(arr)
       for idx, i := range arr {
@@ -78,14 +81,29 @@ func Prepend(value chan int, arr chan []int, output chan []int) {
 }
 
 
-func First(input chan []int, output chan int) {
+func First(input chan []int, output chan int, cur int) {
+  fmt.Println("created First -- ", cur)
   for i := range input {
+    fmt.Println("First : ", i, " -- ", cur)
     output <- i[0]
   }
+  close(output)
 }
 
 func Rest(input chan []int, output chan []int) {
   for i := range input {
-    output <- i[1:]
+    if len(i) > 1 {
+      output <- i[1:]
+    } else {
+      output <- []int{}
+    }
   }
+  close(output)
+}
+
+func Empty(input chan []int, output chan bool) {
+  for i := range input {
+    output <- (len(i) == 0)
+  }
+  close(output)
 }
