@@ -16,7 +16,12 @@
   },
   "author": "Georg Schuppe",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@buggyorg/component-library": "^0.1.6",
+    "commander": "^2.9.0",
+    "get-stdin": "^5.0.1",
+    "lodash": "^3.10.1"
+  },
   "devDependencies": {
     "babel": "^5.8.29",
     "chai": "^3.4.1",

@@ -225,7 +225,7 @@ func SkipIfOneEmpty(a1 chan []int, a2 chan []int, skip chan []int, a1out chan []
   c15:= make(chan bool) // Duplicate:5_2 -> OneEmpty_3
   
   go control.DuplicateIntArray(a1, c1, logIA("sioe1: ",c2))
-  go control.DuplicateIntArray(a2, c3, logIA("sioe2: ", c4))
+  go control.DuplicateIntArray(a2, c3, c4)
   go collection.Empty(c2, c5)
   go collection.Empty(c3, c6)
   go control.Not(c5, c7)

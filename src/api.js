@@ -1,18 +1,23 @@
 import {Graph} from 'graphlib'
+import {getComponentLibrary} from '@buggyorg/component-library'
+import _ from 'lodash'
+
+const compLib = getComponentLibrary()
 
 var api = {
-
-  networkGraphFromAST: function (ast) {
-    var g = new Graph({ compound: true })
-    return g
+  processes: graph => {
+    return _(graph.nodes()).chain()
+      .reject(n => n.indexOf('_PORT_') != -1)
+      .map(n => graph.node(n))
+      .compact()
+      .map(n => [n.meta, compLib[n.meta]])
+      .zipObject()
+      .value()
   },
-
-  codeFromNetworkGraph: function (netgraph) {
-    return null
-  },
-
-  codeFromAst: function (ast) {
-    return api.codeFromNetworkGraph(api.networkGraphFromAST(ast))
+  
+  generateCode: graph => {
+    var processes = api.processes(graph)
+    return ""
   }
 }
 
