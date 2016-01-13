@@ -1,14 +1,16 @@
 /* global describe, it */
-import {Graph} from 'graphlib'
+var graphlib = require('graphlib')
+var fs = require('fs')
 
 var expect = require('chai').expect
 var api = require('../src/api.js')
 
 describe('Go Code Generator', function () {
   it('code from networkGraph', function () {
-    var g = new Graph({ compound: true })
+    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/testgraph.graphlib')))
 
-    api.codeFromNetworkGraph()
+    var code = api.generateCode(portGraph)
+    console.log(code)
     expect(false).to.be.true
   })
 })

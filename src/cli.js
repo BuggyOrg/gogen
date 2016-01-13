@@ -15,7 +15,7 @@ program
 
 var processGraph = str => {
   var graph = graphlib.json.read(JSON.parse(str))
-  if(program.processes){
+  if (program.processes) {
     return api.processes(graph)
   }
   return api.generateCode(graph)

@@ -10,7 +10,7 @@
 |      | N=0 +----------------------------+---->+
 |      |     |                            ^     |
 |      |     |                            |     |
-|      |     |                            |     |
+|  0-->+     |                            |     |
 |      |     |                          +-+-+   |
 |      |else +---+--------------------->+MUL|   |
 |      |     |   |                      +-+-+   |
@@ -35,7 +35,7 @@ import "../lib/numbers"
 func fac(input chan int, output chan int) {
   for N := range input {
     // N := <- input
-    
+
     c1 := make(chan int) // N -> Switch_Value
     c2 := make(chan int) // Constant >> Switch_Comparison
     c3 := make(chan int) // Switch_Equal >> Join_1
@@ -45,7 +45,7 @@ func fac(input chan int, output chan int) {
     c5 := make(chan int) // Decrement >> fac
     c6 := make(chan int) // fac >> Multiply_2
     c7 := make(chan int) // Multiply >> Join_2
-    
+
     go numbers.Constant(1)(c2)
     go control.Switch(c1, c2, c3, c4) // duplicate the input value
     go control.Duplicate(c4, c41, c42)
@@ -53,7 +53,7 @@ func fac(input chan int, output chan int) {
     go fac(c5, c6)
     go numbers.Multiply(c42, c6, c7)
     go control.Join(c3, c7, output)
-    
+
     c1 <- N
   }
 }
@@ -69,11 +69,10 @@ func main() {
 
   c1 := make(chan int) // string_to_int >> fac
   c2 := make(chan int) // fac >> int_to_string_process
-  
+
   go conversion.String2Int(stdin, c1)
   go fac(c1, c2)
   go conversion.Int2String(c2, stdout)
 
   wg.Wait()
 }
-

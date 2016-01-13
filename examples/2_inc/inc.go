@@ -3,7 +3,6 @@
 // INC is an atomic process
 
 package main
-
 import "sync"
 import "../lib/numbers"
 import "../lib/conversion"
@@ -25,7 +24,7 @@ func main() {
   go numbers.Increment(c2, c3)
   go conversion.Int2String(c3, stdout)
 
-  //stdou.close()
+  //stdout.close()
 
   wg.Wait()
 }
