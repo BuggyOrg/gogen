@@ -7,10 +7,13 @@ var api = require('../src/api.js')
 
 describe('Go Code Generator', function () {
   it('code from networkGraph', function () {
-    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/testgraph.graphlib')))
+    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/typedtestgraph.graphlib')))
+    // console.log(portGraph.nodes())
 
     var code = api.generateCode(portGraph)
+    console.log('-+-+-+-+-+-+-')
     console.log(code)
+    console.log('-+-+-+-+-+-+-')
     expect(false).to.be.true
   })
 })
