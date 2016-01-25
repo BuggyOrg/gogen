@@ -1,5 +1,5 @@
 // import {Graph} from 'graphlib'
-import {getComponentLibrary} from '@buggyorg/component-library'
+import {getComponentLibrary, getCode} from '@buggyorg/component-library'
 import _ from 'lodash'
 
 const compLib = getComponentLibrary()
@@ -21,75 +21,89 @@ var api = {
       .filter(n => graph.node(n).nodeType === 'inPort' || graph.node(n).nodeType === 'outPort')
       .map(n => [n, graph.node(n)])
       .compact()
-      // .map(n => [n.meta, compLib[n.meta]])
       .zipObject()
       .value()
   },
 
   generateCode: graph => {
     var codePackage = 'package main\n'
-    var codeImports = '\n'
-    var codeMain = 'func main() {\n'
-    var codeChannels
+    var codeImports = '// imports\n'
+    var codeProcesses = '// processes\n'
+    var codeMainPre = ''
+    var codeMainPost = ''
+    var codeChannels = '// channels\n'
 
     var processes = api.processes(graph)
     var ports = api.ports(graph)
+    var channels = [ ]
+    var imports = [ ]
 
-    // var channels = [ ]
+    var needsWaitGroup = false
+    var channelCount = 0
+
+    // create channels from outPort to inPort
+    for (var port in ports) {
+      if (ports[port].nodeType !== 'outPort') { continue }
+      // we can assume there is exactly one predecessor
+      var processName = graph.predecessors(port)[0]
+      // skip hierarchy ports
+      if (_.has(ports, processName)) { continue }
+      var outPortName = ports[port].portName
+      var processMeta = graph.node(processName).meta
+      var channelType = processes[processMeta].outputPorts[outPortName]
+
+      for (let succ of graph.successors(port)) {
+        var inPort = succ
+        while (graph.node(inPort).hierarchyBorder === true) {
+          // we can assume there is exactly one successor
+          inPort = graph.successors(succ)[0]
+        }
+        // var inPortName = ports[inPort].portName
+        channelCount++
+        var channelName = 'chan' + channelCount
+        codeChannels += channelName + ' := make(chan ' + channelType + ')\n'
+        channels.push({ 'outPort': port, 'inPort': inPort, 'channelName': channelName, 'channelType': channelType })
+      }
+    }
+
+    // check imports, start processes and check for wait group dependencies
+    for (var proc in processes) {
+      // check if needs WaitGroup
+      if (_.has(processes[proc], '.meta.golang.needsWaitGroup')) {
+        if (processes[proc].meta.golang.needsWaitGroup) {
+          needsWaitGroup = true
+        }
+      }
+
+      // check for imports
+      if (_.has(processes[proc], '.dependencies.golang')) {
+        var dependencies = processes[proc].dependencies.golang
+        Array.prototype.push.apply(imports, dependencies)
+      }
+
+      // get code needed for processes
+      if (processes[proc].atomic === true) {
+        codeProcesses += getCode(proc, 'golang', compLib) + '\n'
+      }
+    }
+
+    imports = _.unique(imports)
+    for (let imp of imports) {
+      codeImports += 'import \'' + imp + '\'\n'
+    }
+
+    if (needsWaitGroup) {
+      codeMainPre += 'var wg sync.WaitGroup\nwg.Add(1)\n'
+      codeMainPost += 'wg.Wait()\n'
+    }
+
+    console.log('-+-+-+-+-+-+-+-')
     console.log(processes)
     console.log('-+-+-+-+-+-+-+-')
     console.log(ports)
     console.log('-+-+-+-+-+-+-+-')
 
-    var needsWaitGroup = false
-    for (var key in processes) {
-      if (_.has(processes[key], '.meta.golang.needsWaitGroup')) {
-        if (processes[key].meta.golang.needsWaitGroup) {
-          needsWaitGroup = true
-        }
-      }
-    }
-
-    if (needsWaitGroup) {
-      codeMain += 'var wg sync.WaitGroup\nwg.Add(1)\n'
-    }
-
-    // create channels
-    for (var port in ports) {
-      var portName = ports[port].portName
-      var processName
-      var processMeta
-      var channelType
-
-      if (ports[port].nodeType === 'inPort') {
-        processName = graph.successors(port)[0]
-        // skip hierarchy ports
-        if (_.has(ports, processName)) { continue }
-        processMeta = graph.node(processName).meta
-        channelType = processes[processMeta].inputPorts[portName]
-      } else if (ports[port].nodeType === 'outPort') {
-        processName = graph.predecessors(port)[0]
-        // skip hierarchy ports
-        if (_.has(ports, processName)) { continue }
-        processMeta = graph.node(processName).meta
-        channelType = processes[processMeta].outputPorts[portName]
-      } else {
-        console.log(port)
-        console.log(ports[port])
-        console.log(ports[port].nodeType)
-        console.log('CHANNEL CREATION WENT HORRIBLY WRONG')
-        return
-      }
-      console.log(portName + ' ' + channelType)
-    }
-
-    // TODO start processes with channels
-
-    if (needsWaitGroup) {
-      codeMain += 'wg.Wait()\n'
-    }
-
-    return codePackage + codeImports + codeMain + codeChannels + '}'
+    return codePackage + '\n' + codeImports + '\n' + codeProcesses + 'func main() {\n' + codeMainPre + '\n' + codeChannels + '\n' + codeMainPost + '}'
   }
 }
 

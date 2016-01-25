@@ -63,7 +63,8 @@
       "v": "1_INC_PORT_i",
       "value": {
         "nodeType": "inPort",
-        "portName": "i"
+        "portName": "i",
+        "hierarchyBorder": true
       },
       "parent": "EXAMPLE1"
     },
@@ -87,7 +88,8 @@
       "v": "1_INC_PORT_inc",
       "value": {
         "nodeType": "outPort",
-        "portName": "inc"
+        "portName": "inc",
+        "hierarchyBorder": true
       },
       "parent": "EXAMPLE1"
     },
