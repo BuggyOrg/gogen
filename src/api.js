@@ -8,6 +8,15 @@ var api = {
 
   processes: graph => {
     return _(graph.nodes()).chain()
+    .filter(n => graph.node(n).nodeType === 'process' && graph.node(n).type === 'atomic')
+    .map(n => [n, graph.node(n)])
+    .compact()
+    .zipObject()
+    .value()
+  },
+
+  processesMeta: graph => {
+    return _(graph.nodes()).chain()
       .map(n => graph.node(n))
       .filter(n => n.nodeType === 'process')
       .compact()
@@ -34,6 +43,7 @@ var api = {
     var codeChannels = '// channels\n'
 
     var processes = api.processes(graph)
+    var processesMeta = api.processesMeta(graph)
     var ports = api.ports(graph)
     var channels = [ ]
     var imports = [ ]
@@ -50,7 +60,7 @@ var api = {
       if (_.has(ports, processName)) { continue }
       var outPortName = ports[port].portName
       var processMeta = graph.node(processName).meta
-      var channelType = processes[processMeta].outputPorts[outPortName]
+      var channelType = processesMeta[processMeta].outputPorts[outPortName]
 
       for (let succ of graph.successors(port)) {
         var inPort = succ
@@ -67,29 +77,29 @@ var api = {
     }
 
     // check imports, start processes and check for wait group dependencies
-    for (var proc in processes) {
+    for (var proc in processesMeta) {
       // check if needs WaitGroup
-      if (_.has(processes[proc], '.meta.golang.needsWaitGroup')) {
-        if (processes[proc].meta.golang.needsWaitGroup) {
+      if (_.has(processesMeta[proc], '.meta.golang.needsWaitGroup')) {
+        if (processesMeta[proc].meta.golang.needsWaitGroup) {
           needsWaitGroup = true
         }
       }
 
       // check for imports
-      if (_.has(processes[proc], '.dependencies.golang')) {
-        var dependencies = processes[proc].dependencies.golang
+      if (_.has(processesMeta[proc], '.dependencies.golang')) {
+        var dependencies = processesMeta[proc].dependencies.golang
         Array.prototype.push.apply(imports, dependencies)
       }
 
       // get code needed for processes
-      if (processes[proc].atomic === true) {
+      if (processesMeta[proc].atomic === true) {
         codeProcesses += getCode(proc, 'golang', compLib) + '\n'
       }
     }
 
     imports = _.unique(imports)
     for (let imp of imports) {
-      codeImports += 'import \'' + imp + '\'\n'
+      codeImports += 'import \"' + imp + '\"\n'
     }
 
     if (needsWaitGroup) {
@@ -97,12 +107,14 @@ var api = {
       codeMainPost += 'wg.Wait()\n'
     }
 
-    console.log('-+-+-+-+-+-+-+-')
-    console.log(processes)
-    console.log('-+-+-+-+-+-+-+-')
-    console.log(ports)
-    console.log('-+-+-+-+-+-+-+-')
+    for (var node in processes) {
+      var codeLine = 'go NAMEHERE(\n'
+      var pred = graph.predecessors(node)
+      var succ = graph.successors(node)
+    }
 
+    console.log(processes)
+    console.log(channels)
     return codePackage + '\n' + codeImports + '\n' + codeProcesses + 'func main() {\n' + codeMainPre + '\n' + codeChannels + '\n' + codeMainPost + '}'
   }
 }
