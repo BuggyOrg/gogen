@@ -107,6 +107,7 @@ var api = {
       codeMainPost += 'wg.Wait()\n'
     }
 
+    /*
     for (var node in processes) {
       var codeLine = 'go NAMEHERE(\n'
       var pred = graph.predecessors(node)
@@ -115,6 +116,7 @@ var api = {
 
     console.log(processes)
     console.log(channels)
+    */
     return codePackage + '\n' + codeImports + '\n' + codeProcesses + 'func main() {\n' + codeMainPre + '\n' + codeChannels + '\n' + codeMainPost + '}'
   }
 }
