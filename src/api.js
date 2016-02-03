@@ -52,11 +52,10 @@ var api = {
     var channelCount = 0
 
     // create channels from outPort to inPort
-    for (var port in ports) {
+    for (let port in ports) {
       if (ports[port].nodeType !== 'outPort') { continue }
       // we can assume there is exactly one predecessor
-      var processName = graph.predecessors(port)[0]
-      // skip hierarchy ports
+      const processName = graph.predecessors(port)[0]
       if (_.has(ports, processName)) { continue }
       var outPortName = ports[port].portName
       var processMeta = graph.node(processName).meta
@@ -68,16 +67,14 @@ var api = {
           // we can assume there is exactly one successor
           inPort = graph.successors(succ)[0]
         }
-        // var inPortName = ports[inPort].portName
-        channelCount++
-        var channelName = 'chan' + channelCount
+        var channelName = 'chan' + ++channelCount
         codeChannels += channelName + ' := make(chan ' + channelType + ')\n'
         channels.push({ 'outPort': port, 'inPort': inPort, 'channelName': channelName, 'channelType': channelType })
       }
     }
 
     // check imports, start processes and check for wait group dependencies
-    for (var proc in processesMeta) {
+    for (let proc in processesMeta) {
       // check if needs WaitGroup
       if (_.has(processesMeta[proc], '.meta.golang.needsWaitGroup')) {
         if (processesMeta[proc].meta.golang.needsWaitGroup) {
@@ -87,13 +84,24 @@ var api = {
 
       // check for imports
       if (_.has(processesMeta[proc], '.dependencies.golang')) {
-        var dependencies = processesMeta[proc].dependencies.golang
-        Array.prototype.push.apply(imports, dependencies)
+        Array.prototype.push.apply(imports, processesMeta[proc].dependencies.golang)
       }
 
       // get code needed for processes
       if (processesMeta[proc].atomic === true) {
+        codeProcesses += 'func ' + processesMeta[proc].name + 'Process('
+
+        for (let port in processesMeta[proc]['inputPorts']) {
+          codeProcesses += port + ' chan ' + processesMeta[proc]['inputPorts'][port] + ', '
+        }
+        for (let port in processesMeta[proc]['outputPorts']) {
+          codeProcesses += port + ' chan ' + processesMeta[proc]['outputPorts'][port] + ', '
+        }
+
+        codeProcesses = codeProcesses.slice(0, -2)
+        codeProcesses += ') {\nfor {\n'
         codeProcesses += getCode(proc, 'golang', compLib) + '\n'
+        codeProcesses += '}\n}\n\n'
       }
     }
 
@@ -107,16 +115,16 @@ var api = {
       codeMainPost += 'wg.Wait()\n'
     }
 
-    /*
     for (var node in processes) {
-      var codeLine = 'go NAMEHERE(\n'
-      var pred = graph.predecessors(node)
-      var succ = graph.successors(node)
+      node
+      // var codeLine = 'go NAMEHERE(\n'
+      // var pred = graph.predecessors(node)
+      // var succ = graph.successors(node)
     }
 
-    console.log(processes)
-    console.log(channels)
-    */
+    // console.log(processes)
+    // console.log(channels)
+    // console.log(processesMeta)
     return codePackage + '\n' + codeImports + '\n' + codeProcesses + 'func main() {\n' + codeMainPre + '\n' + codeChannels + '\n' + codeMainPost + '}'
   }
 }
