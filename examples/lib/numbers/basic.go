@@ -45,7 +45,7 @@ func Divide(input1 chan int, input2 chan int, output chan int) {
     if !ok2 {
       break
     }
-    
+
     output <- i1 / i2
   }
   close(output)
@@ -68,7 +68,7 @@ func Biggest(input1 chan int, input2 chan int, output chan int) {
     if !ok {
       break
     }
-    
+
     if i1 < i2 {
       output <- i2
     } else {

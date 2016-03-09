@@ -12,50 +12,75 @@
     {
       "v": "0_STDIN",
       "value": {
-        "nodeType": "process",
-        "meta": "io/stdin",
-        "type": "atomic",
-        "parent": "EXAMPLE1"
+        "id": "io/stdin",
+        "version": "0.1.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "stdin/output": "string"
+        },
+        "atomic": true,
+        "nodeType": "process"
       },
       "parent": "EXAMPLE1"
     },
     {
       "v": "1_INC",
       "value": {
-        "nodeType": "process",
-        "meta": "math/inc",
-        "type": "composite",
-        "parent": "EXAMPLE1"
+        "id": "math/inc",
+        "version": "0.1.0",
+        "inputPorts": {
+          "inc/i": "int"
+        },
+        "outputPorts": {
+          "inc/inc": "int"
+        },
+        "atomic": false,
+        "nodeType": "process"
       },
       "parent": "EXAMPLE1"
     },
     {
       "v": "2_STDOUT",
       "value": {
-        "nodeType": "process",
-        "meta": "io/stdout",
-        "type": "atomic",
-        "parent": "EXAMPLE1"
+        "id": "io/stdout",
+        "version": "0.1.0",
+        "inputPorts": {
+          "stdout/input": "string"
+        },
+        "outputPorts": {},
+        "atomic": true,
+        "nodeType": "process"
       },
       "parent": "EXAMPLE1"
     },
     {
       "v": "3_ADD",
       "value": {
-        "nodeType": "process",
-        "meta": "math/add",
-        "type": "atomic",
-        "parent": "1_INC"
+        "id": "math/add",
+        "version": "0.1.0",
+        "inputPorts": {
+          "add/s1": "int",
+          "add/s2": "int"
+        },
+        "outputPorts": {
+          "add/sum": "int"
+        },
+        "atomic": true,
+        "nodeType": "process"
       },
       "parent": "1_INC"
     },
     {
       "v": "4_CONST1",
       "value": {
-        "nodeType": "process",
-        "meta": "math/const1",
-        "type": "atomic",
-        "parent": "1_INC"
+        "id": "math/const1",
+        "version": "0.1.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "const1/output": "int"
+        },
+        "atomic": true,
+        "nodeType": "process"
       },
       "parent": "1_INC"
     },
@@ -63,7 +88,7 @@
       "v": "1_INC_PORT_i",
       "value": {
         "nodeType": "inPort",
-        "portName": "i",
+        "portName": "inc/i",
         "hierarchyBorder": true
       },
       "parent": "EXAMPLE1"
@@ -72,7 +97,7 @@
       "v": "0_STDIN_PORT_output",
       "value": {
         "nodeType": "outPort",
-        "portName": "output"
+        "portName": "stdin/output"
       },
       "parent": "EXAMPLE1"
     },
@@ -80,7 +105,7 @@
       "v": "2_STDOUT_PORT_input",
       "value": {
         "nodeType": "inPort",
-        "portName": "input"
+        "portName": "stdout/input"
       },
       "parent": "EXAMPLE1"
     },
@@ -88,7 +113,7 @@
       "v": "1_INC_PORT_inc",
       "value": {
         "nodeType": "outPort",
-        "portName": "inc",
+        "portName": "inc/inc",
         "hierarchyBorder": true
       },
       "parent": "EXAMPLE1"
@@ -97,7 +122,7 @@
       "v": "3_ADD_PORT_s1",
       "value": {
         "nodeType": "inPort",
-        "portName": "s1"
+        "portName": "add/s1"
       },
       "parent": "1_INC"
     },
@@ -105,7 +130,7 @@
       "v": "3_ADD_PORT_s2",
       "value": {
         "nodeType": "inPort",
-        "portName": "s2"
+        "portName": "add/s2"
       },
       "parent": "1_INC"
     },
@@ -113,7 +138,7 @@
       "v": "4_CONST1_PORT_const1",
       "value": {
         "nodeType": "outPort",
-        "portName": "const1"
+        "portName": "const1/output"
       },
       "parent": "1_INC"
     },
@@ -121,19 +146,25 @@
       "v": "3_ADD_PORT_sum",
       "value": {
         "nodeType": "outPort",
-        "portName": "sum"
+        "portName": "add/sum"
       },
       "parent": "1_INC"
     },
     {
       "v": "0_STDIN_PORT_output:1_INC_PORT_i_1",
       "value": {
+        "id": "translator/string_to_int",
+        "version": "0.1.0",
+        "inputPorts": {
+          "string_to_int/input": "string"
+        },
+        "outputPorts": {
+          "string_to_int/output": "int"
+        },
+        "atomic": true,
         "nodeType": "process",
         "typeFrom": "string",
-        "typeTo": "int",
-        "meta": "translator/string_to_int",
-        "type": "atomic",
-        "parent": "EXAMPLE1"
+        "typeTo": "int"
       },
       "parent": "EXAMPLE1"
     },
@@ -141,7 +172,7 @@
       "v": "0_STDIN_PORT_output:1_INC_PORT_i_1_PORT_in",
       "value": {
         "nodeType": "inPort",
-        "portName": "input"
+        "portName": "string_to_int/input"
       },
       "parent": "EXAMPLE1"
     },
@@ -149,19 +180,25 @@
       "v": "0_STDIN_PORT_output:1_INC_PORT_i_1_PORT_out",
       "value": {
         "nodeType": "outPort",
-        "portName": "output"
+        "portName": "string_to_int/output"
       },
       "parent": "EXAMPLE1"
     },
     {
       "v": "1_INC_PORT_inc:2_STDOUT_PORT_input_1",
       "value": {
+        "id": "translator/int_to_string",
+        "version": "0.1.0",
+        "inputPorts": {
+          "int_to_string/input": "int"
+        },
+        "outputPorts": {
+          "int_to_string/output": "string"
+        },
+        "atomic": true,
         "nodeType": "process",
         "typeFrom": "int",
-        "typeTo": "string",
-        "meta": "translator/int_to_string",
-        "type": "atomic",
-        "parent": "EXAMPLE1"
+        "typeTo": "string"
       },
       "parent": "EXAMPLE1"
     },
@@ -169,7 +206,7 @@
       "v": "1_INC_PORT_inc:2_STDOUT_PORT_input_1_PORT_in",
       "value": {
         "nodeType": "inPort",
-        "portName": "input"
+        "portName": "int_to_string/input"
       },
       "parent": "EXAMPLE1"
     },
@@ -177,7 +214,7 @@
       "v": "1_INC_PORT_inc:2_STDOUT_PORT_input_1_PORT_out",
       "value": {
         "nodeType": "outPort",
-        "portName": "output"
+        "portName": "int_to_string/output"
       },
       "parent": "EXAMPLE1"
     }
