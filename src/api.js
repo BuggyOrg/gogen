@@ -1,8 +1,35 @@
 import _ from 'lodash'
 
 import libConnection from '@buggyorg/component-library'
+var lib = libConnection('http://quasar:9200')
 
-var replaceAll = function (str, search, replacement) {
+var isProcess = (graph, n) => {
+  return graph.node(n).nodeType === 'process' && graph.node(n).atomic === true
+}
+
+var isPort = (graph, n) => {
+  return graph.node(n).nodeType === 'inPort' || graph.node(n).nodeType === 'outPort'
+}
+
+var getChannelNameByInport = (channels, port) => {
+  for (let channel of channels) {
+    if (channel.inPort === port) {
+      return channel.channelName
+    }
+  }
+  return 'ERROR: getChannelNameByInport: ' + port
+}
+
+var getChannelNameByOutport = (channels, port) => {
+  for (let channel of channels) {
+    if (channel.outPort === port) {
+      return channel.channelName
+    }
+  }
+  return 'ERROR: getChannelNameByOutport: ' + port
+}
+
+var replaceAll = (str, search, replacement) => {
   return str.split(search).join(replacement)
 }
 
@@ -10,52 +37,45 @@ var api = {
 
   processes: graph => {
     return _(graph.nodes()).chain()
-    .filter(n => graph.node(n).nodeType === 'process' && graph.node(n).atomic === true)
-    .map(n => [n, graph.node(n)])
-    .compact()
-    .fromPairs()
+    .filter(_.partial(isProcess, graph))
+    .map(n => _.merge({}, graph.node(n), {name: n}))
     .value()
   },
 
   ports: graph => {
     return _(graph.nodes()).chain()
-    .filter(n => graph.node(n).nodeType === 'inPort' || graph.node(n).nodeType === 'outPort')
-    .map(n => [n, graph.node(n)])
-    .compact()
-    .fromPairs()
+    .filter(_.partial(isPort, graph))
+    .map(n => _.merge({}, graph.node(n), {name: n}))
     .value()
   },
 
-  getChannelNameByInport: (channels, port) => {
-    for (let channel of channels) {
-      if (channel.inPort === port) {
-        return channel.channelName
-      }
-    }
-    return 'ERROR: getChannelNameByInport: ' + port
-  },
-
-  getChannelNameByOutport: (channels, port) => {
-    for (let channel of channels) {
-      if (channel.outPort === port) {
-        return channel.channelName
-      }
-    }
-    return 'ERROR: getChannelNameByOutport: ' + port
+  getCode: (arrayOfNodes) => {
+    return Promise.all(
+      _(arrayOfNodes)
+      .map(n => [
+        n.id,
+        lib.getCode(n.id, n.version, 'golang'),
+        lib.getMeta(n.id, n.version, 'properties/golang'),
+        lib.getMeta(n.id, n.version, 'dependencies/golang')
+      ])
+      .flatten()
+      .value()
+    ).then(dataArray => _.chunk(dataArray, 4))
+    .then(nodeArray => {
+      return _.map(nodeArray, (nArr) => ({id: nArr[0], code: nArr[1], properties: nArr[2], dependencies: nArr[3]}))
+    })
   },
 
   generateCode: graph => {
     // Global Variables
-    var lib = libConnection('http://quasar:9200')
-    var processes = api.processes(graph)
-    var ports = api.ports(graph)
+    var processesArray = api.processes(graph)
+    var processes = _.keyBy(processesArray, 'name')
+    var portsArray = api.ports(graph)
+    var ports = _.keyBy(portsArray, 'name')
     var channels = [ ]
     var imports = [ ]
     var needsWaitGroup = false
     var channelCount = 0
-
-    var PROPERTIES = 2
-    var DEPENDENCIES = 3
 
     // Code Variables
     var codePackage = 'package main\n'
@@ -67,21 +87,9 @@ var api = {
     var codeChannels = '// channels\n'
     var codeProcessesLaunch = '// start processes\n'
 
-    var getCodePromises = _(graph.nodes()).chain()
-    .filter(n => graph.node(n).nodeType === 'process' && graph.node(n).atomic === true)
-    .map(n => [
-      graph.node(n).id,
-      lib.getCode(graph.node(n).id, graph.node(n).version, 'golang'),
-      lib.getMeta(graph.node(n).id, graph.node(n).version, 'properties/golang'),
-      lib.getMeta(graph.node(n).id, graph.node(n).version, 'dependencies/golang')
-    ])
-    .flatten()
-    .value()
-
-    var allPromises = Promise.all(getCodePromises).then((promises) => {
-      var nodeMeta = _.chunk(promises, 4)
-      // {id: [id, code, prop, depend]}
-      var nodesObj = _.keyBy(nodeMeta, function (nodeArr) { return nodeArr[0] })
+    // get all necessary information from server
+    var allPromises = api.getCode(processesArray).then((allInfo) => {
+      var nodesObject = _.keyBy(allInfo, 'id')
 
       // create channels from outPort to inPort
       for (let port in ports) {
@@ -109,10 +117,10 @@ var api = {
         let procID = procObj.id
         let okCount = 0
 
-        // code
+        // code for function import of one single process
         let codeProcessHeader = ''
         let codeProcessPre = 'for {\n'
-        let codeProcessFor = '// ###########\n' + nodesObj[procObj.id][1] + '// ###########\n'
+        let codeProcessFor = '// ###########\n' + nodesObject[procObj.id].code + '// ###########\n'
         let codeProcessPost = '}\n'
 
         // write function declaration and start it later
@@ -129,7 +137,7 @@ var api = {
           let channelName = varName + '_chan'
           codeProcessHeader += channelName + ' chan ' + procObj['inputPorts'][port] + ', '
           codeProcessPre += varName + ',ok' + okCount + ' := <- ' + channelName + '\nif !ok' + okCount++ + ' { break }\n'
-          codeProcessesLaunch += api.getChannelNameByInport(channels, portName) + ', '
+          codeProcessesLaunch += getChannelNameByInport(channels, portName) + ', '
         }
 
         for (let port in processes[proc]['outputPorts']) {
@@ -145,13 +153,12 @@ var api = {
           codeProcessPre += 'var ' + varName + ' ' + channelType + '\n'
           codeProcessFor += channelName + ' <- ' + varName
           codeProcessPost += 'close(' + channelName + ')\n'
-          codeProcessesLaunch += api.getChannelNameByOutport(channels, portName) + ', '
+          codeProcessesLaunch += getChannelNameByOutport(channels, portName) + ', '
         }
-
         codeProcessHeader = codeProcessHeader.slice(0, -2) + ') {\n'
 
-        if (_.has(nodesObj[procID], '.2.needsWaitGroup')) {
-          if (nodesObj[procID][PROPERTIES]['needsWaitGroup'] === true) {
+        if (_.has(nodesObject[procID], '.properties.needsWaitGroup')) {
+          if (nodesObject[procID]['properties']['needsWaitGroup'] === true) {
             needsWaitGroup = true
             codeProcessPost += 'wg.Done()'
           }
@@ -162,28 +169,26 @@ var api = {
         codeProcessesLaunch = codeProcessesLaunch.slice(0, -2) + ')\n'
       }
 
-      for (let id in nodesObj) {
+      for (let id in nodesObject) {
         // dependencies
-        if (nodesObj[id][DEPENDENCIES]) {
-          imports = _.concat(imports, nodesObj[id][DEPENDENCIES])
+        if (nodesObject[id]['dependencies']) {
+          imports = _.concat(imports, nodesObject[id]['dependencies'])
         }
       }
-
+      // add imports
       imports = _.uniq(imports)
       for (let imp of imports) {
         codeImports += 'import \"' + imp + '\"\n'
       }
-
+      // add wait group, if necessary
       if (needsWaitGroup) {
         codeGlobals += 'var wg sync.WaitGroup\n'
         codeMainPre += 'wg.Add(1)\n'
         codeMainPost += 'wg.Wait()\n'
       }
 
-      var stringOutput = codePackage + '\n' + codeImports + '\n' + codeGlobals + '\n' + codeProcesses + codeMainPre + '\n' + codeChannels + '\n' + codeProcessesLaunch + '\n' + codeMainPost + '}'
-      return stringOutput
+      return codePackage + '\n' + codeImports + '\n' + codeGlobals + '\n' + codeProcesses + codeMainPre + '\n' + codeChannels + '\n' + codeProcessesLaunch + '\n' + codeMainPost + '}'
     })
-
     return allPromises
   }
 }
