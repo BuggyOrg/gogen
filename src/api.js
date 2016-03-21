@@ -157,6 +157,7 @@ var api = {
         }
         codeProcessHeader = codeProcessHeader.slice(0, -2) + ') {\n'
 
+        // check for the need of a waitGroup
         if (_.has(nodesObject[procID], '.properties.needsWaitGroup')) {
           if (nodesObject[procID]['properties']['needsWaitGroup'] === true) {
             needsWaitGroup = true
@@ -165,6 +166,7 @@ var api = {
         }
         codeProcessPost += '}\n\n'
 
+        // combine the code snippets to a function
         codeProcesses += codeProcessHeader + codeProcessPre + codeProcessFor + codeProcessPost
         codeProcessesLaunch = codeProcessesLaunch.slice(0, -2) + ')\n'
       }
@@ -186,7 +188,6 @@ var api = {
         codeMainPre += 'wg.Add(1)\n'
         codeMainPost += 'wg.Wait()\n'
       }
-
       return codePackage + '\n' + codeImports + '\n' + codeGlobals + '\n' + codeProcesses + codeMainPre + '\n' + codeChannels + '\n' + codeProcessesLaunch + '\n' + codeMainPost + '}'
     })
     return allPromises

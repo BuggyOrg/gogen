@@ -64,6 +64,8 @@ describe('Go Code Generator', function () {
       fs.writeFileSync('test/fixtures/codeOutput.go', out)
     }).then(() => {
       return executeCodePromise('echo 7 | go run test/fixtures/codeOutput.go', '8\n')
+    }).then(() => {
+      return executeCodePromise('go fmt test/fixtures/codeOutput.go', 'test/fixtures/codeOutput.go\n')
     })
   })
 
