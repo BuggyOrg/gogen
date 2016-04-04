@@ -158,7 +158,7 @@ var api = {
         codeProcessHeader = codeProcessHeader.slice(0, -2) + ') {\n'
 
         // check for the need of a waitGroup
-        if (_.has(nodesObject[procID], '.properties.needsWaitGroup')) {
+        if (_.has(nodesObject[procID], 'properties.needsWaitGroup')) {
           if (nodesObject[procID]['properties']['needsWaitGroup'] === true) {
             needsWaitGroup = true
             codeProcessPost += 'wg.Done()'

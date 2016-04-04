@@ -20,7 +20,7 @@
     "@buggyorg/component-library": "^0.3.2",
     "commander": "^2.9.0",
     "get-stdin": "^5.0.1",
-    "lodash": "^4.6.1"
+    "lodash": "github:lodash/lodash"
   },
   "devDependencies": {
     "babel": "^5.8.29",
