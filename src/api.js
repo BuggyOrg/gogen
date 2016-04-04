@@ -66,6 +66,27 @@ var api = {
     })
   },
 
+  channels: (graph) => {
+    var processesArray = api.processes(graph)
+    var processes = _.keyBy(processesArray, 'name')
+    var ports = api.ports(graph)
+    return _(ports)
+      .filter((p) => p.nodeType === 'outPort')
+      .map((p) => {
+        var processName = p.process
+        var process = processes[processName]
+        var channelType = process.outputPorts[p.portName]
+        return _.map(graph.successors(p.name), (succ) => {
+          let inPort = succ
+          while (graph.node(inPort).hierarchyBorder === true) {
+            // we can assume there is exactly one successor
+            inPort = graph.successors(succ)[0]
+          }
+          return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType }
+        })
+      })
+  },
+
   generateCode: graph => {
     // Global Variables
     var processesArray = api.processes(graph)
