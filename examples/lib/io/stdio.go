@@ -4,16 +4,11 @@ package io
 import "fmt"
 import "sync"
 
-func Stdout(output chan string, wg sync.WaitGroup) {
-  for {
-    str, more := <- output
-    if more {
-      fmt.Println(str)
-    } else {
-      wg.Done()
-      return
-    }
+func Stdout(output chan string, wg* sync.WaitGroup) {
+  for str := range(output) {
+    fmt.Println(str)
   }
+  wg.Done()
 }
 
 func Stdin(input chan string, wg sync.WaitGroup) {
