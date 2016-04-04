@@ -7,7 +7,9 @@ import "../lib/conversion"
 func lambda(output chan func(chan int, chan int)) {
   for {
     output <- func(in chan int, out chan int){
-      for i := range(in) { out <- i }
+      for i := range(in) {
+        out <- i
+      }
       close(out)
     }
   }
@@ -21,7 +23,7 @@ func apply(input chan int, inFn chan func(chan int, chan int), output chan int) 
     return
   }
   out := make(chan int)
-  fn(input, out)
+  go fn(input, out)
   for {
     o,ok2 := <- out
     if !ok2 {

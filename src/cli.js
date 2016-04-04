@@ -23,13 +23,12 @@ var processGraph = str => {
 
 if (program.graphfile) {
   var str = fs.readFileSync(program.graphfile)
-  console.log(processGraph(str))
+  processGraph(str).then((code) => console.log(code))
 } else {
   getStdin().then(str => {
-    try {
-      console.log(processGraph(str))
-    } catch (e) {
-      console.log('Error while processing: ', e)
-    }
+    processGraph(str).then((code) => console.log(code))
+    .catch((e) => {
+      console.log('Error while processing: ', e.stack)
+    })
   })
 }
