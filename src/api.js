@@ -66,6 +66,9 @@ var api = {
     })
   },
 
+  /**
+   * create channels from outPort to inPort
+   */
   channels: (graph) => {
     var processesArray = api.processes(graph)
     var processes = _.keyBy(processesArray, 'name')
@@ -85,6 +88,7 @@ var api = {
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType }
         })
       })
+      .value()
   },
 
   generateCode: graph => {
@@ -93,7 +97,7 @@ var api = {
     var processes = _.keyBy(processesArray, 'name')
     var portsArray = api.ports(graph)
     var ports = _.keyBy(portsArray, 'name')
-    var channels = [ ]
+    var channels = api.channels(graph)
     var imports = [ ]
     var needsWaitGroup = false
     var channelCount = 0
@@ -111,26 +115,6 @@ var api = {
     // get all necessary information from server
     var allPromises = api.getCode(processesArray).then((allInfo) => {
       var nodesObject = _.keyBy(allInfo, 'id')
-
-      // create channels from outPort to inPort
-      for (let port in ports) {
-        if (ports[port].nodeType !== 'outPort') { continue }
-        // we can assume there is exactly one predecessor
-        let processName = graph.predecessors(port)[0]
-        if (_.has(ports, processName)) { continue }
-        let channelType = processes[processName].outputPorts[ports[port].portName]
-
-        for (let succ of graph.successors(port)) {
-          let inPort = succ
-          while (graph.node(inPort).hierarchyBorder === true) {
-            // we can assume there is exactly one successor
-            inPort = graph.successors(succ)[0]
-          }
-          let channelName = 'chan' + channelCount++
-          codeChannels += channelName + ' := make(chan ' + channelType + ')\n'
-          channels.push({ 'outPort': port, 'inPort': inPort, 'channelName': channelName, 'channelType': channelType })
-        }
-      }
 
       // check imports, start processes and check for wait group dependencies
       for (let proc in processes) {
