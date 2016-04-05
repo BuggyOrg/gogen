@@ -1,7 +1,8 @@
 import _ from 'lodash'
+import * as codegen from './codegen'
 
 import libConnection from '@buggyorg/component-library'
-var lib = libConnection('http://quasar:9200')
+var lib = libConnection(process.env.BUGGY_COMPONENT_LIBRARY_HOST)
 
 var isProcess = (graph, n) => {
   return graph.node(n).nodeType === 'process' && graph.node(n).atomic === true
@@ -38,7 +39,7 @@ var api = {
   processes: graph => {
     return _(graph.nodes()).chain()
     .filter(_.partial(isProcess, graph))
-    .map(n => _.merge({}, graph.node(n), {name: n}))
+    .map(n => _.merge({}, graph.node(n), {name: n}, {parent: graph.parent(n) || 'main'}))
     .value()
   },
 
@@ -52,6 +53,7 @@ var api = {
   getCode: (arrayOfNodes) => {
     return Promise.all(
       _(arrayOfNodes)
+      .filter(n => n.atomic)
       .map(n => [
         n.id,
         lib.getCode(n.id, n.version, 'golang'),
@@ -64,6 +66,10 @@ var api = {
     .then(nodeArray => {
       return _.map(nodeArray, (nArr) => ({id: nArr[0], code: nArr[1], properties: nArr[2], dependencies: nArr[3]}))
     })
+  },
+
+  atomics: (graph) => {
+    return api.processes(graph).filter((p) => p.atomic)
   },
 
   /**
@@ -85,22 +91,52 @@ var api = {
             // we can assume there is exactly one successor
             inPort = graph.successors(succ)[0]
           }
-          return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType }
+          return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: p.parent || 'main' }
         })
       })
+      .flatten()
       .value()
   },
 
+  compounds: (graph) => {
+    // TODO: Add inputs and outputs if not main. Those are stored in the node itself
+    var processes = api.processes(graph)
+    var channels = api.channels(graph)
+    console.log(channels)
+    return _(processes)
+      .groupBy('parent')
+      .map((value, key) => (
+        {
+          name: key,
+          processes: value,
+          inputs: [],
+          outputs: [],
+          prefixes: [],
+          channels: _.filter(channels, (c) => c.parent === key)
+        }))
+      .value()
+  },
+
+  createSourceDescriptor: (graph) => {
+    var processes = api.atomics(graph)
+    var compounds = api.compounds(graph)
+    return {
+      imports: _.compact(_.map(processes, 'properties.imports')),
+      globals: _.compact(_.map(processes, 'properties.globals')),
+      processes: _.map(processes, codegen.createProcess),
+      compounds: _.map(compounds, codegen.createCompound)
+    }
+  },
+
   generateCode: graph => {
+    return codegen.createSource(api.createSourceDescriptor(graph))
+    /*
     // Global Variables
     var processesArray = api.processes(graph)
     var processes = _.keyBy(processesArray, 'name')
-    var portsArray = api.ports(graph)
-    var ports = _.keyBy(portsArray, 'name')
     var channels = api.channels(graph)
     var imports = [ ]
     var needsWaitGroup = false
-    var channelCount = 0
 
     // Code Variables
     var codePackage = 'package main\n'
@@ -196,6 +232,7 @@ var api = {
       return codePackage + '\n' + codeImports + '\n' + codeGlobals + '\n' + codeProcesses + codeMainPre + '\n' + codeChannels + '\n' + codeProcessesLaunch + '\n' + codeMainPost + '}'
     })
     return allPromises
+    */
   }
 }
 
