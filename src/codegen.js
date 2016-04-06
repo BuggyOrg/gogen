@@ -30,8 +30,8 @@ export function createProcess (process) {
  * @compound Expects a compound node with the following structure
  * {
  *   name: String,
- *   inputs: Array[{name: String, type: String}],
- *   outputs: Array[{name: String, type: String}],
+ *   inputPorts: Array[{name: String, type: String}],
+ *   outputPorts: Array[{name: String, type: String}],
  *   prefixes: Array[String],
  *   channels: Array[{?, type: String}],
  *   processes: Array[{name: String, inputs: Array[{name: String, type: String}], outputs: Array[{name: String, type: String}], additionalParameters: Array[String]}]

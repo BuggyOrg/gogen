@@ -119,7 +119,6 @@ var api = {
     // TODO: Add inputs and outputs if not main. Those are stored in the node itself
     var processes = api.processes(graph)
     var channels = api.channels(graph)
-    console.log(channels)
     return _(processes)
       .groupBy('parent')
       .map((value, key) => (

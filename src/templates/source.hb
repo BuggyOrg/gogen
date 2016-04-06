@@ -7,7 +7,7 @@ import "{{this}}"
 
 // global variables
 {{#each globals}}
-var {{name}} {{type}}
+var {{sanitize name}} {{type}}
 {{/each}}
 
 // process declarations

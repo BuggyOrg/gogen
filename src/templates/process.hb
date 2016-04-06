@@ -8,6 +8,9 @@ func {{name}}(
     {{#each outputPorts~}}
     var {{sanitize @key}} {{this}}
     {{/each}}
+    {{#each inputPorts~}}
+    {{sanitize @key}},ok{{@index}} := <- {{sanitize @key}}_chan
+    {{/each}}
     // ### Code from metadata ###
     {{code}}
     // ### process output ###

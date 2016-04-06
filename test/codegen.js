@@ -6,8 +6,8 @@ import * as api from '../src/api.js'
 var expect = require('chai').expect
 
 describe('Codegen API', () => {
-  it('can create code for a processes', () => {
-    var code = codegen.createProcess({name: 'proc', inputPorts: {}, outputPorts: {'output': 'string'}, code: 'output++'})
+  it('can create code for a process', () => {
+    var code = codegen.createProcess({name: 'proc', inputPorts: {'in': 'string'}, outputPorts: {'output': 'string'}, code: 'output++'})
     expect(code).to.be.a('string')
     expect(code.indexOf('func proc')).to.not.equal(-1)
     expect(code.indexOf('proc(output_chan chan string')).to.not.equal(-1)
