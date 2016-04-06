@@ -1,10 +1,13 @@
 /* global describe, it */
-import * as api from '../src/codegen.js'
+import * as codegen from '../src/codegen.js'
+import graphlib from 'graphlib'
+import fs from 'fs'
+import * as api from '../src/api.js'
 var expect = require('chai').expect
 
 describe('Codegen API', () => {
   it('can create code for a processes', () => {
-    var code = api.createProcess({process: 'proc', inputs: [], outputs: [{name: 'output', type: 'string'}], code: 'output++'})
+    var code = codegen.createProcess({name: 'proc', inputPorts: {}, outputPorts: {'output': 'string'}, code: 'output++'})
     expect(code).to.be.a('string')
     expect(code.indexOf('func proc')).to.not.equal(-1)
     expect(code.indexOf('proc(output_chan chan string')).to.not.equal(-1)
@@ -14,17 +17,24 @@ describe('Codegen API', () => {
     expect(code.indexOf('close(output_chan)')).to.not.equal(-1)
   })
 
+  it('can create code for all atomics', () => {
+    var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/preproc.json')))
+    var atomics = api.atomics(graph)
+    var code = atomics.map(codegen.createProcess).join('\n\n')
+    expect(code.indexOf('func 0_STDIN')).to.not.equal(-1)
+    expect(code.indexOf('func 2_STDOUT')).to.not.equal(-1)
+  })
+
   it('can create code for a compound node', () => {
-    var code = api.createCompound(
+    var code = codegen.createCompound(
       {
         name: 'cmpd',
-        inputs: [{name: 'in', type: 'string'}],
-        outputs: [{name: 'out', type: 'string'}],
+        inputPorts: {'in': 'string'},
+        outputPorts: {'out': 'string'},
         prefixes: ['wg.Add(1)'],
         channels: [{type: 'string'}],
         processes: [{name: 'other', inputs: [], outputs: [], additionalParameters: ['*wg']}]
       })
-    console.log(code)
     expect(code).to.be.a('string')
     expect(code.indexOf('func cmpd')).to.not.equal(-1)
     expect(code.indexOf('out chan string')).to.not.equal(-1)

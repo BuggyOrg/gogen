@@ -1,21 +1,21 @@
-func {{process}}(
+func {{name}}(
 {{~#each arguments~}}
-{{name}}_chan chan {{type}} {{#unless @last}}, {{/unless}}
+{{sanitize @key}}_chan chan {{this}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   for {
     // ### Definition of variables ###
-    {{#each outputs~}}
-    var {{name}} {{type}}
+    {{#each outputPorts~}}
+    var {{sanitize @key}} {{this}}
     {{/each}}
     // ### Code from metadata ###
     {{code}}
     // ### process output ###
-    {{#each outputs~}}
-    {{name}}_chan <- {{name}}
+    {{#each outputPorts~}}
+    {{sanitize @key}}_chan <- {{sanitize @key}}
     {{/each}}
   }
-  {{#each outputs~}}
-  close({{name}}_chan)
+  {{#each outputPorts~}}
+  close({{sanitize @key}}_chan)
   {{/each}}
 }

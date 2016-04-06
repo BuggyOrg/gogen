@@ -3,16 +3,26 @@ import * as handlebars from 'handlebars'
 import fs from 'fs'
 import _ from 'lodash'
 
-var processTemplate = handlebars.compile(fs.readFileSync('./src/templates/process.hb', 'utf8'))
-var compoundTemplate = handlebars.compile(fs.readFileSync('./src/templates/compound.hb', 'utf8'))
-var sourceTemplate = handlebars.compile(fs.readFileSync('./src/templates/source.hb', 'utf8'))
+var replaceAll = (str, search, replacement) => {
+  return str.split(search).join(replacement)
+}
+
+var sanitize = (str) => {
+  return replaceAll(str, '/', '_')
+}
+
+handlebars.registerHelper('sanitize', sanitize)
+
+var processTemplate = handlebars.compile(fs.readFileSync('./src/templates/process.hb', 'utf8'), {noEscape: true})
+var compoundTemplate = handlebars.compile(fs.readFileSync('./src/templates/compound.hb', 'utf8'), {noEscape: true})
+var sourceTemplate = handlebars.compile(fs.readFileSync('./src/templates/source.hb', 'utf8'), {noEscape: true})
 
 /**
  * Create the source for a process
- * @process Expects a process format of {process: String, inputs: Array[{name: String, type: String}], outputs: Array[{name: String, type: String}], code: String}
+ * @process Expects a process format of {name: String, inputPorts: Array[{name: String, type: String}], outputPorts: Array[{name: String, type: String}], code: String}
  */
 export function createProcess (process) {
-  return processTemplate(_.merge({}, process, {arguments: _.concat(process.inputs, process.outputs)}))
+  return processTemplate(_.merge({}, process, {arguments: _.merge({}, process.inputPorts, process.outputPorts)}))
 }
 
 /**
@@ -28,7 +38,7 @@ export function createProcess (process) {
  * }
  */
 export function createCompound (compound) {
-  return compoundTemplate(_.merge({}, compound, {arguments: _.concat(compound.inputs, compound.outputs)}))
+  return compoundTemplate(_.merge({}, compound, {arguments: _.merge({}, compound.inputPorts, compound.outputPorts)}))
 }
 
 export function createSource (sourceDescriptor) {

@@ -44,19 +44,6 @@ describe('Go Code Generator', function () {
     expect(obj).not.to.include.keys('WISCHWASCH')
   })
 
-  it('get information from server', function () {
-    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/typedtestgraph.graphlib')))
-
-    return api.getCode(api.processes(portGraph)).then((allInfo) => {
-      expect(allInfo).to.be.ok
-      expect(allInfo).to.have.length(6)
-
-      var obj = _.keyBy(allInfo, 'id')
-      expect(obj).to.include.keys('math/const1')
-      expect(obj).not.to.include.keys('math/inc')
-    })
-  })
-
   it('INC-NPG to golang', function () {
     var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/typedtestgraph.graphlib')))
     var code = api.generateCode(portGraph)

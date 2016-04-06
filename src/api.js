@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import * as codegen from './codegen'
+import graphlib from 'graphlib'
 
 import libConnection from '@buggyorg/component-library'
 var lib = libConnection(process.env.BUGGY_COMPONENT_LIBRARY_HOST)
@@ -12,6 +13,7 @@ var isPort = (graph, n) => {
   return graph.node(n).nodeType === 'inPort' || graph.node(n).nodeType === 'outPort'
 }
 
+/*
 var getChannelNameByInport = (channels, port) => {
   for (let channel of channels) {
     if (channel.inPort === port) {
@@ -33,6 +35,24 @@ var getChannelNameByOutport = (channels, port) => {
 var replaceAll = (str, search, replacement) => {
   return str.split(search).join(replacement)
 }
+*/
+var getCode = (arrayOfAtomics) => {
+  return Promise.all(
+    _(arrayOfAtomics)
+    .filter((p) => p.atomic)
+    .map(n => [
+      n.id,
+      lib.getCode(n.id, n.version, 'golang'),
+      lib.getMeta(n.id, n.version, 'properties/golang'),
+      lib.getMeta(n.id, n.version, 'dependencies/golang')
+    ])
+    .flatten()
+    .value()
+  ).then(dataArray => _.chunk(dataArray, 4))
+  .then(nodeArray => {
+    return _.map(nodeArray, (nArr) => ({id: nArr[0], code: nArr[1], properties: nArr[2], dependencies: nArr[3]}))
+  })
+}
 
 var api = {
 
@@ -50,22 +70,19 @@ var api = {
     .value()
   },
 
-  getCode: (arrayOfNodes) => {
-    return Promise.all(
-      _(arrayOfNodes)
-      .filter(n => n.atomic)
-      .map(n => [
-        n.id,
-        lib.getCode(n.id, n.version, 'golang'),
-        lib.getMeta(n.id, n.version, 'properties/golang'),
-        lib.getMeta(n.id, n.version, 'dependencies/golang')
-      ])
-      .flatten()
-      .value()
-    ).then(dataArray => _.chunk(dataArray, 4))
-    .then(nodeArray => {
-      return _.map(nodeArray, (nArr) => ({id: nArr[0], code: nArr[1], properties: nArr[2], dependencies: nArr[3]}))
-    })
+  preprocess: (graph) => {
+    var graphJSON = graphlib.json.write(graph)
+    return getCode(api.processes(graph))
+      .then((atomics) => {
+        var atomicNameMap = _.keyBy(atomics, 'id')
+        return graphlib.json.read(_.merge({}, graphJSON, {nodes: _.map(graphJSON.nodes, (n) => {
+          if (_.has(atomicNameMap, n.value.id)) {
+            return _.merge({}, n, {value: atomicNameMap[n.value.id]})
+          } else {
+            return n
+          }
+        })}))
+      })
   },
 
   atomics: (graph) => {

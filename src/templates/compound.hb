@@ -1,6 +1,6 @@
 func {{name}}(
 {{~#each arguments~}}
-{{name}} chan {{type}} {{#unless @last}}, {{/unless}}
+{{sanitize @key}} chan {{this}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   {{#each prefixes}}

@@ -28,9 +28,19 @@ describe('Gogen API', () => {
   it('can create a list of compound nodes', () => {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/simplegraph.json')))
     var cmpds = api.compounds(graph)
-    console.log(JSON.stringify(cmpds, null, 2))
     expect(cmpds).to.have.length(1)
     expect(cmpds[0].processes).to.have.length(2)
     expect(cmpds[0].channels).to.have.length(1)
+  })
+
+  it('can add meta information to a graph', () => {
+    var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/simplegraph.json')))
+    return api.preprocess(graph).then((newGraph) => {
+      var procs = api.processes(newGraph)
+      expect(procs).to.have.length(2)
+      expect(newGraph.node('0_STDIN')).to.have.property('code')
+      expect(newGraph.node('0_STDIN')).to.have.property('properties')
+      expect(newGraph.node('0_STDIN')).to.have.property('dependencies')
+    })
   })
 })
