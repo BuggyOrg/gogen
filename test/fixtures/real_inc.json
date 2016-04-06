@@ -45,55 +45,74 @@
       "v": "inc",
       "value": {
         "id": "math/inc",
-        "version": "0.2.0",
+        "version": "0.3.0",
         "inputPorts": {
-          "inc/i": "int"
+          "i": "int"
         },
         "outputPorts": {
-          "inc/inc": "int"
+          "inc": "int"
         },
         "atomic": false,
         "implementation": {
           "nodes": [
             {
               "id": "math/add",
-              "version": "0.1.0",
+              "version": "0.1.1",
               "inputPorts": {
-                "add/s1": "int",
-                "add/s2": "int"
+                "s1": "int",
+                "s2": "int"
               },
               "outputPorts": {
-                "add/sum": "int"
+                "sum": "int"
               },
               "atomic": true,
               "path": [
                 {
                   "meta": "math/inc",
                   "branch": "inc",
-                  "version": "0.2.0",
+                  "version": "0.3.0",
                   "path": []
                 }
               ],
               "parent": "inc",
               "branchPath": "inc:add",
               "branch": "add",
-              "values": [
+              "nodeType": "process"
+            },
+            {
+              "id": "math/const1",
+              "version": "0.2.0",
+              "inputPorts": {},
+              "outputPorts": {
+                "output": "int"
+              },
+              "atomic": true,
+              "path": [
                 {
-                  "value": 1,
-                  "port": "add/s2"
+                  "meta": "math/inc",
+                  "branch": "inc",
+                  "version": "0.3.0",
+                  "path": []
                 }
               ],
+              "parent": "inc",
+              "branchPath": "inc:c",
+              "branch": "c",
               "nodeType": "process"
             }
           ],
           "edges": [
             {
-              "from": "inc/i",
-              "to": "add:add/s1"
+              "from": "i",
+              "to": "add:s1"
             },
             {
-              "from": "add:add/sum",
-              "to": "inc/inc"
+              "from": "c:output",
+              "to": "add:s2"
+            },
+            {
+              "from": "add:sum",
+              "to": "inc"
             }
           ]
         },
@@ -108,32 +127,51 @@
       "v": "inc:add",
       "value": {
         "id": "math/add",
-        "version": "0.1.0",
+        "version": "0.1.1",
         "inputPorts": {
-          "add/s1": "int",
-          "add/s2": "int"
+          "s1": "int",
+          "s2": "int"
         },
         "outputPorts": {
-          "add/sum": "int"
+          "sum": "int"
         },
         "atomic": true,
         "path": [
           {
             "meta": "math/inc",
             "branch": "inc",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "path": []
           }
         ],
         "parent": "inc",
         "branchPath": "inc:add",
         "branch": "add",
-        "values": [
+        "nodeType": "process"
+      },
+      "parent": "inc"
+    },
+    {
+      "v": "inc:c",
+      "value": {
+        "id": "math/const1",
+        "version": "0.2.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "output": "int"
+        },
+        "atomic": true,
+        "path": [
           {
-            "value": 1,
-            "port": "add/s2"
+            "meta": "math/inc",
+            "branch": "inc",
+            "version": "0.3.0",
+            "path": []
           }
         ],
+        "parent": "inc",
+        "branchPath": "inc:c",
+        "branch": "c",
         "nodeType": "process"
       },
       "parent": "inc"
@@ -195,6 +233,7 @@
       "value": {
         "nodeType": "inPort",
         "portName": "i",
+        "hierarchyBorder": true,
         "process": "inc"
       }
     },
@@ -219,6 +258,7 @@
       "value": {
         "nodeType": "outPort",
         "portName": "inc",
+        "hierarchyBorder": true,
         "process": "inc"
       }
     },
@@ -239,35 +279,37 @@
       }
     },
     {
-      "v": "inc:add_PORT_add/s1",
+      "v": "inc:add_PORT_s1",
       "value": {
         "nodeType": "inPort",
-        "portName": "add/s1",
+        "portName": "s1",
         "process": "inc:add"
       },
       "parent": "inc"
     },
     {
-      "v": "inc_PORT_inc/i",
-      "value": {
-        "nodeType": "outPort",
-        "portName": "inc/i",
-        "process": "inc"
-      }
-    },
-    {
-      "v": "inc_PORT_inc/inc",
+      "v": "inc:add_PORT_s2",
       "value": {
         "nodeType": "inPort",
-        "portName": "inc/inc",
-        "process": "inc"
-      }
+        "portName": "s2",
+        "process": "inc:add"
+      },
+      "parent": "inc"
     },
     {
-      "v": "inc:add_PORT_add/sum",
+      "v": "inc:c_PORT_output",
       "value": {
         "nodeType": "outPort",
-        "portName": "add/sum",
+        "portName": "output",
+        "process": "inc:c"
+      },
+      "parent": "inc"
+    },
+    {
+      "v": "inc:add_PORT_sum",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "sum",
         "process": "inc:add"
       },
       "parent": "inc"
@@ -315,20 +357,32 @@
       "w": "out_PORT_stdout/output"
     },
     {
-      "v": "inc:add_PORT_add/s1",
+      "v": "inc:add_PORT_s1",
       "w": "inc:add"
     },
     {
-      "v": "inc_PORT_inc/i",
-      "w": "inc:add_PORT_add/s1"
+      "v": "inc_PORT_i",
+      "w": "inc:add_PORT_s1"
+    },
+    {
+      "v": "inc:add_PORT_s2",
+      "w": "inc:add"
+    },
+    {
+      "v": "inc:c",
+      "w": "inc:c_PORT_output"
+    },
+    {
+      "v": "inc:c_PORT_output",
+      "w": "inc:add_PORT_s2"
     },
     {
       "v": "inc:add",
-      "w": "inc:add_PORT_add/sum"
+      "w": "inc:add_PORT_sum"
     },
     {
-      "v": "inc:add_PORT_add/sum",
-      "w": "inc_PORT_inc/inc"
+      "v": "inc:add_PORT_sum",
+      "w": "inc_PORT_inc"
     }
   ]
 }

@@ -78,6 +78,16 @@ var waitGroupPostDefinitions = (processes) => {
   }
 }
 
+var parent = function (graph, outP, inP) {
+  if (graph.parent(outP.name) === graph.parent(inP.name)) {
+    return graph.parent(outP.name)
+  } else if (graph.parent(outP.name) === inP.process) {
+    return inP.process
+  } else {
+    return outP.process
+  }
+}
+
 var api = {
 
   processes: graph => {
@@ -123,6 +133,7 @@ var api = {
     var processesArray = api.processes(graph)
     var processes = _.keyBy(processesArray, 'name')
     var ports = api.ports(graph)
+    var portsByName = _.keyBy(ports, 'name')
     return _(ports)
       .filter((p) => p.nodeType === 'outPort')
       .map((p) => {
@@ -135,7 +146,7 @@ var api = {
             // we can assume there is exactly one successor
             inPort = graph.successors(succ)[0]
           }
-          return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: p.parent || 'main' }
+          return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
         })
       })
       .flatten()
@@ -145,6 +156,14 @@ var api = {
   compounds: (graph) => {
     // TODO: Add inputs and outputs if not main. Those are stored in the node itself
     var processes = api.processes(graph)
+    var processesByName = _.keyBy(processes, 'name')
+    var parentProperty = (process, type, def) => {
+      if (_.has(processesByName, process)) {
+        return processesByName[process][type]
+      } else {
+        return def
+      }
+    }
     var channels = api.channels(graph)
     if (processes.length === 0) {
       return [{ name: 'main', processes: [], inputs: [], outputs: [], prefixes: [], channels: [] }]
@@ -155,8 +174,9 @@ var api = {
         {
           name: key,
           processes: value,
-          inputPorts: [], // FIXME: extend with parents process ports
-          outputPorts: [],
+          inputPorts: parentProperty(key, 'inputPorts', {}), // FIXME: extend with parents process ports
+          outputPorts: parentProperty(key, 'outputPorts', {}),
+          arguments: parentProperty(key, 'arguments', []),
           prefixes: waitGroupPreDefinitions(value),
           postfixes: waitGroupPostDefinitions(value),
           channels: _.filter(channels, (c) => c.parent === key)
@@ -167,6 +187,7 @@ var api = {
   createSourceDescriptor: (graph) => {
     var processes = api.atomics(graph)
     var compounds = api.compounds(graph)
+    console.log(_.map(compounds, 'channels'))
     return {
       imports: imports(processes),
       globals: globals(processes),
