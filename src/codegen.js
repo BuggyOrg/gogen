@@ -1,13 +1,14 @@
 
 import * as handlebars from 'handlebars'
 import fs from 'fs'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 var replaceAll = (str, search, replacement) => {
   return str.split(search).join(replacement)
 }
 
 var sanitize = (str) => {
+  console.log(str)
   return replaceAll(str, '/', '_')
 }
 
@@ -21,9 +22,7 @@ var sourceTemplate = handlebars.compile(fs.readFileSync('./src/templates/source.
  * Create the source for a process
  * @process Expects a process format of {name: String, inputPorts: Array[{name: String, type: String}], outputPorts: Array[{name: String, type: String}], code: String}
  */
-export function createProcess (process) {
-  return processTemplate(_.merge({}, process, {arguments: _.merge({}, process.inputPorts, process.outputPorts)}))
-}
+export { processTemplate as createProcess }
 
 /**
  * Create the source for a coumpound node
@@ -37,10 +36,6 @@ export function createProcess (process) {
  *   processes: Array[{name: String, inputs: Array[{name: String, type: String}], outputs: Array[{name: String, type: String}], additionalParameters: Array[String]}]
  * }
  */
-export function createCompound (compound) {
-  return compoundTemplate(_.merge({}, compound, {arguments: _.merge({}, compound.inputPorts, compound.outputPorts)}))
-}
+export { compoundTemplate as createCompound }
 
-export function createSource (sourceDescriptor) {
-  return sourceTemplate(sourceDescriptor)
-}
+export { sourceTemplate as createSource }

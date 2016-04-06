@@ -1,6 +1,6 @@
-func {{name}}(
+func {{sanitize id}}(
 {{~#each arguments~}}
-{{sanitize @key}}_chan chan {{this}} {{#unless @last}}, {{/unless}}
+{{sanitize name}}_chan chan {{type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   for {
@@ -10,6 +10,9 @@ func {{name}}(
     {{/each}}
     {{#each inputPorts~}}
     {{sanitize @key}},ok{{@index}} := <- {{sanitize @key}}_chan
+    if !ok{{@index}} {
+      break
+    }
     {{/each}}
     // ### Code from metadata ###
     {{code}}

@@ -1,17 +1,18 @@
 func {{name}}(
 {{~#each arguments~}}
-{{sanitize @key}} chan {{this}} {{#unless @last}}, {{/unless}}
+{{sanitize name}} chan {{type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   {{#each prefixes}}
   {{this}}
   {{/each}}
-  
+
   {{#each channels}}
-  chan{{@index}} := make(chan {{type}})
+  chan_{{sanitize inPort}} := make(chan {{channelType}})
+  chan_{{sanitize outPort}} := chan_{{sanitize inPort}}
   {{/each}}
-  
+
   {{#each processes}}
-  go {{name}}({{#each parameters}}{{name}} {{#unless @last}}, {{/unless}}{{/each}})
+  go {{sanitize id}}({{#each arguments}}chan_{{sanitize ../name}}_PORT_{{sanitize name}} {{#unless @last}}, {{/unless}}{{/each}})
   {{/each}}
 }

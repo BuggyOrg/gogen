@@ -41,17 +41,14 @@ describe('Go Code Generator', function () {
 
     var obj = _.keyBy(ports, 'name')
     expect(obj).to.include.keys('1_INC_PORT_inc')
-    expect(obj).not.to.include.keys('WISCHWASCH')
+    expect(obj).not.to.include.keys('0_STDIN')
   })
 
-  it('INC-NPG to golang', function () {
-    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/typedtestgraph.graphlib')))
+  it('create code from preprocessed graph', function () {
+    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/preproc.json')))
     var code = api.generateCode(portGraph)
-    return code.then((out) => {
-      fs.writeFileSync('test/fixtures/codeOutput.go', out)
-    }).then(() => {
-      return executeCodePromise('echo 7 | go run test/fixtures/codeOutput.go', '8\n')
-    }).then(() => {
+    fs.writeFileSync('test/fixtures/codeOutput.go', code)
+    return executeCodePromise('echo 7 | go run test/fixtures/codeOutput.go', '7\n').then(() => {
       return executeCodePromise('go fmt test/fixtures/codeOutput.go', 'test/fixtures/codeOutput.go\n')
     })
   })
@@ -59,10 +56,7 @@ describe('Go Code Generator', function () {
   it('empty graph to golang', function () {
     var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/emptytestgraph.graphlib')))
     var code = api.generateCode(portGraph)
-    return code.then((out) => {
-      fs.writeFileSync('test/fixtures/emptyOutput.go', out)
-    }).then(() => {
-      return executeCodePromise('echo 7 | go run test/fixtures/emptyOutput.go', '')
-    })
+    fs.writeFileSync('test/fixtures/emptyOutput.go', code)
+    return executeCodePromise('echo 7 | go run test/fixtures/emptyOutput.go', '')
   })
 })

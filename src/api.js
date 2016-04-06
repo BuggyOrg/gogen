@@ -36,6 +36,13 @@ var replaceAll = (str, search, replacement) => {
   return str.split(search).join(replacement)
 }
 */
+var createParameters = (node) => {
+  var mapper = _()
+    .map((type, key) => ({name: key, type: type}))
+    .sortBy('name')
+  return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value())
+}
+
 var getCode = (arrayOfAtomics) => {
   return Promise.all(
     _(arrayOfAtomics)
@@ -59,7 +66,10 @@ var api = {
   processes: graph => {
     return _(graph.nodes()).chain()
     .filter(_.partial(isProcess, graph))
-    .map(n => _.merge({}, graph.node(n), {name: n}, {parent: graph.parent(n) || 'main'}))
+    .map(n => _.merge({}, graph.node(n),
+        {name: n},
+        {parent: graph.parent(n) || 'main'},
+        {arguments: createParameters(graph.node(n))}))
     .value()
   },
 
@@ -108,6 +118,7 @@ var api = {
             // we can assume there is exactly one successor
             inPort = graph.successors(succ)[0]
           }
+          console.log('channel', { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: p.parent || 'main' })
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: p.parent || 'main' }
         })
       })
@@ -119,6 +130,9 @@ var api = {
     // TODO: Add inputs and outputs if not main. Those are stored in the node itself
     var processes = api.processes(graph)
     var channels = api.channels(graph)
+    if (processes.length === 0) {
+      return [{ name: 'main', processes: [], inputs: [], outputs: [], prefixes: [], channels: [] }]
+    }
     return _(processes)
       .groupBy('parent')
       .map((value, key) => (
@@ -136,8 +150,9 @@ var api = {
   createSourceDescriptor: (graph) => {
     var processes = api.atomics(graph)
     var compounds = api.compounds(graph)
+    console.log(processes)
     return {
-      imports: _.compact(_.map(processes, 'properties.imports')),
+      imports: _.compact(_.map(processes, 'properties.dependencies')),
       globals: _.compact(_.map(processes, 'properties.globals')),
       processes: _.map(processes, codegen.createProcess),
       compounds: _.map(compounds, codegen.createCompound)
@@ -145,6 +160,7 @@ var api = {
   },
 
   generateCode: graph => {
+    // console.log(api.createSourceDescriptor(graph))
     return codegen.createSource(api.createSourceDescriptor(graph))
     /*
     // Global Variables
