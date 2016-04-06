@@ -53,6 +53,18 @@ describe('Go Code Generator', function () {
     })
   })
 
+  it('create code for a real example graph', function () {
+    var incGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/real_inc.json')))
+    return api.preprocess(incGraph).then((graph) => {
+      var code = api.generateCode(graph)
+      fs.writeFileSync('test/fixtures/realInc.go', code)
+      return executeCodePromise('echo 7 | go run test/fixtures/realInc.go', '8\n')
+    })
+    .then(() => {
+      return executeCodePromise('go fmt test/fixtures/realInc.go', 'test/fixtures/realInc.go\n')
+    })
+  })
+
   it('empty graph to golang', function () {
     var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/emptytestgraph.graphlib')))
     var code = api.generateCode(portGraph)

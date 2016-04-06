@@ -6,41 +6,25 @@ import libConnection from '@buggyorg/component-library'
 var lib = libConnection(process.env.BUGGY_COMPONENT_LIBRARY_HOST)
 
 var isProcess = (graph, n) => {
-  return graph.node(n).nodeType === 'process' && graph.node(n).atomic === true
+  return graph.node(n).nodeType === 'process'
 }
 
 var isPort = (graph, n) => {
   return graph.node(n).nodeType === 'inPort' || graph.node(n).nodeType === 'outPort'
 }
 
-/*
-var getChannelNameByInport = (channels, port) => {
-  for (let channel of channels) {
-    if (channel.inPort === port) {
-      return channel.channelName
-    }
+var additionalParameters = (node) => {
+  if (node.properties && node.properties.needsWaitGroup) {
+    return [{name: 'wg', type: 'sync.WaitGroup', inputPrefix: '*', passingPrefix: '&'}]
   }
-  return 'ERROR: getChannelNameByInport: ' + port
+  return []
 }
 
-var getChannelNameByOutport = (channels, port) => {
-  for (let channel of channels) {
-    if (channel.outPort === port) {
-      return channel.channelName
-    }
-  }
-  return 'ERROR: getChannelNameByOutport: ' + port
-}
-
-var replaceAll = (str, search, replacement) => {
-  return str.split(search).join(replacement)
-}
-*/
 var createParameters = (node) => {
   var mapper = _()
     .map((type, key) => ({name: key, type: type}))
     .sortBy('name')
-  return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value())
+  return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value(), additionalParameters(node))
 }
 
 var getCode = (arrayOfAtomics) => {
@@ -59,6 +43,39 @@ var getCode = (arrayOfAtomics) => {
   .then(nodeArray => {
     return _.map(nodeArray, (nArr) => ({id: nArr[0], code: nArr[1], properties: nArr[2], dependencies: nArr[3]}))
   })
+}
+
+var imports = (processes) => {
+  return _.uniq(_.flatten(_.map(processes, 'dependencies')))
+}
+
+/**
+ * Returns a list of global definitions.
+ */
+var globals = (processes) => {
+  // we do not have any global definitions (yet...)
+  return []
+}
+
+var waitGroupPreDefinitions = (processes) => {
+  var prefixes = _(processes)
+    .filter((p) => p.properties && p.properties.needsWaitGroup)
+    .map(() => 'wg.Add(1)')
+    .value()
+  if (prefixes.length !== 0) {
+    return _.concat(['var wg sync.WaitGroup'], prefixes)
+  } else {
+    return []
+  }
+}
+
+var waitGroupPostDefinitions = (processes) => {
+  var prefixes = _.filter(processes, (p) => p.properties && p.properties.needsWaitGroup)
+  if (prefixes.length !== 0) {
+    return ['wg.Wait()']
+  } else {
+    return []
+  }
 }
 
 var api = {
@@ -118,7 +135,6 @@ var api = {
             // we can assume there is exactly one successor
             inPort = graph.successors(succ)[0]
           }
-          console.log('channel', { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: p.parent || 'main' })
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: p.parent || 'main' }
         })
       })
@@ -139,9 +155,10 @@ var api = {
         {
           name: key,
           processes: value,
-          inputs: [],
-          outputs: [],
-          prefixes: [],
+          inputPorts: [], // FIXME: extend with parents process ports
+          outputPorts: [],
+          prefixes: waitGroupPreDefinitions(value),
+          postfixes: waitGroupPostDefinitions(value),
           channels: _.filter(channels, (c) => c.parent === key)
         }))
       .value()
@@ -150,121 +167,16 @@ var api = {
   createSourceDescriptor: (graph) => {
     var processes = api.atomics(graph)
     var compounds = api.compounds(graph)
-    console.log(processes)
     return {
-      imports: _.compact(_.map(processes, 'properties.dependencies')),
-      globals: _.compact(_.map(processes, 'properties.globals')),
+      imports: imports(processes),
+      globals: globals(processes),
       processes: _.map(processes, codegen.createProcess),
       compounds: _.map(compounds, codegen.createCompound)
     }
   },
 
   generateCode: graph => {
-    // console.log(api.createSourceDescriptor(graph))
     return codegen.createSource(api.createSourceDescriptor(graph))
-    /*
-    // Global Variables
-    var processesArray = api.processes(graph)
-    var processes = _.keyBy(processesArray, 'name')
-    var channels = api.channels(graph)
-    var imports = [ ]
-    var needsWaitGroup = false
-
-    // Code Variables
-    var codePackage = 'package main\n'
-    var codeImports = '// imports\n'
-    var codeGlobals = '// global variables\n'
-    var codeProcesses = '// process declarations\n'
-    var codeMainPre = '// main function\nfunc main() {\n'
-    var codeMainPost = ''
-    var codeChannels = '// channels\n'
-    var codeProcessesLaunch = '// start processes\n'
-
-    // get all necessary information from server
-    var allPromises = api.getCode(processesArray).then((allInfo) => {
-      var nodesObject = _.keyBy(allInfo, 'id')
-
-      // check imports, start processes and check for wait group dependencies
-      for (let proc in processes) {
-        let procObj = processes[proc]
-        let procID = procObj.id
-        let okCount = 0
-
-        // code for function import of one single process
-        let codeProcessHeader = ''
-        let codeProcessPre = 'for {\n'
-        let codeProcessFor = '// ###########\n' + nodesObject[procObj.id].code + '// ###########\n'
-        let codeProcessPost = '}\n'
-
-        // write function declaration and start it later
-        codeProcessHeader += 'func ' + replaceAll(procID, '/', '_') + '('
-        codeProcessesLaunch += 'go ' + replaceAll(procID, '/', '_') + '('
-
-        for (let port in processes[proc]['inputPorts']) {
-          // get name of the inPort
-          let portName = ''
-          for (let pred of graph.predecessors(proc)) {
-            if (graph.node(pred).portName === port) { portName = pred }
-          }
-          let varName = port.split('/')[port.split('/').length - 1]
-          let channelName = varName + '_chan'
-          codeProcessHeader += channelName + ' chan ' + procObj['inputPorts'][port] + ', '
-          codeProcessPre += varName + ',ok' + okCount + ' := <- ' + channelName + '\nif !ok' + okCount++ + ' { break }\n'
-          codeProcessesLaunch += getChannelNameByInport(channels, portName) + ', '
-        }
-
-        for (let port in processes[proc]['outputPorts']) {
-          // get name of the outPort
-          let portName = ''
-          for (let succ of graph.successors(proc)) {
-            if (graph.node(succ).portName === port) { portName = succ }
-          }
-          let varName = port.split('/')[port.split('/').length - 1]
-          let channelName = varName + '_chan'
-          let channelType = procObj['outputPorts'][port]
-          codeProcessHeader += channelName + ' chan ' + channelType + ', '
-          codeProcessPre += 'var ' + varName + ' ' + channelType + '\n'
-          codeProcessFor += channelName + ' <- ' + varName
-          codeProcessPost += 'close(' + channelName + ')\n'
-          codeProcessesLaunch += getChannelNameByOutport(channels, portName) + ', '
-        }
-        codeProcessHeader = codeProcessHeader.slice(0, -2) + ') {\n'
-
-        // check for the need of a waitGroup
-        if (_.has(nodesObject[procID], 'properties.needsWaitGroup')) {
-          if (nodesObject[procID]['properties']['needsWaitGroup'] === true) {
-            needsWaitGroup = true
-            codeProcessPost += 'wg.Done()'
-          }
-        }
-        codeProcessPost += '}\n\n'
-
-        // combine the code snippets to a function
-        codeProcesses += codeProcessHeader + codeProcessPre + codeProcessFor + codeProcessPost
-        codeProcessesLaunch = codeProcessesLaunch.slice(0, -2) + ')\n'
-      }
-
-      for (let id in nodesObject) {
-        // dependencies
-        if (nodesObject[id]['dependencies']) {
-          imports = _.concat(imports, nodesObject[id]['dependencies'])
-        }
-      }
-      // add imports
-      imports = _.uniq(imports)
-      for (let imp of imports) {
-        codeImports += 'import \"' + imp + '\"\n'
-      }
-      // add wait group, if necessary
-      if (needsWaitGroup) {
-        codeGlobals += 'var wg sync.WaitGroup\n'
-        codeMainPre += 'wg.Add(1)\n'
-        codeMainPost += 'wg.Wait()\n'
-      }
-      return codePackage + '\n' + codeImports + '\n' + codeGlobals + '\n' + codeProcesses + codeMainPre + '\n' + codeChannels + '\n' + codeProcessesLaunch + '\n' + codeMainPost + '}'
-    })
-    return allPromises
-    */
   }
 }
 

@@ -1,6 +1,6 @@
-func {{sanitize id}}(
+func P_{{sanitize name}}(
 {{~#each arguments~}}
-{{sanitize name}}_chan chan {{type}} {{#unless @last}}, {{/unless}}
+{{sanitize name}}{{#if inputPrefix}}{{inputPrefix}} {{/if}}{{#unless inputPrefix}}_chan chan {{/unless}}{{type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   for {
@@ -21,6 +21,9 @@ func {{sanitize id}}(
     {{sanitize @key}}_chan <- {{sanitize @key}}
     {{/each}}
   }
+  {{#if properties.needsWaitGroup}}
+  wg.Done()
+  {{/if}}
   {{#each outputPorts~}}
   close({{sanitize @key}}_chan)
   {{/each}}

@@ -23,3 +23,7 @@ var {{sanitize name}} {{type}}
 {{this}}
 
 {{/each}}
+
+func main() {
+  P_main()
+}

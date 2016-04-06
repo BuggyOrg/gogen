@@ -12,7 +12,7 @@
         "version": "0.1.0",
         "inputPorts": {},
         "outputPorts": {
-          "stdin/output": "string"
+          "output": "string"
         },
         "atomic": true,
         "nodeType": "process",
@@ -30,7 +30,7 @@
         "id": "io/stdout",
         "version": "0.1.0",
         "inputPorts": {
-          "stdout/input": "string"
+          "input": "string"
         },
         "outputPorts": {},
         "atomic": true,
@@ -48,7 +48,7 @@
       "v": "0_STDIN_PORT_output",
       "value": {
         "nodeType": "outPort",
-        "portName": "stdin/output",
+        "portName": "output",
         "process": "0_STDIN"
       }
     },
@@ -56,7 +56,7 @@
       "v": "2_STDOUT_PORT_input",
       "value": {
         "nodeType": "inPort",
-        "portName": "stdout/input",
+        "portName": "input",
         "process": "2_STDOUT"
       }
     }

@@ -1,6 +1,6 @@
-func {{name}}(
+func P_{{sanitize name}}(
 {{~#each arguments~}}
-{{sanitize name}} chan {{type}} {{#unless @last}}, {{/unless}}
+{{#if inputPrefix}}{{inputPrefix}}{{/if}}{{sanitize name}}{{#unless inputPrefix}}_chan chan {{/unless}}{{type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   {{#each prefixes}}
@@ -13,6 +13,13 @@ func {{name}}(
   {{/each}}
 
   {{#each processes}}
-  go {{sanitize id}}({{#each arguments}}chan_{{sanitize ../name}}_PORT_{{sanitize name}} {{#unless @last}}, {{/unless}}{{/each}})
+  go P_{{sanitize name}}({{#each arguments~}}
+  {{#if passingPrefix}}{{passingPrefix}}{{sanitize name}}
+  {{~else~}}
+  chan_{{sanitize ../name}}_PORT_{{sanitize name}}{{/if}} {{#unless @last}}, {{/unless}}{{/each}})
+  {{/each}}
+  
+  {{#each postfixes}}
+  {{this}}
   {{/each}}
 }
