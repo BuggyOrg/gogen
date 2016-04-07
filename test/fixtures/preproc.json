@@ -9,7 +9,7 @@
       "v": "0_STDIN",
       "value": {
         "id": "io/stdin",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "inputPorts": {},
         "outputPorts": {
           "output": "string"
@@ -28,14 +28,14 @@
       "v": "2_STDOUT",
       "value": {
         "id": "io/stdout",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "inputPorts": {
           "input": "string"
         },
         "outputPorts": {},
         "atomic": true,
         "nodeType": "process",
-        "code": "fmt.Println(input)\n",
+        "code": "fmt.Print(input)\n",
         "properties": {
           "needsWaitGroup": true
         },

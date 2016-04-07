@@ -9,10 +9,10 @@
       "v": "in",
       "value": {
         "id": "io/stdin",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "inputPorts": {},
         "outputPorts": {
-          "stdin/output": "string"
+          "output": "string"
         },
         "atomic": true,
         "path": [],
@@ -26,12 +26,12 @@
       "v": "strToNum",
       "value": {
         "id": "translator/string_to_int",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "inputPorts": {
-          "string_to_int/input": "string"
+          "input": "string"
         },
         "outputPorts": {
-          "string_to_int/output": "int"
+          "output": "int"
         },
         "atomic": true,
         "path": [],
@@ -180,12 +180,12 @@
       "v": "numToStr",
       "value": {
         "id": "translator/int_to_string",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "inputPorts": {
-          "int_to_string/input": "int"
+          "input": "int"
         },
         "outputPorts": {
-          "int_to_string/output": "string"
+          "output": "string"
         },
         "atomic": true,
         "path": [],
@@ -199,9 +199,9 @@
       "v": "out",
       "value": {
         "id": "io/stdout",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "inputPorts": {
-          "stdout/input": "string"
+          "input": "string"
         },
         "outputPorts": {},
         "atomic": true,
@@ -213,18 +213,18 @@
       }
     },
     {
-      "v": "strToNum_PORT_string_to_int/input",
+      "v": "strToNum_PORT_input",
       "value": {
         "nodeType": "inPort",
-        "portName": "string_to_int/input",
+        "portName": "input",
         "process": "strToNum"
       }
     },
     {
-      "v": "in_PORT_stdin/input",
+      "v": "in_PORT_output",
       "value": {
         "nodeType": "outPort",
-        "portName": "stdin/input",
+        "portName": "output",
         "process": "in"
       }
     },
@@ -238,18 +238,18 @@
       }
     },
     {
-      "v": "strToNum_PORT_string_to_int/output",
+      "v": "strToNum_PORT_output",
       "value": {
         "nodeType": "outPort",
-        "portName": "string_to_int/output",
+        "portName": "output",
         "process": "strToNum"
       }
     },
     {
-      "v": "numToStr_PORT_int_to_strint/input",
+      "v": "numToStr_PORT_input",
       "value": {
         "nodeType": "inPort",
-        "portName": "int_to_strint/input",
+        "portName": "input",
         "process": "numToStr"
       }
     },
@@ -263,18 +263,18 @@
       }
     },
     {
-      "v": "out_PORT_stdout/output",
+      "v": "out_PORT_input",
       "value": {
         "nodeType": "inPort",
-        "portName": "stdout/output",
+        "portName": "input",
         "process": "out"
       }
     },
     {
-      "v": "numToStr_PORT_int_to_string/output",
+      "v": "numToStr_PORT_output",
       "value": {
         "nodeType": "outPort",
-        "portName": "int_to_string/output",
+        "portName": "output",
         "process": "numToStr"
       }
     },
@@ -317,44 +317,44 @@
   ],
   "edges": [
     {
-      "v": "strToNum_PORT_string_to_int/input",
+      "v": "strToNum_PORT_input",
       "w": "strToNum"
     },
     {
       "v": "in",
-      "w": "in_PORT_stdin/input"
+      "w": "in_PORT_output"
     },
     {
-      "v": "in_PORT_stdin/input",
-      "w": "strToNum_PORT_string_to_int/input"
+      "v": "in_PORT_output",
+      "w": "strToNum_PORT_input"
     },
     {
       "v": "strToNum",
-      "w": "strToNum_PORT_string_to_int/output"
+      "w": "strToNum_PORT_output"
     },
     {
-      "v": "strToNum_PORT_string_to_int/output",
+      "v": "strToNum_PORT_output",
       "w": "inc_PORT_i"
     },
     {
-      "v": "numToStr_PORT_int_to_strint/input",
+      "v": "numToStr_PORT_input",
       "w": "numToStr"
     },
     {
       "v": "inc_PORT_inc",
-      "w": "numToStr_PORT_int_to_strint/input"
+      "w": "numToStr_PORT_input"
     },
     {
-      "v": "out_PORT_stdout/output",
+      "v": "out_PORT_input",
       "w": "out"
     },
     {
       "v": "numToStr",
-      "w": "numToStr_PORT_int_to_string/output"
+      "w": "numToStr_PORT_output"
     },
     {
-      "v": "numToStr_PORT_int_to_string/output",
-      "w": "out_PORT_stdout/output"
+      "v": "numToStr_PORT_output",
+      "w": "out_PORT_input"
     },
     {
       "v": "inc:add_PORT_s1",

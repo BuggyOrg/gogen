@@ -26,11 +26,11 @@ describe('Go Code Generator', function () {
     var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/typedtestgraph.graphlib')))
     var processes = api.processes(portGraph)
     expect(processes).to.be.ok
-    expect(processes).to.have.length(6)
+    expect(processes).to.have.length(7)
 
     var obj = _.keyBy(processes, 'id')
     expect(obj).to.include.keys('io/stdin')
-    expect(obj).not.to.include.keys('math/inc')
+    expect(obj).to.include.keys('math/inc')
   })
 
   it('get ports from graph', function () {
@@ -48,7 +48,7 @@ describe('Go Code Generator', function () {
     var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/preproc.json')))
     var code = api.generateCode(portGraph)
     fs.writeFileSync('test/fixtures/codeOutput.go', code)
-    return executeCodePromise('echo 7 | go run test/fixtures/codeOutput.go', '7\n').then(() => {
+    return executeCodePromise('echo 7 | go run test/fixtures/codeOutput.go', '7').then(() => {
       return executeCodePromise('go fmt test/fixtures/codeOutput.go', 'test/fixtures/codeOutput.go\n')
     })
   })
@@ -58,7 +58,7 @@ describe('Go Code Generator', function () {
     return api.preprocess(incGraph).then((graph) => {
       var code = api.generateCode(graph)
       fs.writeFileSync('test/fixtures/realInc.go', code)
-      return executeCodePromise('echo 7 | go run test/fixtures/realInc.go', '8\n')
+      return executeCodePromise('echo 7 | go run test/fixtures/realInc.go', '8')
     })
     .then(() => {
       return executeCodePromise('go fmt test/fixtures/realInc.go', 'test/fixtures/realInc.go\n')

@@ -46,7 +46,7 @@ var getCode = (arrayOfAtomics) => {
 }
 
 var imports = (processes) => {
-  return _.uniq(_.flatten(_.map(processes, 'dependencies')))
+  return _.uniq(_.compact(_.flatten(_.map(processes, 'dependencies'))))
 }
 
 /**
@@ -135,17 +135,17 @@ var api = {
     var ports = api.ports(graph)
     var portsByName = _.keyBy(ports, 'name')
     return _(ports)
-      .filter((p) => p.nodeType === 'outPort')
+      .filter((p) => p.nodeType === 'outPort' || p.hierarchyBorder)
       .map((p) => {
         var processName = p.process
         var process = processes[processName]
-        var channelType = process.outputPorts[p.portName]
+        var channelType = ((p.nodeType !== 'outPort' && p.hierarchyBorder) ? process.inputPorts : process.outputPorts)[p.portName]
         return _.map(graph.successors(p.name), (succ) => {
           let inPort = succ
-          while (graph.node(inPort).hierarchyBorder === true) {
+          // while (graph.node(inPort).hierarchyBorder === true) {
             // we can assume there is exactly one successor
-            inPort = graph.successors(succ)[0]
-          }
+            // inPort = graph.successors(succ)[0]
+          // }
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
         })
       })
@@ -187,7 +187,6 @@ var api = {
   createSourceDescriptor: (graph) => {
     var processes = api.atomics(graph)
     var compounds = api.compounds(graph)
-    console.log(_.map(compounds, 'channels'))
     return {
       imports: imports(processes),
       globals: globals(processes),
