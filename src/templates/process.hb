@@ -1,4 +1,4 @@
-func P_{{sanitize name}}(
+func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
 {{~#each arguments~}}
 {{sanitize name}}{{#if inputPrefix}}{{inputPrefix}} {{/if}}{{#unless inputPrefix}}_chan chan {{/unless}}{{type}} {{#unless @last}}, {{/unless}}
 {{~/each}}

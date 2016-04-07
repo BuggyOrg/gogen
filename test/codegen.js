@@ -21,8 +21,8 @@ describe('Codegen API', () => {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/preproc.json')))
     var atomics = api.atomics(graph)
     var code = atomics.map(codegen.createProcess).join('\n\n')
-    expect(code).to.contain('func P_0_STDIN')
-    expect(code).to.contain('func P_2_STDOUT')
+    expect(code).to.contain('func P_io_stdin')
+    expect(code).to.contain('func P_io_stdout')
   })
 
   it('can create code for a compound node', () => {

@@ -173,6 +173,7 @@ var api = {
       .map((value, key) => (
         {
           name: key,
+          id: parentProperty(key, 'id'),
           processes: value,
           inputPorts: parentProperty(key, 'inputPorts', {}), // FIXME: extend with parents process ports
           outputPorts: parentProperty(key, 'outputPorts', {}),
