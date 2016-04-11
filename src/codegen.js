@@ -8,7 +8,7 @@ var replaceAll = (str, search, replacement) => {
 }
 
 var sanitize = (str) => {
-  return replaceAll(replaceAll(str, '/', '_'), ':', '__')
+  return replaceAll(replaceAll(replaceAll(str, '/', '_'), ':', '__'), '>', '___')
 }
 
 handlebars.registerHelper('sanitize', sanitize)

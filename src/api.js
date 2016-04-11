@@ -191,8 +191,8 @@ var api = {
     return {
       imports: imports(processes),
       globals: globals(processes),
-      processes: _.map(processes, codegen.createProcess),
-      compounds: _.map(compounds, codegen.createCompound)
+      processes: _.map(_.uniqBy(processes, 'id'), codegen.createProcess),
+      compounds: _.map(_.uniqBy(compounds, 'id'), codegen.createCompound)
     }
   },
 
