@@ -27,15 +27,21 @@ var createParameters = (node) => {
   return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value(), additionalParameters(node))
 }
 
+var safeQuery = (q, failureMessage) => {
+  return q.catch(() => {
+    throw new Error(failureMessage)
+  })
+}
+
 var getCode = (arrayOfAtomics) => {
   return Promise.all(
     _(arrayOfAtomics)
     .filter((p) => p.atomic)
     .map(n => [
       n.id,
-      lib.getCode(n.id, n.version, 'golang'),
-      lib.getMeta(n.id, n.version, 'properties/golang'),
-      lib.getMeta(n.id, n.version, 'dependencies/golang')
+      safeQuery(lib.getCode(n.id, n.version, 'golang'), `Unable to query code for ${n.id}@${n.version}`),
+      safeQuery(lib.getMeta(n.id, n.version, 'properties/golang'), `Unable to query properties for ${n.id}@${n.version}`),
+      safeQuery(lib.getMeta(n.id, n.version, 'dependencies/golang'), `Unable to query dependencies for ${n.id}@${n.version}`)
     ])
     .flatten()
     .value()
@@ -120,6 +126,9 @@ var api = {
           }
         })}))
       })
+      .catch((err) => {
+        console.log('Error while retrieving code', err)
+      })
   },
 
   atomics: (graph) => {
@@ -146,6 +155,9 @@ var api = {
             // we can assume there is exactly one successor
             // inPort = graph.successors(succ)[0]
           // }
+          console.log(p)
+          console.log(inPort)
+          console.log(portsByName[inPort])
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
         })
       })

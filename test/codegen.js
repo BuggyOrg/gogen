@@ -43,4 +43,32 @@ describe('Codegen API', () => {
     expect(code).to.contain('chan_b := chan_a')
     expect(code).to.contain('go P_other')
   })
+
+  it('recognizes special forms and uses custom implementations', () => {
+    var code = codegen.createProcess({
+      meta: 'control/join',
+      name: 'join',
+      inputPorts: {
+        in1: 'int',
+        in2: 'int'
+      },
+      outputPorts: {
+        to: 'int'
+      },
+      atomic: true,
+      specialForm: true,
+      code: `select {
+{{#each inputPorts}}
+  case {{sanitize @key}} := <- {{sanitize @key}}_chan:
+    to_chan <- {{sanitize @key}}
+{{/each}}
+}`,
+      arguments: [{name: 'in1', type: 'int'}, {name: 'in2', type: 'int'}, {name: 'to', type: 'int'}]
+    })
+    expect(code).to.contain('select')
+    expect(code).to.contain('case in1 := <- in1_chan')
+    expect(code).to.contain('case in2 := <- in2_chan')
+    expect(code).to.contain('to_chan <- in1')
+    expect(code).to.contain('to_chan <- in2')
+  })
 })

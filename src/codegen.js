@@ -14,6 +14,7 @@ var sanitize = (str) => {
 handlebars.registerHelper('sanitize', sanitize)
 
 var processTemplate = handlebars.compile(fs.readFileSync('./src/templates/process.hb', 'utf8'), {noEscape: true})
+var specialFormTemplate = handlebars.compile(fs.readFileSync('./src/templates/special_form.hb', 'utf8'), {noEscape: true})
 var compoundTemplate = handlebars.compile(fs.readFileSync('./src/templates/compound.hb', 'utf8'), {noEscape: true})
 var sourceTemplate = handlebars.compile(fs.readFileSync('./src/templates/source.hb', 'utf8'), {noEscape: true})
 
@@ -21,7 +22,14 @@ var sourceTemplate = handlebars.compile(fs.readFileSync('./src/templates/source.
  * Create the source for a process
  * @process Expects a process format of {name: String, inputPorts: Array[{name: String, type: String}], outputPorts: Array[{name: String, type: String}], code: String}
  */
-export { processTemplate as createProcess }
+export function createProcess (proc) {
+  if (proc.specialForm) {
+    proc.compiledCode = handlebars.compile(proc.code)(proc)
+    return specialFormTemplate(proc)
+  } else {
+    return processTemplate(proc)
+  }
+}
 
 /**
  * Create the source for a coumpound node
