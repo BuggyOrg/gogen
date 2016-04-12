@@ -1644,6 +1644,24 @@
       }
     },
     {
+      "v": "fac_JOIN_0_1",
+      "value": {
+        "id": "control/join",
+        "version": "0.1.1",
+        "inputPorts": {
+          "in1": "int",
+          "in2": "int"
+        },
+        "outputPorts": {
+          "to": "int"
+        },
+        "atomic": true,
+        "specialForm": true,
+        "nodeType": "process"
+      },
+      "parent": "fac"
+    },
+    {
       "v": "fac:recFac_JOIN_0_1",
       "value": {
         "id": "control/join",
@@ -1658,7 +1676,59 @@
         "atomic": true,
         "specialForm": true,
         "nodeType": "process"
-      }
+      },
+      "parent": "fac:recFac"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1",
+      "value": {
+        "id": "control/duplicate",
+        "version": "0.1.0",
+        "inputPorts": {
+          "in": "int"
+        },
+        "outputPorts": {
+          "d1": "int",
+          "d2": "int"
+        },
+        "atomic": true,
+        "nodeType": "process"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1",
+      "value": {
+        "id": "control/duplicate",
+        "version": "0.1.0",
+        "inputPorts": {
+          "in": "int"
+        },
+        "outputPorts": {
+          "d1": "int",
+          "d2": "int"
+        },
+        "atomic": true,
+        "nodeType": "process"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1",
+      "value": {
+        "id": "control/duplicate",
+        "version": "0.1.0",
+        "inputPorts": {
+          "in": "int"
+        },
+        "outputPorts": {
+          "d1": "int",
+          "d2": "int"
+        },
+        "atomic": true,
+        "nodeType": "process"
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:choose_DUPLICATE_0_1",
@@ -1674,7 +1744,8 @@
         },
         "atomic": true,
         "nodeType": "process"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "strToNum_PORT_input",
@@ -1722,6 +1793,7 @@
       "value": {
         "nodeType": "outPort",
         "portName": "fac",
+        "hierarchyBorder": true,
         "process": "fac"
       }
     },
@@ -1742,15 +1814,6 @@
       }
     },
     {
-      "v": "fac:is1_PORT_e1",
-      "value": {
-        "nodeType": "inPort",
-        "portName": "e1",
-        "process": "fac:is1"
-      },
-      "parent": "fac"
-    },
-    {
       "v": "fac:is1_PORT_e2",
       "value": {
         "nodeType": "inPort",
@@ -1769,15 +1832,6 @@
       "parent": "fac"
     },
     {
-      "v": "fac:choose_PORT_input",
-      "value": {
-        "nodeType": "inPort",
-        "portName": "input",
-        "process": "fac:choose"
-      },
-      "parent": "fac"
-    },
-    {
       "v": "fac:choose_PORT_control",
       "value": {
         "nodeType": "inPort",
@@ -1792,25 +1846,6 @@
         "nodeType": "outPort",
         "portName": "isEqual",
         "process": "fac:is1"
-      },
-      "parent": "fac"
-    },
-    {
-      "v": "fac:dec_PORT_s1",
-      "value": {
-        "nodeType": "inPort",
-        "portName": "s1",
-        "process": "fac:dec"
-      },
-      "parent": "fac"
-    },
-    {
-      "v": "fac:choose_PORT_outFalse",
-      "value": {
-        "nodeType": "inPort",
-        "portName": "outFalse",
-        "hierarchyBorder": true,
-        "process": "fac:choose"
       },
       "parent": "fac"
     },
@@ -1837,6 +1872,7 @@
       "value": {
         "nodeType": "inPort",
         "portName": "n",
+        "hierarchyBorder": true,
         "process": "fac:recFac"
       },
       "parent": "fac"
@@ -1847,15 +1883,6 @@
         "nodeType": "outPort",
         "portName": "sum",
         "process": "fac:dec"
-      },
-      "parent": "fac"
-    },
-    {
-      "v": "fac:mul_PORT_m1",
-      "value": {
-        "nodeType": "inPort",
-        "portName": "m1",
-        "process": "fac:mul"
       },
       "parent": "fac"
     },
@@ -1969,6 +1996,48 @@
       "parent": "fac:recFac"
     },
     {
+      "v": "fac_JOIN_0_1_PORT_in1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "in1",
+        "process": "fac_JOIN_0_1"
+      }
+    },
+    {
+      "v": "fac:choose_PORT_outTrue",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "outTrue",
+        "process": "fac:choose"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac_JOIN_0_1_PORT_in2",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "in2",
+        "process": "fac_JOIN_0_1"
+      }
+    },
+    {
+      "v": "fac:mul_PORT_product",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "product",
+        "process": "fac:mul"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac_JOIN_0_1_PORT_to",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "to",
+        "process": "fac_JOIN_0_1"
+      }
+    },
+    {
       "v": "fac:recFac_JOIN_0_1_PORT_in1",
       "value": {
         "nodeType": "inPort",
@@ -2008,6 +2077,141 @@
         "nodeType": "outPort",
         "portName": "to",
         "process": "fac:recFac_JOIN_0_1"
+      }
+    },
+    {
+      "v": "fac:is1_PORT_e1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "e1",
+        "process": "fac:is1"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1_PORT_d1",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d1",
+        "process": "fac_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac:choose_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "fac:choose"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1_PORT_d2",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d2",
+        "process": "fac_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac_DUPLICATE_0_1_PORT_in",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "in",
+        "process": "fac_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac:dec_PORT_s1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "s1",
+        "process": "fac:dec"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1_PORT_d1",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d1",
+        "process": "fac:choose_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac:mul_PORT_m1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "m1",
+        "process": "fac:mul"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1_PORT_d2",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d2",
+        "process": "fac:choose_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1_PORT_in",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "in",
+        "process": "fac:choose_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac:choose_PORT_outFalse",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "outFalse",
+        "process": "fac:choose"
+      },
+      "parent": "fac"
+    },
+    {
+      "v": "fac:recFac:is1_PORT_e1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "e1",
+        "process": "fac:recFac:is1"
+      },
+      "parent": "fac:recFac"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1_PORT_d1",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d1",
+        "process": "fac:recFac_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac:recFac:choose_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "fac:recFac:choose"
+      },
+      "parent": "fac:recFac"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1_PORT_d2",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d2",
+        "process": "fac:recFac_DUPLICATE_0_1"
+      }
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1_PORT_in",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "in",
+        "process": "fac:recFac_DUPLICATE_0_1"
       }
     },
     {
@@ -2104,14 +2308,6 @@
       "w": "out_PORT_input"
     },
     {
-      "v": "fac:is1_PORT_e1",
-      "w": "fac:is1"
-    },
-    {
-      "v": "fac_PORT_n",
-      "w": "fac:is1_PORT_e1"
-    },
-    {
       "v": "fac:is1_PORT_e2",
       "w": "fac:is1"
     },
@@ -2124,14 +2320,6 @@
       "w": "fac:is1_PORT_e2"
     },
     {
-      "v": "fac:choose_PORT_input",
-      "w": "fac:choose"
-    },
-    {
-      "v": "fac_PORT_n",
-      "w": "fac:choose_PORT_input"
-    },
-    {
       "v": "fac:choose_PORT_control",
       "w": "fac:choose"
     },
@@ -2142,18 +2330,6 @@
     {
       "v": "fac:is1_PORT_isEqual",
       "w": "fac:choose_PORT_control"
-    },
-    {
-      "v": "fac:dec_PORT_s1",
-      "w": "fac:dec"
-    },
-    {
-      "v": "fac:choose",
-      "w": "fac:choose_PORT_outFalse"
-    },
-    {
-      "v": "fac:choose_PORT_outFalse",
-      "w": "fac:dec_PORT_s1"
     },
     {
       "v": "fac:dec_PORT_s2",
@@ -2174,14 +2350,6 @@
     {
       "v": "fac:dec_PORT_sum",
       "w": "fac:recFac_PORT_n"
-    },
-    {
-      "v": "fac:mul_PORT_m1",
-      "w": "fac:mul"
-    },
-    {
-      "v": "fac:choose_PORT_outFalse",
-      "w": "fac:mul_PORT_m1"
     },
     {
       "v": "fac:mul_PORT_m2",
@@ -2252,6 +2420,38 @@
       "w": "fac:recFac:mul_PORT_m2"
     },
     {
+      "v": "fac_JOIN_0_1_PORT_in1",
+      "w": "fac_JOIN_0_1"
+    },
+    {
+      "v": "fac:choose",
+      "w": "fac:choose_PORT_outTrue"
+    },
+    {
+      "v": "fac:choose_PORT_outTrue",
+      "w": "fac_JOIN_0_1_PORT_in1"
+    },
+    {
+      "v": "fac_JOIN_0_1_PORT_in2",
+      "w": "fac_JOIN_0_1"
+    },
+    {
+      "v": "fac:mul",
+      "w": "fac:mul_PORT_product"
+    },
+    {
+      "v": "fac:mul_PORT_product",
+      "w": "fac_JOIN_0_1_PORT_in2"
+    },
+    {
+      "v": "fac_JOIN_0_1",
+      "w": "fac_JOIN_0_1_PORT_to"
+    },
+    {
+      "v": "fac_JOIN_0_1_PORT_to",
+      "w": "fac_PORT_fac"
+    },
+    {
       "v": "fac:recFac_JOIN_0_1_PORT_in1",
       "w": "fac:recFac_JOIN_0_1"
     },
@@ -2282,6 +2482,106 @@
     {
       "v": "fac:recFac_JOIN_0_1_PORT_to",
       "w": "fac:recFac_PORT_fac"
+    },
+    {
+      "v": "fac:is1_PORT_e1",
+      "w": "fac:is1"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1",
+      "w": "fac_DUPLICATE_0_1_PORT_d1"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1_PORT_d1",
+      "w": "fac:is1_PORT_e1"
+    },
+    {
+      "v": "fac:choose_PORT_input",
+      "w": "fac:choose"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1",
+      "w": "fac_DUPLICATE_0_1_PORT_d2"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1_PORT_d2",
+      "w": "fac:choose_PORT_input"
+    },
+    {
+      "v": "fac_DUPLICATE_0_1_PORT_in",
+      "w": "fac_DUPLICATE_0_1"
+    },
+    {
+      "v": "fac_PORT_n",
+      "w": "fac_DUPLICATE_0_1_PORT_in"
+    },
+    {
+      "v": "fac:dec_PORT_s1",
+      "w": "fac:dec"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1",
+      "w": "fac:choose_DUPLICATE_0_1_PORT_d1"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1_PORT_d1",
+      "w": "fac:dec_PORT_s1"
+    },
+    {
+      "v": "fac:mul_PORT_m1",
+      "w": "fac:mul"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1",
+      "w": "fac:choose_DUPLICATE_0_1_PORT_d2"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1_PORT_d2",
+      "w": "fac:mul_PORT_m1"
+    },
+    {
+      "v": "fac:choose_DUPLICATE_0_1_PORT_in",
+      "w": "fac:choose_DUPLICATE_0_1"
+    },
+    {
+      "v": "fac:choose",
+      "w": "fac:choose_PORT_outFalse"
+    },
+    {
+      "v": "fac:choose_PORT_outFalse",
+      "w": "fac:choose_DUPLICATE_0_1_PORT_in"
+    },
+    {
+      "v": "fac:recFac:is1_PORT_e1",
+      "w": "fac:recFac:is1"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1",
+      "w": "fac:recFac_DUPLICATE_0_1_PORT_d1"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1_PORT_d1",
+      "w": "fac:recFac:is1_PORT_e1"
+    },
+    {
+      "v": "fac:recFac:choose_PORT_input",
+      "w": "fac:recFac:choose"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1",
+      "w": "fac:recFac_DUPLICATE_0_1_PORT_d2"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1_PORT_d2",
+      "w": "fac:recFac:choose_PORT_input"
+    },
+    {
+      "v": "fac:recFac_DUPLICATE_0_1_PORT_in",
+      "w": "fac:recFac_DUPLICATE_0_1"
+    },
+    {
+      "v": "fac:recFac_PORT_n",
+      "w": "fac:recFac_DUPLICATE_0_1_PORT_in"
     },
     {
       "v": "fac:recFac:dec_PORT_s1",

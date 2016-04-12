@@ -156,8 +156,7 @@ var api = {
             // inPort = graph.successors(succ)[0]
           // }
           console.log(p)
-          console.log(inPort)
-          console.log(portsByName[inPort])
+          console.log(processName)
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
         })
       })
