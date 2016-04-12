@@ -26,7 +26,6 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
     for o := range chan_{{sanitize ../name}}_PORT_{{sanitize @key}} {
       {{sanitize @key}}_chan <- o
     }
-    close({{sanitize @key}}_chan)
     wg_inner.Done()
   }()
   wg_inner.Add(1)
