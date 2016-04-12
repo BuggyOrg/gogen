@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import * as codegen from './codegen'
 import graphlib from 'graphlib'
+import hash from 'object-hash'
 
 import libConnection from '@buggyorg/component-library'
 var lib = libConnection(process.env.BUGGY_COMPONENT_LIBRARY_HOST)
@@ -100,9 +101,10 @@ var api = {
     return _(graph.nodes()).chain()
     .filter(_.partial(isProcess, graph))
     .map(n => _.merge({}, graph.node(n),
-        {name: n},
+        {name: n, hash: (graph.node(n).params) ? hash(graph.node(n).params) : ''},
         {parent: graph.parent(n) || 'main'},
         {arguments: createParameters(graph.node(n))}))
+    .map(n => _.merge({}, n, {uid: n.id + n.hash}))
     .value()
   },
 
@@ -155,8 +157,6 @@ var api = {
             // we can assume there is exactly one successor
             // inPort = graph.successors(succ)[0]
           // }
-          console.log(p)
-          console.log(processName)
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
         })
       })
@@ -202,7 +202,7 @@ var api = {
     return {
       imports: imports(processes),
       globals: globals(processes),
-      processes: _.map(_.uniqBy(processes, 'id'), codegen.createProcess),
+      processes: _.map(_.uniqBy(processes, 'uid'), codegen.createProcess),
       compounds: _.map(_.uniqBy(compounds, 'id'), codegen.createCompound)
     }
   },

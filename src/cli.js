@@ -16,9 +16,9 @@ program
 var processGraph = str => {
   var graph = graphlib.json.read(JSON.parse(str))
   if (program.processes) {
-    return api.processes(graph)
+    return Promise.resolve(api.processes(graph))
   }
-  return api.generateCode(graph)
+  return api.preprocess(graph).then((g) => api.generateCode(g))
 }
 
 if (program.graphfile) {

@@ -45,7 +45,7 @@
       "v": "fac",
       "value": {
         "id": "math/faculty",
-        "version": "0.1.3",
+        "version": "0.1.8",
         "inputPorts": {
           "n": "int"
         },
@@ -70,7 +70,7 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 }
               ],
@@ -91,10 +91,13 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 }
               ],
+              "params": {
+                "value": 1
+              },
               "parent": "fac",
               "branchPath": "fac:c",
               "branch": "c",
@@ -111,12 +114,13 @@
                 "outFalse": "int"
               },
               "atomic": true,
-              "version": "0.1.0",
+              "version": "0.1.2",
+              "specialForm": true,
               "path": [
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 }
               ],
@@ -137,10 +141,13 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 }
               ],
+              "params": {
+                "value": -1
+              },
               "parent": "fac",
               "branchPath": "fac:c_dec",
               "branch": "c_dec",
@@ -161,7 +168,7 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 }
               ],
@@ -172,7 +179,7 @@
             },
             {
               "id": "math/faculty",
-              "version": "0.1.3",
+              "version": "0.1.8",
               "inputPorts": {
                 "n": "int"
               },
@@ -197,18 +204,18 @@
                       {
                         "meta": "math/faculty",
                         "branch": "fac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": []
                       },
                       {
                         "meta": "math/faculty",
                         "branch": "recFac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": [
                           {
                             "meta": "math/faculty",
                             "branch": "fac",
-                            "version": "0.1.3",
+                            "version": "0.1.8",
                             "path": []
                           }
                         ]
@@ -231,23 +238,26 @@
                       {
                         "meta": "math/faculty",
                         "branch": "fac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": []
                       },
                       {
                         "meta": "math/faculty",
                         "branch": "recFac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": [
                           {
                             "meta": "math/faculty",
                             "branch": "fac",
-                            "version": "0.1.3",
+                            "version": "0.1.8",
                             "path": []
                           }
                         ]
                       }
                     ],
+                    "params": {
+                      "value": 1
+                    },
                     "parent": "fac:recFac",
                     "branchPath": "fac:recFac:c",
                     "branch": "c",
@@ -264,23 +274,24 @@
                       "outFalse": "int"
                     },
                     "atomic": true,
-                    "version": "0.1.0",
+                    "version": "0.1.2",
+                    "specialForm": true,
                     "path": [
                       {
                         "meta": "math/faculty",
                         "branch": "fac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": []
                       },
                       {
                         "meta": "math/faculty",
                         "branch": "recFac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": [
                           {
                             "meta": "math/faculty",
                             "branch": "fac",
-                            "version": "0.1.3",
+                            "version": "0.1.8",
                             "path": []
                           }
                         ]
@@ -303,23 +314,26 @@
                       {
                         "meta": "math/faculty",
                         "branch": "fac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": []
                       },
                       {
                         "meta": "math/faculty",
                         "branch": "recFac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": [
                           {
                             "meta": "math/faculty",
                             "branch": "fac",
-                            "version": "0.1.3",
+                            "version": "0.1.8",
                             "path": []
                           }
                         ]
                       }
                     ],
+                    "params": {
+                      "value": -1
+                    },
                     "parent": "fac:recFac",
                     "branchPath": "fac:recFac:c_dec",
                     "branch": "c_dec",
@@ -340,18 +354,18 @@
                       {
                         "meta": "math/faculty",
                         "branch": "fac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": []
                       },
                       {
                         "meta": "math/faculty",
                         "branch": "recFac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": [
                           {
                             "meta": "math/faculty",
                             "branch": "fac",
-                            "version": "0.1.3",
+                            "version": "0.1.8",
                             "path": []
                           }
                         ]
@@ -364,7 +378,7 @@
                   },
                   {
                     "id": "math/faculty",
-                    "version": "0.1.3",
+                    "version": "0.1.8",
                     "inputPorts": {
                       "n": "int"
                     },
@@ -382,16 +396,22 @@
                         {
                           "meta": "math/const",
                           "version": "0.1.0",
+                          "params": {
+                            "value": 1
+                          },
                           "name": "c"
                         },
                         {
                           "meta": "logic/demux>int",
-                          "version": "0.1.0",
+                          "version": "0.1.2",
                           "name": "choose"
                         },
                         {
                           "meta": "math/const",
                           "version": "0.1.0",
+                          "params": {
+                            "value": -1
+                          },
                           "name": "c_dec"
                         },
                         {
@@ -401,7 +421,7 @@
                         },
                         {
                           "meta": "math/faculty",
-                          "version": "0.1.3",
+                          "version": "0.1.8",
                           "name": "recFac"
                         },
                         {
@@ -413,18 +433,18 @@
                       "edges": [
                         {
                           "from": "n",
-                          "to": "is1:e1"
+                          "to": "is1:i1"
                         },
                         {
                           "from": "c:output",
-                          "to": "is1:e2"
+                          "to": "is1:i2"
                         },
                         {
                           "from": "n",
                           "to": "choose:input"
                         },
                         {
-                          "from": "is1:isEqual",
+                          "from": "is1:eq",
                           "to": "choose:control"
                         },
                         {
@@ -461,18 +481,18 @@
                       {
                         "meta": "math/faculty",
                         "branch": "fac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": []
                       },
                       {
                         "meta": "math/faculty",
                         "branch": "recFac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": [
                           {
                             "meta": "math/faculty",
                             "branch": "fac",
-                            "version": "0.1.3",
+                            "version": "0.1.8",
                             "path": []
                           }
                         ]
@@ -499,18 +519,18 @@
                       {
                         "meta": "math/faculty",
                         "branch": "fac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": []
                       },
                       {
                         "meta": "math/faculty",
                         "branch": "recFac",
-                        "version": "0.1.3",
+                        "version": "0.1.8",
                         "path": [
                           {
                             "meta": "math/faculty",
                             "branch": "fac",
-                            "version": "0.1.3",
+                            "version": "0.1.8",
                             "path": []
                           }
                         ]
@@ -525,18 +545,18 @@
                 "edges": [
                   {
                     "from": "n",
-                    "to": "is1:e1"
+                    "to": "is1:i1"
                   },
                   {
                     "from": "c:output",
-                    "to": "is1:e2"
+                    "to": "is1:i2"
                   },
                   {
                     "from": "n",
                     "to": "choose:input"
                   },
                   {
-                    "from": "is1:isEqual",
+                    "from": "is1:eq",
                     "to": "choose:control"
                   },
                   {
@@ -573,7 +593,7 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 }
               ],
@@ -597,7 +617,7 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 }
               ],
@@ -610,18 +630,18 @@
           "edges": [
             {
               "from": "n",
-              "to": "is1:e1"
+              "to": "is1:i1"
             },
             {
               "from": "c:output",
-              "to": "is1:e2"
+              "to": "is1:i2"
             },
             {
               "from": "n",
               "to": "choose:input"
             },
             {
-              "from": "is1:isEqual",
+              "from": "is1:eq",
               "to": "choose:control"
             },
             {
@@ -678,7 +698,7 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           }
         ],
@@ -703,10 +723,13 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           }
         ],
+        "params": {
+          "value": 1
+        },
         "parent": "fac",
         "branchPath": "fac:c",
         "branch": "c",
@@ -727,12 +750,13 @@
           "outFalse": "int"
         },
         "atomic": true,
-        "version": "0.1.0",
+        "version": "0.1.2",
+        "specialForm": true,
         "path": [
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           }
         ],
@@ -757,10 +781,13 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           }
         ],
+        "params": {
+          "value": -1
+        },
         "parent": "fac",
         "branchPath": "fac:c_dec",
         "branch": "c_dec",
@@ -785,7 +812,7 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           }
         ],
@@ -800,7 +827,7 @@
       "v": "fac:recFac",
       "value": {
         "id": "math/faculty",
-        "version": "0.1.3",
+        "version": "0.1.8",
         "inputPorts": {
           "n": "int"
         },
@@ -825,18 +852,18 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 },
                 {
                   "meta": "math/faculty",
                   "branch": "recFac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": [
                     {
                       "meta": "math/faculty",
                       "branch": "fac",
-                      "version": "0.1.3",
+                      "version": "0.1.8",
                       "path": []
                     }
                   ]
@@ -859,23 +886,26 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 },
                 {
                   "meta": "math/faculty",
                   "branch": "recFac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": [
                     {
                       "meta": "math/faculty",
                       "branch": "fac",
-                      "version": "0.1.3",
+                      "version": "0.1.8",
                       "path": []
                     }
                   ]
                 }
               ],
+              "params": {
+                "value": 1
+              },
               "parent": "fac:recFac",
               "branchPath": "fac:recFac:c",
               "branch": "c",
@@ -892,23 +922,24 @@
                 "outFalse": "int"
               },
               "atomic": true,
-              "version": "0.1.0",
+              "version": "0.1.2",
+              "specialForm": true,
               "path": [
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 },
                 {
                   "meta": "math/faculty",
                   "branch": "recFac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": [
                     {
                       "meta": "math/faculty",
                       "branch": "fac",
-                      "version": "0.1.3",
+                      "version": "0.1.8",
                       "path": []
                     }
                   ]
@@ -931,23 +962,26 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 },
                 {
                   "meta": "math/faculty",
                   "branch": "recFac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": [
                     {
                       "meta": "math/faculty",
                       "branch": "fac",
-                      "version": "0.1.3",
+                      "version": "0.1.8",
                       "path": []
                     }
                   ]
                 }
               ],
+              "params": {
+                "value": -1
+              },
               "parent": "fac:recFac",
               "branchPath": "fac:recFac:c_dec",
               "branch": "c_dec",
@@ -968,18 +1002,18 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 },
                 {
                   "meta": "math/faculty",
                   "branch": "recFac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": [
                     {
                       "meta": "math/faculty",
                       "branch": "fac",
-                      "version": "0.1.3",
+                      "version": "0.1.8",
                       "path": []
                     }
                   ]
@@ -992,7 +1026,7 @@
             },
             {
               "id": "math/faculty",
-              "version": "0.1.3",
+              "version": "0.1.8",
               "inputPorts": {
                 "n": "int"
               },
@@ -1010,16 +1044,22 @@
                   {
                     "meta": "math/const",
                     "version": "0.1.0",
+                    "params": {
+                      "value": 1
+                    },
                     "name": "c"
                   },
                   {
                     "meta": "logic/demux>int",
-                    "version": "0.1.0",
+                    "version": "0.1.2",
                     "name": "choose"
                   },
                   {
                     "meta": "math/const",
                     "version": "0.1.0",
+                    "params": {
+                      "value": -1
+                    },
                     "name": "c_dec"
                   },
                   {
@@ -1029,7 +1069,7 @@
                   },
                   {
                     "meta": "math/faculty",
-                    "version": "0.1.3",
+                    "version": "0.1.8",
                     "name": "recFac"
                   },
                   {
@@ -1041,18 +1081,18 @@
                 "edges": [
                   {
                     "from": "n",
-                    "to": "is1:e1"
+                    "to": "is1:i1"
                   },
                   {
                     "from": "c:output",
-                    "to": "is1:e2"
+                    "to": "is1:i2"
                   },
                   {
                     "from": "n",
                     "to": "choose:input"
                   },
                   {
-                    "from": "is1:isEqual",
+                    "from": "is1:eq",
                     "to": "choose:control"
                   },
                   {
@@ -1089,18 +1129,18 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 },
                 {
                   "meta": "math/faculty",
                   "branch": "recFac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": [
                     {
                       "meta": "math/faculty",
                       "branch": "fac",
-                      "version": "0.1.3",
+                      "version": "0.1.8",
                       "path": []
                     }
                   ]
@@ -1127,18 +1167,18 @@
                 {
                   "meta": "math/faculty",
                   "branch": "fac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": []
                 },
                 {
                   "meta": "math/faculty",
                   "branch": "recFac",
-                  "version": "0.1.3",
+                  "version": "0.1.8",
                   "path": [
                     {
                       "meta": "math/faculty",
                       "branch": "fac",
-                      "version": "0.1.3",
+                      "version": "0.1.8",
                       "path": []
                     }
                   ]
@@ -1153,18 +1193,18 @@
           "edges": [
             {
               "from": "n",
-              "to": "is1:e1"
+              "to": "is1:i1"
             },
             {
               "from": "c:output",
-              "to": "is1:e2"
+              "to": "is1:i2"
             },
             {
               "from": "n",
               "to": "choose:input"
             },
             {
-              "from": "is1:isEqual",
+              "from": "is1:eq",
               "to": "choose:control"
             },
             {
@@ -1201,7 +1241,7 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           }
         ],
@@ -1229,18 +1269,18 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           },
           {
             "meta": "math/faculty",
             "branch": "recFac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": [
               {
                 "meta": "math/faculty",
                 "branch": "fac",
-                "version": "0.1.3",
+                "version": "0.1.8",
                 "path": []
               }
             ]
@@ -1267,23 +1307,26 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           },
           {
             "meta": "math/faculty",
             "branch": "recFac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": [
               {
                 "meta": "math/faculty",
                 "branch": "fac",
-                "version": "0.1.3",
+                "version": "0.1.8",
                 "path": []
               }
             ]
           }
         ],
+        "params": {
+          "value": 1
+        },
         "parent": "fac:recFac",
         "branchPath": "fac:recFac:c",
         "branch": "c",
@@ -1304,23 +1347,24 @@
           "outFalse": "int"
         },
         "atomic": true,
-        "version": "0.1.0",
+        "version": "0.1.2",
+        "specialForm": true,
         "path": [
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           },
           {
             "meta": "math/faculty",
             "branch": "recFac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": [
               {
                 "meta": "math/faculty",
                 "branch": "fac",
-                "version": "0.1.3",
+                "version": "0.1.8",
                 "path": []
               }
             ]
@@ -1347,23 +1391,26 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           },
           {
             "meta": "math/faculty",
             "branch": "recFac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": [
               {
                 "meta": "math/faculty",
                 "branch": "fac",
-                "version": "0.1.3",
+                "version": "0.1.8",
                 "path": []
               }
             ]
           }
         ],
+        "params": {
+          "value": -1
+        },
         "parent": "fac:recFac",
         "branchPath": "fac:recFac:c_dec",
         "branch": "c_dec",
@@ -1388,18 +1435,18 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           },
           {
             "meta": "math/faculty",
             "branch": "recFac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": [
               {
                 "meta": "math/faculty",
                 "branch": "fac",
-                "version": "0.1.3",
+                "version": "0.1.8",
                 "path": []
               }
             ]
@@ -1416,7 +1463,7 @@
       "v": "fac:recFac:recFac",
       "value": {
         "id": "math/faculty",
-        "version": "0.1.3",
+        "version": "0.1.8",
         "inputPorts": {
           "n": "int"
         },
@@ -1434,16 +1481,22 @@
             {
               "meta": "math/const",
               "version": "0.1.0",
+              "params": {
+                "value": 1
+              },
               "name": "c"
             },
             {
               "meta": "logic/demux>int",
-              "version": "0.1.0",
+              "version": "0.1.2",
               "name": "choose"
             },
             {
               "meta": "math/const",
               "version": "0.1.0",
+              "params": {
+                "value": -1
+              },
               "name": "c_dec"
             },
             {
@@ -1453,7 +1506,7 @@
             },
             {
               "meta": "math/faculty",
-              "version": "0.1.3",
+              "version": "0.1.8",
               "name": "recFac"
             },
             {
@@ -1465,18 +1518,18 @@
           "edges": [
             {
               "from": "n",
-              "to": "is1:e1"
+              "to": "is1:i1"
             },
             {
               "from": "c:output",
-              "to": "is1:e2"
+              "to": "is1:i2"
             },
             {
               "from": "n",
               "to": "choose:input"
             },
             {
-              "from": "is1:isEqual",
+              "from": "is1:eq",
               "to": "choose:control"
             },
             {
@@ -1513,18 +1566,18 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           },
           {
             "meta": "math/faculty",
             "branch": "recFac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": [
               {
                 "meta": "math/faculty",
                 "branch": "fac",
-                "version": "0.1.3",
+                "version": "0.1.8",
                 "path": []
               }
             ]
@@ -1555,18 +1608,18 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           },
           {
             "meta": "math/faculty",
             "branch": "recFac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": [
               {
                 "meta": "math/faculty",
                 "branch": "fac",
-                "version": "0.1.3",
+                "version": "0.1.8",
                 "path": []
               }
             ]
@@ -1596,7 +1649,7 @@
           {
             "meta": "math/faculty",
             "branch": "fac",
-            "version": "0.1.3",
+            "version": "0.1.8",
             "path": []
           }
         ],
@@ -1814,10 +1867,10 @@
       }
     },
     {
-      "v": "fac:is1_PORT_e2",
+      "v": "fac:is1_PORT_i2",
       "value": {
         "nodeType": "inPort",
-        "portName": "e2",
+        "portName": "i2",
         "process": "fac:is1"
       },
       "parent": "fac"
@@ -1841,10 +1894,10 @@
       "parent": "fac"
     },
     {
-      "v": "fac:is1_PORT_isEqual",
+      "v": "fac:is1_PORT_eq",
       "value": {
         "nodeType": "outPort",
-        "portName": "isEqual",
+        "portName": "eq",
         "process": "fac:is1"
       },
       "parent": "fac"
@@ -1906,10 +1959,10 @@
       "parent": "fac"
     },
     {
-      "v": "fac:recFac:is1_PORT_e2",
+      "v": "fac:recFac:is1_PORT_i2",
       "value": {
         "nodeType": "inPort",
-        "portName": "e2",
+        "portName": "i2",
         "process": "fac:recFac:is1"
       },
       "parent": "fac:recFac"
@@ -1933,10 +1986,10 @@
       "parent": "fac:recFac"
     },
     {
-      "v": "fac:recFac:is1_PORT_isEqual",
+      "v": "fac:recFac:is1_PORT_eq",
       "value": {
         "nodeType": "outPort",
-        "portName": "isEqual",
+        "portName": "eq",
         "process": "fac:recFac:is1"
       },
       "parent": "fac:recFac"
@@ -2001,7 +2054,8 @@
         "nodeType": "inPort",
         "portName": "in1",
         "process": "fac_JOIN_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:choose_PORT_outTrue",
@@ -2018,7 +2072,8 @@
         "nodeType": "inPort",
         "portName": "in2",
         "process": "fac_JOIN_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:mul_PORT_product",
@@ -2035,7 +2090,8 @@
         "nodeType": "outPort",
         "portName": "to",
         "process": "fac_JOIN_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:recFac_JOIN_0_1_PORT_in1",
@@ -2043,7 +2099,8 @@
         "nodeType": "inPort",
         "portName": "in1",
         "process": "fac:recFac_JOIN_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:choose_PORT_outTrue",
@@ -2060,7 +2117,8 @@
         "nodeType": "inPort",
         "portName": "in2",
         "process": "fac:recFac_JOIN_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:mul_PORT_product",
@@ -2077,13 +2135,14 @@
         "nodeType": "outPort",
         "portName": "to",
         "process": "fac:recFac_JOIN_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
-      "v": "fac:is1_PORT_e1",
+      "v": "fac:is1_PORT_i1",
       "value": {
         "nodeType": "inPort",
-        "portName": "e1",
+        "portName": "i1",
         "process": "fac:is1"
       },
       "parent": "fac"
@@ -2094,7 +2153,8 @@
         "nodeType": "outPort",
         "portName": "d1",
         "process": "fac_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:choose_PORT_input",
@@ -2111,7 +2171,8 @@
         "nodeType": "outPort",
         "portName": "d2",
         "process": "fac_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac_DUPLICATE_0_1_PORT_in",
@@ -2119,7 +2180,8 @@
         "nodeType": "inPort",
         "portName": "in",
         "process": "fac_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:dec_PORT_s1",
@@ -2136,7 +2198,8 @@
         "nodeType": "outPort",
         "portName": "d1",
         "process": "fac:choose_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:mul_PORT_m1",
@@ -2153,7 +2216,8 @@
         "nodeType": "outPort",
         "portName": "d2",
         "process": "fac:choose_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:choose_DUPLICATE_0_1_PORT_in",
@@ -2161,7 +2225,8 @@
         "nodeType": "inPort",
         "portName": "in",
         "process": "fac:choose_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac"
     },
     {
       "v": "fac:choose_PORT_outFalse",
@@ -2173,10 +2238,10 @@
       "parent": "fac"
     },
     {
-      "v": "fac:recFac:is1_PORT_e1",
+      "v": "fac:recFac:is1_PORT_i1",
       "value": {
         "nodeType": "inPort",
-        "portName": "e1",
+        "portName": "i1",
         "process": "fac:recFac:is1"
       },
       "parent": "fac:recFac"
@@ -2187,7 +2252,8 @@
         "nodeType": "outPort",
         "portName": "d1",
         "process": "fac:recFac_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:choose_PORT_input",
@@ -2204,7 +2270,8 @@
         "nodeType": "outPort",
         "portName": "d2",
         "process": "fac:recFac_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac_DUPLICATE_0_1_PORT_in",
@@ -2212,7 +2279,8 @@
         "nodeType": "inPort",
         "portName": "in",
         "process": "fac:recFac_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:dec_PORT_s1",
@@ -2229,7 +2297,8 @@
         "nodeType": "outPort",
         "portName": "d1",
         "process": "fac:recFac:choose_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:mul_PORT_m1",
@@ -2246,7 +2315,8 @@
         "nodeType": "outPort",
         "portName": "d2",
         "process": "fac:recFac:choose_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:choose_DUPLICATE_0_1_PORT_in",
@@ -2254,7 +2324,8 @@
         "nodeType": "inPort",
         "portName": "in",
         "process": "fac:recFac:choose_DUPLICATE_0_1"
-      }
+      },
+      "parent": "fac:recFac"
     },
     {
       "v": "fac:recFac:choose_PORT_outFalse",
@@ -2308,7 +2379,7 @@
       "w": "out_PORT_input"
     },
     {
-      "v": "fac:is1_PORT_e2",
+      "v": "fac:is1_PORT_i2",
       "w": "fac:is1"
     },
     {
@@ -2317,7 +2388,7 @@
     },
     {
       "v": "fac:c_PORT_output",
-      "w": "fac:is1_PORT_e2"
+      "w": "fac:is1_PORT_i2"
     },
     {
       "v": "fac:choose_PORT_control",
@@ -2325,10 +2396,10 @@
     },
     {
       "v": "fac:is1",
-      "w": "fac:is1_PORT_isEqual"
+      "w": "fac:is1_PORT_eq"
     },
     {
-      "v": "fac:is1_PORT_isEqual",
+      "v": "fac:is1_PORT_eq",
       "w": "fac:choose_PORT_control"
     },
     {
@@ -2360,7 +2431,7 @@
       "w": "fac:mul_PORT_m2"
     },
     {
-      "v": "fac:recFac:is1_PORT_e2",
+      "v": "fac:recFac:is1_PORT_i2",
       "w": "fac:recFac:is1"
     },
     {
@@ -2369,7 +2440,7 @@
     },
     {
       "v": "fac:recFac:c_PORT_output",
-      "w": "fac:recFac:is1_PORT_e2"
+      "w": "fac:recFac:is1_PORT_i2"
     },
     {
       "v": "fac:recFac:choose_PORT_control",
@@ -2377,10 +2448,10 @@
     },
     {
       "v": "fac:recFac:is1",
-      "w": "fac:recFac:is1_PORT_isEqual"
+      "w": "fac:recFac:is1_PORT_eq"
     },
     {
-      "v": "fac:recFac:is1_PORT_isEqual",
+      "v": "fac:recFac:is1_PORT_eq",
       "w": "fac:recFac:choose_PORT_control"
     },
     {
@@ -2484,7 +2555,7 @@
       "w": "fac:recFac_PORT_fac"
     },
     {
-      "v": "fac:is1_PORT_e1",
+      "v": "fac:is1_PORT_i1",
       "w": "fac:is1"
     },
     {
@@ -2493,7 +2564,7 @@
     },
     {
       "v": "fac_DUPLICATE_0_1_PORT_d1",
-      "w": "fac:is1_PORT_e1"
+      "w": "fac:is1_PORT_i1"
     },
     {
       "v": "fac:choose_PORT_input",
@@ -2552,7 +2623,7 @@
       "w": "fac:choose_DUPLICATE_0_1_PORT_in"
     },
     {
-      "v": "fac:recFac:is1_PORT_e1",
+      "v": "fac:recFac:is1_PORT_i1",
       "w": "fac:recFac:is1"
     },
     {
@@ -2561,7 +2632,7 @@
     },
     {
       "v": "fac:recFac_DUPLICATE_0_1_PORT_d1",
-      "w": "fac:recFac:is1_PORT_e1"
+      "w": "fac:recFac:is1_PORT_i1"
     },
     {
       "v": "fac:recFac:choose_PORT_input",

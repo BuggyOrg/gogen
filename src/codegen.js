@@ -24,9 +24,10 @@ var sourceTemplate = handlebars.compile(fs.readFileSync('./src/templates/source.
  */
 export function createProcess (proc) {
   if (proc.specialForm) {
-    proc.compiledCode = handlebars.compile(proc.code)(proc)
+    proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc)
     return specialFormTemplate(proc)
   } else {
+    proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc.params || {})
     return processTemplate(proc)
   }
 }
