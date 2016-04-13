@@ -53,7 +53,13 @@ var getCode = (arrayOfAtomics) => {
 }
 
 var imports = (processes) => {
-  return _.uniq(_.compact(_.flatten(_.map(processes, 'dependencies'))))
+  return _(processes)
+    .map('dependencies')
+    .flatten()
+    .concat('sync')
+    .compact()
+    .uniq()
+    .value()
 }
 
 /**
