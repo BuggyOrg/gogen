@@ -1,6 +1,6 @@
 {
   "name": "@buggyorg/gogen",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "creates go code out of csp algebra",
   "main": "lib/api.js",
   "esnext:main": "src/api.js",
