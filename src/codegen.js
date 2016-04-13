@@ -1,6 +1,7 @@
 
 import * as handlebars from 'handlebars'
 import fs from 'fs'
+import path from 'path'
 // import _ from 'lodash'
 
 var replaceAll = (str, search, replacement) => {
@@ -13,10 +14,10 @@ var sanitize = (str) => {
 
 handlebars.registerHelper('sanitize', sanitize)
 
-var processTemplate = handlebars.compile(fs.readFileSync('./src/templates/process.hb', 'utf8'), {noEscape: true})
-var specialFormTemplate = handlebars.compile(fs.readFileSync('./src/templates/special_form.hb', 'utf8'), {noEscape: true})
-var compoundTemplate = handlebars.compile(fs.readFileSync('./src/templates/compound.hb', 'utf8'), {noEscape: true})
-var sourceTemplate = handlebars.compile(fs.readFileSync('./src/templates/source.hb', 'utf8'), {noEscape: true})
+var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
+var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
+var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound.hb'), 'utf8'), {noEscape: true})
+var sourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/source.hb'), 'utf8'), {noEscape: true})
 
 /**
  * Create the source for a process
