@@ -2,7 +2,7 @@ package main
 
 // imports
 {{#each imports}}
-import "{{this}}"
+import {{#ifEq this "unsafe"}}unsafe{{/ifEq}} "{{this}}"
 {{/each}}
 
 // global variables

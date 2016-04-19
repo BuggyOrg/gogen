@@ -2,7 +2,7 @@
 import * as handlebars from 'handlebars'
 import fs from 'fs'
 import path from 'path'
-// import _ from 'lodash'
+import _ from 'lodash'
 
 var replaceAll = (str, search, replacement) => {
   return str.split(search).join(replacement)
@@ -13,6 +13,13 @@ var sanitize = (str) => {
 }
 
 handlebars.registerHelper('sanitize', sanitize)
+
+handlebars.registerHelper('ifEq', (s1, s2, opts) => {
+  if(s1 === s2)
+    return opts.fn(this);
+  else
+    return opts.inverse(this);
+})
 
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
 var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
@@ -28,7 +35,7 @@ export function createProcess (proc) {
     proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc)
     return specialFormTemplate(proc)
   } else {
-    proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc.params || {})
+    proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({}, proc.params, {ports: _.merge({}, proc.inputPorts, proc.outputPorts)}))
     return processTemplate(proc)
   }
 }
