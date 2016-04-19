@@ -128,14 +128,14 @@ var api = {
         var atomicNameMap = _.keyBy(atomics, 'id')
         return graphlib.json.read(_.merge({}, graphJSON, {nodes: _.map(graphJSON.nodes, (n) => {
           if (_.has(atomicNameMap, n.value.id)) {
+            if (!atomicNameMap[n.value.id].code) {
+              throw new Error('Missing code for ' + n.value.id)
+            }
             return _.merge({}, n, {value: atomicNameMap[n.value.id]})
           } else {
             return n
           }
         })}))
-      })
-      .catch((err) => {
-        console.log('Error while retrieving code', err)
       })
   },
 
