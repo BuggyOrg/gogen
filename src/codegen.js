@@ -15,10 +15,11 @@ var sanitize = (str) => {
 handlebars.registerHelper('sanitize', sanitize)
 
 handlebars.registerHelper('ifEq', (s1, s2, opts) => {
-  if(s1 === s2)
-    return opts.fn(this);
-  else
-    return opts.inverse(this);
+  if (s1 === s2) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
 })
 
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
