@@ -43,4 +43,27 @@ describe('Gogen API', () => {
       expect(newGraph.node('0_STDIN')).to.have.property('dependencies')
     })
   })
+
+  it('can handle lambda types', () => {
+    var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/lambda.json')))
+    var lambdaGraph = api.resolveLambdas(graph)
+    expect(lambdaGraph.node('apply').inputPorts.fn).to.be.a('string')
+    expect(lambdaGraph.node('apply').inputPorts.fn).to.equal('func (chan int, chan int)')
+    expect(lambdaGraph.node('apply').outputPorts.result).to.equal('int')
+  })
+
+  it('can get types for channels in lambda functions', () => {
+    var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/lambda.json')))
+    var channels = api.channels(graph)
+    expect(channels).to.be.ok
+    expect(channels[5].channelType).to.equal('int')
+  })
+  
+  it('compounds do not list not connected parts', () => {
+    var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/lambda.json')))
+    var compounds = api.compounds(graph)
+    expect(compounds).to.be.ok
+    expect(compounds[0].processes).to.have.length(6)
+    expect(compounds[1].processes).to.have.length(2)
+  })
 })

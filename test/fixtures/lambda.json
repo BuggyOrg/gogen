@@ -1,0 +1,489 @@
+{
+  "options": {
+    "directed": true,
+    "multigraph": false,
+    "compound": true
+  },
+  "nodes": [
+    {
+      "v": "in",
+      "value": {
+        "id": "io/stdin",
+        "version": "0.2.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "output": "string"
+        },
+        "atomic": true,
+        "path": [],
+        "branchPath": "in",
+        "branch": "in",
+        "name": "in",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "strToNum",
+      "value": {
+        "id": "translator/string_to_number",
+        "version": "0.1.0",
+        "inputPorts": {
+          "input": "string"
+        },
+        "outputPorts": {
+          "output": "int64"
+        },
+        "atomic": true,
+        "path": [],
+        "branchPath": "strToNum",
+        "branch": "strToNum",
+        "name": "strToNum",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "lambda_inc",
+      "value": {
+        "id": "functional/lambda",
+        "version": "0.1.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "fn": {
+            "arguments": {
+              "i": "int"
+            },
+            "return": "int"
+          }
+        },
+        "atomic": true,
+        "path": [],
+        "params": {
+          "implementation": "math/inc"
+        },
+        "branchPath": "lambda_inc",
+        "branch": "lambda_inc",
+        "name": "lambda_inc",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "inc_lambda",
+      "value": {
+        "id": "math/inc",
+        "version": "0.3.0",
+        "inputPorts": {
+          "i": "int"
+        },
+        "outputPorts": {
+          "inc": "int"
+        },
+        "atomic": false,
+        "implementation": {
+          "nodes": [
+            {
+              "id": "math/add",
+              "version": "0.1.1",
+              "inputPorts": {
+                "s1": "int",
+                "s2": "int"
+              },
+              "outputPorts": {
+                "sum": "int"
+              },
+              "atomic": true,
+              "path": [
+                {
+                  "meta": "math/inc",
+                  "branch": "inc_lambda",
+                  "version": "0.3.0",
+                  "path": []
+                }
+              ],
+              "parent": "inc_lambda",
+              "branchPath": "inc_lambda:add",
+              "branch": "add"
+            },
+            {
+              "id": "math/const1",
+              "version": "0.2.0",
+              "inputPorts": {},
+              "outputPorts": {
+                "output": "int"
+              },
+              "atomic": true,
+              "path": [
+                {
+                  "meta": "math/inc",
+                  "branch": "inc_lambda",
+                  "version": "0.3.0",
+                  "path": []
+                }
+              ],
+              "parent": "inc_lambda",
+              "branchPath": "inc_lambda:c",
+              "branch": "c"
+            }
+          ],
+          "edges": [
+            {
+              "from": "i",
+              "to": "add:s1"
+            },
+            {
+              "from": "c:output",
+              "to": "add:s2"
+            },
+            {
+              "from": "add:sum",
+              "to": "inc"
+            }
+          ]
+        },
+        "path": [],
+        "branchPath": "inc_lambda",
+        "branch": "inc_lambda",
+        "name": "inc_lambda",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "inc_lambda:add",
+      "value": {
+        "id": "math/add",
+        "version": "0.1.1",
+        "inputPorts": {
+          "s1": "int",
+          "s2": "int"
+        },
+        "outputPorts": {
+          "sum": "int"
+        },
+        "atomic": true,
+        "path": [
+          {
+            "meta": "math/inc",
+            "branch": "inc_lambda",
+            "version": "0.3.0",
+            "path": []
+          }
+        ],
+        "parent": "inc_lambda",
+        "branchPath": "inc_lambda:add",
+        "branch": "add",
+        "nodeType": "process"
+      },
+      "parent": "inc_lambda"
+    },
+    {
+      "v": "inc_lambda:c",
+      "value": {
+        "id": "math/const1",
+        "version": "0.2.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "output": "int"
+        },
+        "atomic": true,
+        "path": [
+          {
+            "meta": "math/inc",
+            "branch": "inc_lambda",
+            "version": "0.3.0",
+            "path": []
+          }
+        ],
+        "parent": "inc_lambda",
+        "branchPath": "inc_lambda:c",
+        "branch": "c",
+        "nodeType": "process"
+      },
+      "parent": "inc_lambda"
+    },
+    {
+      "v": "apply",
+      "value": {
+        "id": "functional/apply",
+        "version": "0.1.1",
+        "inputPorts": {
+          "fn": {
+            "arguments": {
+              "i": "int"
+            },
+            "return": "int"
+          },
+          "value": "int64"
+        },
+        "outputPorts": {
+          "result": "int"
+        },
+        "atomic": true,
+        "specialForm": true,
+        "path": [],
+        "branchPath": "apply",
+        "branch": "apply",
+        "name": "apply",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "numToStr",
+      "value": {
+        "id": "translator/number_to_string",
+        "version": "0.1.0",
+        "inputPorts": {
+          "input": "int64"
+        },
+        "outputPorts": {
+          "output": "string"
+        },
+        "atomic": true,
+        "path": [],
+        "branchPath": "numToStr",
+        "branch": "numToStr",
+        "name": "numToStr",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "out",
+      "value": {
+        "id": "io/stdout",
+        "version": "0.2.0",
+        "inputPorts": {
+          "input": "string"
+        },
+        "outputPorts": {},
+        "atomic": true,
+        "path": [],
+        "branchPath": "out",
+        "branch": "out",
+        "name": "out",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "strToNum_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "strToNum"
+      }
+    },
+    {
+      "v": "in_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "in"
+      }
+    },
+    {
+      "v": "apply_PORT_value",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "value",
+        "process": "apply"
+      }
+    },
+    {
+      "v": "strToNum_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "strToNum"
+      }
+    },
+    {
+      "v": "apply_PORT_fn",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "fn",
+        "process": "apply"
+      }
+    },
+    {
+      "v": "lambda_inc_PORT_fn",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "fn",
+        "process": "lambda_inc"
+      }
+    },
+    {
+      "v": "numToStr_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "numToStr"
+      }
+    },
+    {
+      "v": "apply_PORT_result",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "result",
+        "process": "apply"
+      }
+    },
+    {
+      "v": "out_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "out"
+      }
+    },
+    {
+      "v": "numToStr_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "numToStr"
+      }
+    },
+    {
+      "v": "inc_lambda:add_PORT_s1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "s1",
+        "process": "inc_lambda:add"
+      },
+      "parent": "inc_lambda"
+    },
+    {
+      "v": "inc_lambda_PORT_i",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "i",
+        "hierarchyBorder": true,
+        "process": "inc_lambda"
+      }
+    },
+    {
+      "v": "inc_lambda:add_PORT_s2",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "s2",
+        "process": "inc_lambda:add"
+      },
+      "parent": "inc_lambda"
+    },
+    {
+      "v": "inc_lambda:c_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "inc_lambda:c"
+      },
+      "parent": "inc_lambda"
+    },
+    {
+      "v": "inc_lambda_PORT_inc",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "inc",
+        "hierarchyBorder": true,
+        "process": "inc_lambda"
+      }
+    },
+    {
+      "v": "inc_lambda:add_PORT_sum",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "sum",
+        "process": "inc_lambda:add"
+      },
+      "parent": "inc_lambda"
+    }
+  ],
+  "edges": [
+    {
+      "v": "strToNum_PORT_input",
+      "w": "strToNum"
+    },
+    {
+      "v": "in",
+      "w": "in_PORT_output"
+    },
+    {
+      "v": "in_PORT_output",
+      "w": "strToNum_PORT_input"
+    },
+    {
+      "v": "apply_PORT_value",
+      "w": "apply"
+    },
+    {
+      "v": "strToNum",
+      "w": "strToNum_PORT_output"
+    },
+    {
+      "v": "strToNum_PORT_output",
+      "w": "apply_PORT_value"
+    },
+    {
+      "v": "apply_PORT_fn",
+      "w": "apply"
+    },
+    {
+      "v": "lambda_inc",
+      "w": "lambda_inc_PORT_fn"
+    },
+    {
+      "v": "lambda_inc_PORT_fn",
+      "w": "apply_PORT_fn"
+    },
+    {
+      "v": "numToStr_PORT_input",
+      "w": "numToStr"
+    },
+    {
+      "v": "apply",
+      "w": "apply_PORT_result"
+    },
+    {
+      "v": "apply_PORT_result",
+      "w": "numToStr_PORT_input"
+    },
+    {
+      "v": "out_PORT_input",
+      "w": "out"
+    },
+    {
+      "v": "numToStr",
+      "w": "numToStr_PORT_output"
+    },
+    {
+      "v": "numToStr_PORT_output",
+      "w": "out_PORT_input"
+    },
+    {
+      "v": "inc_lambda:add_PORT_s1",
+      "w": "inc_lambda:add"
+    },
+    {
+      "v": "inc_lambda_PORT_i",
+      "w": "inc_lambda:add_PORT_s1"
+    },
+    {
+      "v": "inc_lambda:add_PORT_s2",
+      "w": "inc_lambda:add"
+    },
+    {
+      "v": "inc_lambda:c",
+      "w": "inc_lambda:c_PORT_output"
+    },
+    {
+      "v": "inc_lambda:c_PORT_output",
+      "w": "inc_lambda:add_PORT_s2"
+    },
+    {
+      "v": "inc_lambda:add",
+      "w": "inc_lambda:add_PORT_sum"
+    },
+    {
+      "v": "inc_lambda:add_PORT_sum",
+      "w": "inc_lambda_PORT_inc"
+    }
+  ]
+}

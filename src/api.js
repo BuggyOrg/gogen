@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import * as codegen from './codegen'
 import graphlib from 'graphlib'
+import {utils, walkPort} from '@buggyorg/graphtools'
 import hash from 'object-hash'
 
 import libConnection from '@buggyorg/component-library'
@@ -21,11 +22,36 @@ var additionalParameters = (node) => {
   return []
 }
 
+var mapPortsForNode = (n, fn) => {
+  return _.merge({}, n, {value: {
+    inputPorts: _.mapValues(n.value.inputPorts, fn),
+    outputPorts: _.mapValues(n.value.outputPorts, fn)
+  }})
+}
+
+var mapPorts = (graphJSON, fn) => {
+  return _.merge({}, graphJSON, {
+    nodes: _.map(graphJSON.nodes, _.partial(mapPortsForNode, _, fn))
+  })
+}
+
 var createParameters = (node) => {
   var mapper = _()
     .map((type, key) => ({name: key, type: type}))
     .sortBy('name')
   return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value(), additionalParameters(node))
+}
+
+var createLambdaFunctions = (type) => {
+  if (typeof type === 'object' && type.arguments && type.return) {
+    if (typeof type.return !== 'string') {
+      throw new Error('multiple return values in lambda functions are not [yet] supported')
+    }
+    var parameters = _.map(type.arguments, (type, key) => 'chan ' + type)
+    return 'func (' + parameters.join(',') + ', chan ' + type.return + ')'
+  } else {
+    return type
+  }
 }
 
 var safeQuery = (q, failureMessage) => {
@@ -101,6 +127,19 @@ var parent = function (graph, outP, inP) {
   }
 }
 
+var rejectUnconnected = (graph, processes, channels) => {
+  var newProcs = _(processes)
+    .reject((p) => {
+      if (_.keys(p.inputPorts).length === 0) return false
+      return _.reduce(p.inputPorts, (res, type, name) => {
+        console.log('pred ', p.name, name, walkPort.predecessorPort(graph, p.name, name))
+        return res || walkPort.predecessorPort(graph, p.name, name).length === 0
+      }, false)
+    })
+    .value()
+  return newProcs
+}
+
 var api = {
 
   processes: graph => {
@@ -121,8 +160,13 @@ var api = {
     .value()
   },
 
+  resolveLambdas: (graph) => {
+    return utils.finalize(mapPorts(utils.edit(graph), createLambdaFunctions))
+  },
+
   preprocess: (graph) => {
-    var graphJSON = graphlib.json.write(graph)
+    var lambdaGraph = api.resolveLambdas(graph)
+    var graphJSON = graphlib.json.write(lambdaGraph)
     return getCode(api.processes(graph))
       .then((atomics) => {
         var atomicNameMap = _.keyBy(atomics, 'id')
@@ -191,7 +235,7 @@ var api = {
         {
           name: key,
           id: parentProperty(key, 'id'),
-          processes: value,
+          processes: rejectUnconnected(graph, value, _.filter(channels, (c) => c.parent === key)),
           inputPorts: parentProperty(key, 'inputPorts', {}), // FIXME: extend with parents process ports
           outputPorts: parentProperty(key, 'outputPorts', {}),
           arguments: parentProperty(key, 'arguments', []),
