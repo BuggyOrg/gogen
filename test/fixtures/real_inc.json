@@ -76,8 +76,7 @@
               ],
               "parent": "inc",
               "branchPath": "inc:add",
-              "branch": "add",
-              "nodeType": "process"
+              "branch": "add"
             },
             {
               "id": "math/const1",
@@ -97,8 +96,7 @@
               ],
               "parent": "inc",
               "branchPath": "inc:c",
-              "branch": "c",
-              "nodeType": "process"
+              "branch": "c"
             }
           ],
           "edges": [

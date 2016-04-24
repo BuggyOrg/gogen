@@ -132,7 +132,14 @@ var rejectUnconnected = (graph, processes, channels) => {
     .reject((p) => {
       if (_.keys(p.inputPorts).length === 0) return false
       return _.reduce(p.inputPorts, (res, type, name) => {
-        console.log('pred ', p.name, name, walkPort.predecessorPort(graph, p.name, name))
+        return res || walkPort.predecessorPort(graph, p.name, name).length === 0
+      }, false)
+    })
+    .value()
+  _(processes)
+    .filter((p) => {
+      if (_.keys(p.inputPorts).length === 0) return false
+      return _.reduce(p.inputPorts, (res, type, name) => {
         return res || walkPort.predecessorPort(graph, p.name, name).length === 0
       }, false)
     })
