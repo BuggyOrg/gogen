@@ -1,0 +1,333 @@
+{
+  "options": {
+    "directed": true,
+    "multigraph": false,
+    "compound": true
+  },
+  "nodes": [
+    {
+      "v": "in",
+      "value": {
+        "id": "io/stdin",
+        "version": "0.1.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "stdin/output": "string"
+        },
+        "atomic": true,
+        "path": [],
+        "branchPath": "in",
+        "branch": "in",
+        "name": "in",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "strToNum",
+      "value": {
+        "id": "translator/string_to_int",
+        "version": "0.1.0",
+        "inputPorts": {
+          "string_to_int/input": "string"
+        },
+        "outputPorts": {
+          "string_to_int/output": "int"
+        },
+        "atomic": true,
+        "path": [],
+        "branchPath": "strToNum",
+        "branch": "strToNum",
+        "name": "strToNum",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "inc",
+      "value": {
+        "id": "math/inc",
+        "version": "0.2.0",
+        "inputPorts": {
+          "inc/i": "int"
+        },
+        "outputPorts": {
+          "inc/inc": "int"
+        },
+        "atomic": false,
+        "implementation": {
+          "nodes": [
+            {
+              "id": "math/add",
+              "version": "0.1.0",
+              "inputPorts": {
+                "add/s1": "int",
+                "add/s2": "int"
+              },
+              "outputPorts": {
+                "add/sum": "int"
+              },
+              "atomic": true,
+              "path": [
+                {
+                  "meta": "math/inc",
+                  "branch": "inc",
+                  "version": "0.2.0",
+                  "path": []
+                }
+              ],
+              "branchPath": "inc:add",
+              "branch": "add",
+              "values": [
+                {
+                  "value": 1,
+                  "port": "add/s2"
+                }
+              ],
+              "nodeType": "process"
+            }
+          ],
+          "edges": [
+            {
+              "from": "inc/i",
+              "to": "add:add/s1"
+            },
+            {
+              "from": "add:add/sum",
+              "to": "inc/inc"
+            }
+          ]
+        },
+        "path": [],
+        "branchPath": "inc",
+        "branch": "inc",
+        "name": "inc",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "inc:add",
+      "value": {
+        "id": "math/add",
+        "version": "0.1.0",
+        "inputPorts": {
+          "add/s1": "int",
+          "add/s2": "int"
+        },
+        "outputPorts": {
+          "add/sum": "int"
+        },
+        "atomic": true,
+        "path": [
+          {
+            "meta": "math/inc",
+            "branch": "inc",
+            "version": "0.2.0",
+            "path": []
+          }
+        ],
+        "branchPath": "inc:add",
+        "branch": "add",
+        "values": [
+          {
+            "value": 1,
+            "port": "add/s2"
+          }
+        ],
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "numToStr",
+      "value": {
+        "id": "translator/int_to_string",
+        "version": "0.1.0",
+        "inputPorts": {
+          "int_to_string/input": "int"
+        },
+        "outputPorts": {
+          "int_to_string/output": "string"
+        },
+        "atomic": true,
+        "path": [],
+        "branchPath": "numToStr",
+        "branch": "numToStr",
+        "name": "numToStr",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "out",
+      "value": {
+        "id": "io/stdout",
+        "version": "0.1.0",
+        "inputPorts": {
+          "stdout/input": "string"
+        },
+        "outputPorts": {},
+        "atomic": true,
+        "path": [],
+        "branchPath": "out",
+        "branch": "out",
+        "name": "out",
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "strToNum_PORT_string_to_int/input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "string_to_int/input"
+      }
+    },
+    {
+      "v": "in_PORT_stdin/output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "stdin/output"
+      }
+    },
+    {
+      "v": "inc_PORT_i",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "i"
+      }
+    },
+    {
+      "v": "strToNum_PORT_string_to_int/output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "string_to_int/output"
+      }
+    },
+    {
+      "v": "numToStr_PORT_int_to_strint/input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "int_to_strint/input"
+      }
+    },
+    {
+      "v": "inc_PORT_inc",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "inc"
+      }
+    },
+    {
+      "v": "out_PORT_stdout/input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "stdout/input"
+      }
+    },
+    {
+      "v": "numToStr_PORT_int_to_string/output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "int_to_string/output"
+      }
+    },
+    {
+      "v": "inc:add_PORT_add/s1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "add/s1"
+      }
+    },
+    {
+      "v": "inc_PORT_inc/i",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "inc/i"
+      }
+    },
+    {
+      "v": "inc_PORT_inc/inc",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "inc/inc"
+      }
+    },
+    {
+      "v": "inc:add_PORT_add/sum",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "add/sum"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "v": "strToNum_PORT_string_to_int/input",
+      "w": "strToNum"
+    },
+    {
+      "v": "in",
+      "w": "in_PORT_stdin/output"
+    },
+    {
+      "v": "in_PORT_stdin/output",
+      "w": "strToNum_PORT_string_to_int/input"
+    },
+    {
+      "v": "inc_PORT_i",
+      "w": "inc"
+    },
+    {
+      "v": "strToNum",
+      "w": "strToNum_PORT_string_to_int/output"
+    },
+    {
+      "v": "strToNum_PORT_string_to_int/output",
+      "w": "inc_PORT_i"
+    },
+    {
+      "v": "numToStr_PORT_int_to_strint/input",
+      "w": "numToStr"
+    },
+    {
+      "v": "inc",
+      "w": "inc_PORT_inc"
+    },
+    {
+      "v": "inc_PORT_inc",
+      "w": "numToStr_PORT_int_to_strint/input"
+    },
+    {
+      "v": "out_PORT_stdout/input",
+      "w": "out"
+    },
+    {
+      "v": "numToStr",
+      "w": "numToStr_PORT_int_to_string/output"
+    },
+    {
+      "v": "numToStr_PORT_int_to_string/output",
+      "w": "out_PORT_stdout/input"
+    },
+    {
+      "v": "inc:add_PORT_add/s1",
+      "w": "inc:add"
+    },
+    {
+      "v": "inc",
+      "w": "inc_PORT_inc/i"
+    },
+    {
+      "v": "inc_PORT_inc/i",
+      "w": "inc:add_PORT_add/s1"
+    },
+    {
+      "v": "inc_PORT_inc/inc",
+      "w": "inc"
+    },
+    {
+      "v": "inc:add",
+      "w": "inc:add_PORT_add/sum"
+    },
+    {
+      "v": "inc:add_PORT_add/sum",
+      "w": "inc_PORT_inc/inc"
+    }
+  ]
+}
