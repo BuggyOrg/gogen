@@ -105,6 +105,8 @@ var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '
 var recursiveTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound_recursive.hb'), 'utf8'), {noEscape: true})
 var unpackedTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/unpack.hb'), 'utf8'), {noEscape: true})
 var sourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/source.hb'), 'utf8'), {noEscape: true})
+var seqSourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/seq_source.hb'), 'utf8'), {noEscape: true})
+var seqCompoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/seq_compound.hb'), 'utf8'), {noEscape: true})
 
 /**
  * Create the source for a process
@@ -169,3 +171,7 @@ export function createCompound (cmpd) {
 }
 
 export { sourceTemplate as createSource }
+
+export { seqCompoundTemplate as createSeqCompound }
+
+export { seqSourceTemplate as createSeqSource }
