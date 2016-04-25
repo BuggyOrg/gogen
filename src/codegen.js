@@ -172,6 +172,20 @@ export function createCompound (cmpd) {
 
 export { sourceTemplate as createSource }
 
-export { seqCompoundTemplate as createSeqCompound }
+export function createSeqCompound (cmpd) {
+  cmpd.processes = _.sortBy(cmpd.processes, p => p.topSort)
+  for (let proc of cmpd.processes) {
+    if (!proc.atomic) {
+      for (let arg of proc.arguments) {
+        arg.inputPrefix = '*'
+        arg.passingPrefix = '&'
+      }
+    }
+    if (proc.code) {
+      proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({}, proc.params, {ports: _.merge({}, proc.inputPorts, proc.outputPorts)}))
+    }
+  }
+  return seqCompoundTemplate(cmpd)
+}
 
 export { seqSourceTemplate as createSeqSource }
