@@ -56,6 +56,26 @@
         "implementation": {
           "nodes": [
             {
+              "id": "math/const1",
+              "version": "0.2.0",
+              "inputPorts": {},
+              "outputPorts": {
+                "output": "int"
+              },
+              "atomic": true,
+              "path": [
+                {
+                  "meta": "math/inc",
+                  "branch": "inc",
+                  "version": "0.3.0",
+                  "path": []
+                }
+              ],
+              "parent": "inc",
+              "branchPath": "inc:c",
+              "branch": "c"
+            },
+            {
               "id": "math/add",
               "version": "0.1.1",
               "inputPorts": {
@@ -77,26 +97,6 @@
               "parent": "inc",
               "branchPath": "inc:add",
               "branch": "add"
-            },
-            {
-              "id": "math/const1",
-              "version": "0.2.0",
-              "inputPorts": {},
-              "outputPorts": {
-                "output": "int"
-              },
-              "atomic": true,
-              "path": [
-                {
-                  "meta": "math/inc",
-                  "branch": "inc",
-                  "version": "0.3.0",
-                  "path": []
-                }
-              ],
-              "parent": "inc",
-              "branchPath": "inc:c",
-              "branch": "c"
             }
           ],
           "edges": [
