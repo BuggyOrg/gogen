@@ -26,6 +26,8 @@ var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '.
 var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
 var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound.hb'), 'utf8'), {noEscape: true})
 var sourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/source.hb'), 'utf8'), {noEscape: true})
+var seqSourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/seq_source.hb'), 'utf8'), {noEscape: true})
+var seqCompoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/seq_compound.hb'), 'utf8'), {noEscape: true})
 
 /**
  * Create the source for a process
@@ -56,3 +58,7 @@ export function createProcess (proc) {
 export { compoundTemplate as createCompound }
 
 export { sourceTemplate as createSource }
+
+export { seqCompoundTemplate as createSeqCompound }
+
+export { seqSourceTemplate as createSeqSource }
