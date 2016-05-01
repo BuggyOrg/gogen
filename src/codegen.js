@@ -35,6 +35,7 @@ handlebars.registerHelper('normType', (type) => {
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
 var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
 var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound.hb'), 'utf8'), {noEscape: true})
+var unpackedTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/unpack.hb'), 'utf8'), {noEscape: true})
 var sourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/source.hb'), 'utf8'), {noEscape: true})
 
 /**
@@ -63,6 +64,12 @@ export function createProcess (proc) {
  *   processes: Array[{name: String, inputs: Array[{name: String, type: String}], outputs: Array[{name: String, type: String}], additionalParameters: Array[String]}]
  * }
  */
-export { compoundTemplate as createCompound }
+export function createCompound (cmpd) {
+  if (cmpd.settings && cmpd.settings.unpacked) {
+    return unpackedTemplate(cmpd)
+  } else {
+    return compoundTemplate(cmpd)
+  }
+}
 
 export { sourceTemplate as createSource }
