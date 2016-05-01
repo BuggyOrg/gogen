@@ -1,12 +1,12 @@
 func P_{{sanitize uid}}(
 {{~#each arguments~}}
-{{sanitize name}}{{#if inputPrefix}}{{inputPrefix}} {{/if}}{{#unless inputPrefix}}_chan chan {{/unless}}{{type}} {{#unless @last}}, {{/unless}}
+{{sanitize name}}{{#if inputPrefix}}{{inputPrefix}} {{/if}}{{#unless inputPrefix}}_chan chan {{/unless}}{{normType type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   for {
     // ### Definition of variables ###
     {{#each outputPorts~}}
-    var {{sanitize @key}} {{this}}
+    var {{sanitize @key}} {{normType this}}
     {{/each}}
     {{#each inputPorts~}}
     {{sanitize @key}},ok{{@index}} := <- {{sanitize @key}}_chan

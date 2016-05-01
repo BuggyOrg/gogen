@@ -136,14 +136,6 @@ var rejectUnconnected = (graph, processes, channels) => {
       }, false)
     })
     .value()
-  _(processes)
-    .filter((p) => {
-      if (_.keys(p.inputPorts).length === 0) return false
-      return _.reduce(p.inputPorts, (res, type, name) => {
-        return res || walkPort.predecessorPort(graph, p.name, name).length === 0
-      }, false)
-    })
-    .value()
   return newProcs
 }
 
@@ -222,7 +214,6 @@ var api = {
   },
 
   compounds: (graph) => {
-    // TODO: Add inputs and outputs if not main. Those are stored in the node itself
     var processes = api.processes(graph)
     var processesByName = _.keyBy(processes, 'name')
     var parentProperty = (process, type, def) => {

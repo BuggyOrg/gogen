@@ -2,6 +2,7 @@
 import * as handlebars from 'handlebars'
 import fs from 'fs'
 import path from 'path'
+import * as types from './types.js'
 import _ from 'lodash'
 
 var replaceAll = (str, search, replacement) => {
@@ -20,6 +21,15 @@ handlebars.registerHelper('ifEq', (s1, s2, opts) => {
   } else {
     return opts.inverse(this)
   }
+})
+
+handlebars.registerHelper('arrayType', (type) => {
+  // improve replacement, use typify for that!?
+  return types.arrayType(type)
+})
+
+handlebars.registerHelper('normType', (type) => {
+  return types.normalize(type)
 })
 
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})

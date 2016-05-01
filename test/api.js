@@ -66,7 +66,6 @@ describe('Gogen API', () => {
     expect(compounds[0].processes).to.have.length(6)
     expect(compounds[1].processes).to.have.length(2)
   })
-
   it('compounds do not reject connected inner compound nodes', () => {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/fac.json')))
     var compounds = api.compounds(graph)

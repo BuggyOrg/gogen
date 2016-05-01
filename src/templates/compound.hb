@@ -1,6 +1,6 @@
 func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
 {{~#each arguments~}}
-{{#if inputPrefix}}{{inputPrefix}}{{/if}}{{sanitize name}}{{#unless inputPrefix}}_chan chan {{/unless}}{{type}} {{#unless @last}}, {{/unless}}
+{{#if inputPrefix}}{{inputPrefix}}{{/if}}{{sanitize name}}{{#unless inputPrefix}}_chan chan {{/unless}}{{normType type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   var wg_inner sync.WaitGroup
@@ -19,7 +19,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
   {{/each}}
 
   {{#each channels}}
-  chan_{{sanitize inPort}} := make(chan {{channelType}})
+  chan_{{sanitize inPort}} := make(chan {{normType channelType}})
   {{/each}}
   {{#each outputPorts~}}
   go func(){

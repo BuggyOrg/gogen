@@ -24,6 +24,9 @@ var processGraph = str => {
 if (program.graphfile) {
   var str = fs.readFileSync(program.graphfile)
   processGraph(str).then((code) => console.log(code))
+  .catch((e) => {
+    console.log('Error while processing: ', e.stack)
+  })
 } else {
   getStdin().then(str => {
     processGraph(str).then((code) => console.log(code))
