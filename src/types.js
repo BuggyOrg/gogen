@@ -13,3 +13,7 @@ export function normalize (type) {
 export function arrayType (type) {
   return type.replace(/\[/g, '').replace(/\]/g, '')
 }
+
+export function isArrayType (type) {
+  return type[0] === '[' && type[type.length - 1] === ']'
+}

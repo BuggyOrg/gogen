@@ -237,6 +237,7 @@ var api = {
           inputPorts: parentProperty(key, 'inputPorts', {}), // FIXME: extend with parents process ports
           outputPorts: parentProperty(key, 'outputPorts', {}),
           arguments: parentProperty(key, 'arguments', []),
+          settings: parentProperty(key, 'settings', {}),
           prefixes: waitGroupPreDefinitions(value),
           postfixes: waitGroupPostDefinitions(value),
           channels: _.filter(channels, (c) => c.parent === key)

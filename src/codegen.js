@@ -52,6 +52,10 @@ export function createProcess (proc) {
   }
 }
 
+function portName (portNode) {
+  return _.last(portNode.split('_'))
+}
+
 /**
  * Create the source for a coumpound node
  * @compound Expects a compound node with the following structure
@@ -66,7 +70,20 @@ export function createProcess (proc) {
  */
 export function createCompound (cmpd) {
   if (cmpd.settings && cmpd.settings.unpacked) {
-    return unpackedTemplate(cmpd)
+    var arrayInputs = _.pickBy(cmpd.inputPorts, types.isArrayType)
+    var normalInputs = _.pickBy(cmpd.inputPorts, _.negate(types.isArrayType))
+    var unpackChannels = _.filter(cmpd.channels, (c) => _.has(arrayInputs, portName(c.inPort)))
+    var cacheChannels = _.filter(cmpd.channels, (c) => _.has(normalInputs, portName(c.inPort)))
+    var arrayOutputs = _.pickBy(cmpd.outputPorts, types.isArrayType)
+    var packChannels = _.filter(cmpd.channels, (c) => _.has(arrayOutputs, portName(c.outPort)))
+    console.log(cmpd.channels)
+    console.log(arrayOutputs)
+    console.log(packChannels)
+    return unpackedTemplate(_.merge({}, cmpd, {
+      unpacks: unpackChannels,
+      caches: cacheChannels,
+      packs: packChannels
+    }))
   } else {
     return compoundTemplate(cmpd)
   }
