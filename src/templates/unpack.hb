@@ -35,10 +35,10 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
     chan_{{sanitize inPort}} := make(chan {{channelType}})
     {{/each}}
     {{#each outputPorts~}}
-    im_{{sanitize @key}}_chan := make(chan {{arrayType this}})
+    im_{{sanitize ../name}}_PORT_{{sanitize @key}}_chan := make(chan {{arrayType this}})
     go func(){
       for o := range chan_{{sanitize ../name}}_PORT_{{sanitize @key}} {
-        im_{{sanitize @key}}_chan <- o
+        im_{{sanitize ../name}}_PORT_{{sanitize @key}}_chan <- o
       }
       wg_inner.Done()
     }()
@@ -60,8 +60,8 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
     close(chan_{{sanitize ../name}}_PORT_{{sanitize @key}})
     {{/each}}
     
-    {{#each outputPorts~}}
-    pack_chan_{{sanitize ../name}}_PORT_{{sanitize @key}} <- im_{{sanitize @key}}_chan
+    {{#each packs~}}
+    pack_chan_{{sanitize outPort}} <- im_{{sanitize inPort}}_chan
     {{/each}}
     
     {{#each postfixes}}
