@@ -1,6 +1,6 @@
 func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
 {{~#each arguments~}}
-{{#if inputPrefix}}{{inputPrefix}}{{/if}}{{sanitize name}}{{#unless inputPrefix}}_chan chan {{/unless}}{{type}} {{#unless @last}}, {{/unless}}
+{{#if inputPrefix}}{{inputPrefix}}{{/if}}{{sanitize name}}{{#unless inputPrefix}}_chan chan {{/unless}}{{normType type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   // unpacking the elements in the nodes input channel. The channels deliver arrays which are converted into channels of channels
@@ -37,7 +37,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
 
     // create channels for every edge in the graph
     {{#each channels}}
-    chan_{{sanitize inPort}} := make(chan {{channelType}})
+    chan_{{sanitize inPort}} := make(chan {{normType channelType}})
     {{/each}}
     // go through every element in every out port to pin point the time when all output ports are closed.
     // it is very important to close every output port correctly!

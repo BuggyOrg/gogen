@@ -77,12 +77,16 @@ export function createCompound (cmpd) {
     var arrayOutputs = _.pickBy(cmpd.outputPorts, types.isArrayType)
     var packChannels = _.filter(cmpd.channels, (c) => _.has(arrayOutputs, portName(c.outPort)))
     console.log(cmpd.channels)
-    console.log(arrayOutputs)
-    console.log(packChannels)
+    console.log(unpackChannels)
     return unpackedTemplate(_.merge({}, cmpd, {
       unpacks: unpackChannels,
       caches: cacheChannels,
-      packs: packChannels
+      packs: packChannels,
+      channels: _.map(cmpd.channels, (c) =>
+        (_.find(unpackChannels, (u) =>
+          (u.outPort === c.outPort)))
+            ? _.merge({}, c, {unpacked: true})
+            : c)
     }))
   } else {
     return compoundTemplate(cmpd)
