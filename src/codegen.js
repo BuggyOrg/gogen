@@ -3,15 +3,8 @@ import * as handlebars from 'handlebars'
 import fs from 'fs'
 import path from 'path'
 import * as types from './types.js'
+import {sanitize} from './utils.js'
 import _ from 'lodash'
-
-var replaceAll = (str, search, replacement) => {
-  return str.split(search).join(replacement)
-}
-
-var sanitize = (str) => {
-  return replaceAll(replaceAll(replaceAll(str, '/', '_'), ':', '__'), '>', '___')
-}
 
 handlebars.registerHelper('sanitize', sanitize)
 

@@ -1,7 +1,7 @@
 /* global describe, it */
 var graphlib = require('graphlib')
 var fs = require('fs')
-var api = require('../src/api.js')
+import api from '../src/api.js'
 var expect = require('chai').expect
 import _ from 'lodash'
 

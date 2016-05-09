@@ -3,6 +3,7 @@ import * as codegen from './codegen'
 import graphlib from 'graphlib'
 import {utils, walk} from '@buggyorg/graphtools'
 import hash from 'object-hash'
+import * as types from './types'
 
 import libConnection from '@buggyorg/component-library'
 var lib = libConnection(process.env.BUGGY_COMPONENT_LIBRARY_HOST)
@@ -141,18 +142,19 @@ var rejectUnconnected = (graph, processes, channels) => {
 
 var api = {
 
-  processes: graph => {
+  processes: (graph) => {
     return _(graph.nodes()).chain()
     .filter(_.partial(isProcess, graph))
     .map(n => _.merge({}, graph.node(n),
         {name: n, hash: (graph.node(n).params) ? hash(graph.node(n).params) : ''},
         {parent: graph.parent(n) || 'main'},
         {arguments: createParameters(graph.node(n))}))
-    .map(n => _.merge({}, n, {uid: n.id + n.hash}))
+    .map(n => _.merge({}, n, {mangle: types.mangle(n)}))
+    .map(n => _.merge({}, n, {uid: n.id + n.hash + n.mangle}))
     .value()
   },
 
-  ports: graph => {
+  ports: (graph) => {
     return _(graph.nodes()).chain()
     .filter(_.partial(isPort, graph))
     .map(n => _.merge({}, graph.node(n), {name: n}))
@@ -261,4 +263,4 @@ var api = {
   }
 }
 
-module.exports = api
+export default api

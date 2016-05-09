@@ -1,4 +1,8 @@
 
+import _ from 'lodash'
+import hash from 'object-hash'
+import {sanitize} from './utils.js'
+
 export function normalize (type) {
   if (type[0] === '[' && type[type.length - 1] === ']') {
     return '[]' + type.slice(1, -1)
@@ -16,4 +20,22 @@ export function arrayType (type) {
 
 export function isArrayType (type) {
   return type[0] === '[' && type[type.length - 1] === ']'
+}
+
+export function typeName (type) {
+  if (typeof (type) === 'object') {
+    return 'type_' + hash(type)
+  } else {
+    return type
+  }
+}
+
+export function mangle (node) {
+  if (node.generic) {
+    return _.reduce(node.arguments, (mangled, arg) => {
+      return mangled + '_' + sanitize(typeName(arg.type))
+    }, '_')
+  } else {
+    return ''
+  }
 }
