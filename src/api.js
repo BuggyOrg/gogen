@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as codegen from './codegen'
 import graphlib from 'graphlib'
-import {utils, walkPort} from '@buggyorg/graphtools'
+import {utils, walk} from '@buggyorg/graphtools'
 import hash from 'object-hash'
 
 import libConnection from '@buggyorg/component-library'
@@ -132,7 +132,7 @@ var rejectUnconnected = (graph, processes, channels) => {
     .reject((p) => {
       if (_.keys(p.inputPorts).length === 0) return false
       return _.reduce(p.inputPorts, (res, type, name) => {
-        return res || walkPort.predecessorPort(graph, p.name, name).length === 0
+        return res || walk.predecessor(graph, p.name, name).length === 0
       }, false)
     })
     .value()
