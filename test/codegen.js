@@ -2,7 +2,7 @@
 import * as codegen from '../src/codegen.js'
 import graphlib from 'graphlib'
 import fs from 'fs'
-import * as api from '../src/api.js'
+import api from '../src/api.js'
 var expect = require('chai').expect
 
 describe('Codegen API', () => {
@@ -21,14 +21,15 @@ describe('Codegen API', () => {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/preproc.json')))
     var atomics = api.atomics(graph)
     var code = atomics.map(codegen.createProcess).join('\n\n')
-    expect(code).to.contain('func P_io_stdin')
-    expect(code).to.contain('func P_io_stdout')
+    expect(code).to.contain('func P_io0stdin')
+    expect(code).to.contain('func P_io0stdout')
   })
 
   it('can create code for a compound node', () => {
     var code = codegen.createCompound(
       {
         name: 'cmpd',
+        uid: 'cmpd',
         inputPorts: {'in': 'string'},
         outputPorts: {'out': 'string'},
         prefixes: ['wg.Add(1)'],
@@ -48,6 +49,7 @@ describe('Codegen API', () => {
     var code = codegen.createProcess({
       meta: 'control/join',
       name: 'join',
+      uid: 'join',
       inputPorts: {
         in1: 'int',
         in2: 'int'

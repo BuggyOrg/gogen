@@ -227,7 +227,7 @@ var api = {
     }
     var channels = api.channels(graph)
     if (processes.length === 0) {
-      return [{ name: 'main', processes: [], inputs: [], outputs: [], prefixes: [], channels: [] }]
+      return [{ name: 'main', uid: 'main', processes: [], inputs: [], outputs: [], prefixes: [], channels: [] }]
     }
     return _(processes)
       .groupBy('parent')

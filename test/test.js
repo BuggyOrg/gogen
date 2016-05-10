@@ -1,7 +1,9 @@
 /* global describe, it */
+
+import api from '../src/api.js'
+
 var graphlib = require('graphlib')
 var fs = require('fs')
-var api = require('../src/api.js')
 var expect = require('chai').expect
 const exec = require('child_process').exec
 import _ from 'lodash'
@@ -76,6 +78,14 @@ describe('Go Code Generator', function () {
       return executeCodePromise('go fmt test/fixtures/realFac.go', 'test/fixtures/realFac.go\n')
     })
   })
+
+/* TODO add map example
+  it.only('creates correct code for map example', function () {
+    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/emptytestgraph.graphlib')))
+    var code = api.generateCode(portGraph)
+    fs.writeFileSync('test/fixtures/emptyOutput.go', code)
+    return executeCodePromise('echo 7 | go run test/fixtures/emptyOutput.go', '')
+  })*/
 
   it('empty graph to golang', function () {
     var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/emptytestgraph.graphlib')))
