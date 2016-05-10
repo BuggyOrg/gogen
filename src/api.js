@@ -235,6 +235,7 @@ var api = {
         {
           name: key,
           id: parentProperty(key, 'id'),
+          uid: (parentProperty(key, 'id')) ? parentProperty(key, 'uid') : 'main',
           processes: rejectUnconnected(graph, value, _.filter(channels, (c) => c.parent === key)),
           inputPorts: parentProperty(key, 'inputPorts', {}), // FIXME: extend with parents process ports
           outputPorts: parentProperty(key, 'outputPorts', {}),
