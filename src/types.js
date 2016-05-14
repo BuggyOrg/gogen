@@ -32,9 +32,7 @@ export function typeName (type) {
 
 export function mangle (node) {
   if (node.generic) {
-    return _.reduce(node.arguments, (mangled, arg) => {
-      return mangled + '_' + sanitize(typeName(arg.type))
-    }, '_')
+    return sanitize(node.genericType)
   } else {
     return ''
   }
