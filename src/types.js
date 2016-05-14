@@ -1,5 +1,4 @@
 
-import _ from 'lodash'
 import hash from 'object-hash'
 import {sanitize} from './utils.js'
 
