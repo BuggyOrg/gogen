@@ -17,10 +17,18 @@ var isPort = (graph, n) => {
 }
 
 var additionalParameters = (node) => {
+  var params = []
   if (node.properties && node.properties.needsWaitGroup) {
-    return [{name: 'wg', type: 'sync.WaitGroup', inputPrefix: '*', passingPrefix: '&'}]
+    params = _.concat(params, [{name: 'wg', type: 'sync.WaitGroup', inputPrefix: '*', passingPrefix: '&'}])
   }
-  return []
+  if (node.params && node.params.isContinuation) {
+    params = _.concat(params, [{name: 'continuation_' + node.name, type: 'bool', passingPrefix: ' '}])
+  }
+  if (node.params && node.params.continuations) {
+    params = _.concat(params,
+      _.map(node.params.continuations, (c) => ({name: 'continuation_' + c.node, type: 'bool', passingPrefix: ' '})))
+  }
+  return params
 }
 
 var mapPortsForNode = (n, fn) => {
@@ -147,9 +155,8 @@ var api = {
     .filter(_.partial(isProcess, graph))
     .map(n => _.merge({}, graph.node(n),
         {name: n, hash: (graph.node(n).params) ? hash(graph.node(n).params) : ''},
-        {parent: graph.parent(n) || 'main'},
-        {arguments: createParameters(graph.node(n))}))
-    .map(n => _.merge({}, n, {mangle: types.mangle(n)}))
+        {parent: graph.parent(n) || 'main'}))
+    .map(n => _.merge({}, n, {mangle: types.mangle(n)}, {arguments: createParameters(n)}))
     .map(n => _.merge({}, n, {uid: n.id + n.hash + n.mangle}))
     .value()
   },
@@ -159,6 +166,10 @@ var api = {
     .filter(_.partial(isPort, graph))
     .map(n => _.merge({}, graph.node(n), {name: n}))
     .value()
+  },
+
+  continuations: (graph) => {
+    return _.filter(graph.edges(), (e) => graph.edge(e) && graph.edge(e).continuation)
   },
 
   resolveLambdas: (graph) => {
@@ -218,6 +229,7 @@ var api = {
   compounds: (graph) => {
     var processes = api.processes(graph)
     var processesByName = _.keyBy(processes, 'name')
+    var continuations = api.continuations(graph)
     var parentProperty = (process, type, def) => {
       if (_.has(processesByName, process)) {
         return processesByName[process][type]
@@ -229,7 +241,7 @@ var api = {
     if (processes.length === 0) {
       return [{ name: 'main', uid: 'main', processes: [], inputs: [], outputs: [], prefixes: [], channels: [] }]
     }
-    return _(processes)
+    var metaCompounds = _(processes)
       .groupBy('parent')
       .map((value, key) => (
         {
@@ -239,13 +251,22 @@ var api = {
           processes: rejectUnconnected(graph, value, _.filter(channels, (c) => c.parent === key)),
           inputPorts: parentProperty(key, 'inputPorts', {}), // FIXME: extend with parents process ports
           outputPorts: parentProperty(key, 'outputPorts', {}),
-          arguments: parentProperty(key, 'arguments', []),
+//          arguments: parentProperty(key, 'arguments', []),
           settings: parentProperty(key, 'settings', {}),
           prefixes: waitGroupPreDefinitions(value),
           postfixes: waitGroupPostDefinitions(value),
-          channels: _.filter(channels, (c) => c.parent === key)
+          channels: _.filter(channels, (c) => c.parent === key),
+          continuations: _.filter(continuations, (c) => graph.parent(c.v) === key && graph.parent(c.w) === key)
         }))
+      .toPairs()
+      .map((p) => [p[1].id || 'main', p[1]])
+      .fromPairs()
       .value()
+    var compounds = _(_.concat({id: 'main'}, processes))
+      .reject((p) => p.atomic)
+      .map((c) => _.merge({}, metaCompounds[c.id], c))
+      .value()
+    return compounds
   },
 
   createSourceDescriptor: (graph) => {
@@ -255,7 +276,7 @@ var api = {
       imports: imports(processes),
       globals: globals(processes),
       processes: _.map(_.uniqBy(processes, 'uid'), codegen.createProcess),
-      compounds: _.map(_.uniqBy(compounds, 'id'), codegen.createCompound)
+      compounds: _.map(_.uniqBy(compounds, 'uid'), codegen.createCompound)
     }
   },
 

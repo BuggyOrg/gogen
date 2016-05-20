@@ -1,3 +1,4 @@
+// {{name}}
 func P_{{sanitize uid}}(
 {{~#each arguments~}}
 {{#if inputPrefix}}{{inputPrefix}}{{/if}}{{sanitize name}}{{#unless inputPrefix}}_chan chan {{/unless}}{{normType type}} {{#unless @last}}, {{/unless}}
@@ -17,24 +18,54 @@ func P_{{sanitize uid}}(
     break
   }
   {{/each}}
+  
+  {{#if params.isContinuation}}
+  // wait for continuation
+  b_cont := <- continuation_{{sanitize name}}_chan
+  // reject branch if continuation says so
+  if (!b_cont) {
+    {{#if arguments.length}}
+    continue
+    {{else}}
+    return
+    {{/if}}
+  }
+  {{/if}}
 
   {{#each channels}}
   chan_{{sanitize inPort}} := make(chan {{normType channelType}})
   {{/each}}
+  {{#each channels}}
+  chan_{{sanitize outPort}} := chan_{{sanitize inPort}}
+  {{/each}}
   {{#each outputPorts~}}
   go func(){
+    {{#if ../recursesTo}}
+    for o := range chan_{{sanitize ../recursesTo/branch}}_PORT_{{sanitize @key}} {
+    {{else}}
     for o := range chan_{{sanitize ../name}}_PORT_{{sanitize @key}} {
+    {{/if}}
       {{sanitize @key}}_chan <- o
     }
     wg_inner.Done()
   }()
   wg_inner.Add(1)
   {{/each}}
-  {{#each channels}}
-  chan_{{sanitize outPort}} := chan_{{sanitize inPort}}
+  
+  {{#each continuations}}
+  // continuation channels
+  continuation_{{sanitize w}} := make(chan bool)
   {{/each}}
 
   {{#each processes}}
+  {{#if params.recursiveRoot}}
+  continuation_{{sanitize name}} := make(chan bool)
+  go func() {
+    for {
+      continuation_{{sanitize name}} <- true
+    }
+  }()
+  {{/if}}
   go P_{{sanitize uid}}({{#each arguments~}}
   {{#if passingPrefix}}{{passingPrefix}}{{sanitize name}}
   {{~else~}}
@@ -42,8 +73,13 @@ func P_{{sanitize uid}}(
   {{/each}}
   
   {{#each inputPorts~}}
+  {{#if ../recursesTo}}
+  chan_{{sanitize ../recursesTo/branch}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
+  close(chan_{{sanitize ../recursesTo/branch}}_PORT_{{sanitize @key}})
+  {{else}}
   chan_{{sanitize ../name}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
   close(chan_{{sanitize ../name}}_PORT_{{sanitize @key}})
+  {{/if}}
   {{/each}}
   
   {{#each postfixes}}

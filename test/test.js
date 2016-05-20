@@ -62,9 +62,6 @@ describe('Go Code Generator', function () {
       fs.writeFileSync('test/fixtures/realInc.go', code)
       return executeCodePromise('echo 7 | go run test/fixtures/realInc.go', '8')
     })
-    .then(() => {
-      return executeCodePromise('go fmt test/fixtures/realInc.go', 'test/fixtures/realInc.go\n')
-    })
   })
 
   it('create code for a recursive example graph', function () {
@@ -74,8 +71,23 @@ describe('Go Code Generator', function () {
       fs.writeFileSync('test/fixtures/realFac.go', code)
       return executeCodePromise('echo 3 | go run test/fixtures/realFac.go', '6')
     })
-    .then(() => {
-      return executeCodePromise('go fmt test/fixtures/realFac.go', 'test/fixtures/realFac.go\n')
+  })
+
+  it('creates code for an example graph with continuations', function () {
+    var incGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/factorial_mux.json')))
+    return api.preprocess(incGraph).then((graph) => {
+      var code = api.generateCode(graph)
+      fs.writeFileSync('test/fixtures/muxFac.go', code)
+      return executeCodePromise('echo 3 | go run test/fixtures/muxFac.go', '6')
+    })
+  })
+
+  it('creates code for the ackermann example', function () {
+    var incGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/ack.json')))
+    return api.preprocess(incGraph).then((graph) => {
+      var code = api.generateCode(graph)
+      fs.writeFileSync('test/fixtures/ack.go', code)
+      return executeCodePromise('echo 3 | go run test/fixtures/ack.go', '61')
     })
   })
 

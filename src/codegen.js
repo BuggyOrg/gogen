@@ -40,7 +40,12 @@ export function createProcess (proc) {
     proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc)
     return specialFormTemplate(proc)
   } else {
-    proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({}, proc.params, {ports: _.merge({}, proc.inputPorts, proc.outputPorts)}))
+    proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({},
+      proc.params,
+      {
+        ports: _.merge({}, proc.inputPorts, proc.outputPorts),
+        settings: proc.settings
+      }))
     return processTemplate(proc)
   }
 }

@@ -4,6 +4,7 @@ package main
 {{#each imports}}
 import {{#ifEq this "unsafe"}}unsafe{{/ifEq}} "{{this}}"
 {{/each}}
+import "runtime"
 
 // global variables
 {{#each globals}}
@@ -25,5 +26,7 @@ var {{sanitize name}} {{type}}
 {{/each}}
 
 func main() {
+  // prevent crashes due to too many processes
+  runtime.GOMAXPROCS(2)
   P_main()
 }
