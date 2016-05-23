@@ -2,6 +2,7 @@ import graphlib from 'graphlib'
 import api from './api.js'
 import * as codegen from './codegen'
 import _ from 'lodash'
+// import { compoundify } from '@buggyorg/graphtools'
 
 var topsort = (graph) => {
   var g = graphlib.json.read(graphlib.json.write(graph))
@@ -71,7 +72,6 @@ var sequential = {
     var compounds = sequential.compounds(graph)
     return {
       imports: imports(processes),
-//      processes: _.map(_.uniqBy(processes, 'uid'), codegen.createProcess),
       compounds: _.map(_.uniqBy(compounds, 'id'), codegen.createSeqCompound)
     }
   },
