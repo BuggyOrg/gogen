@@ -41,7 +41,7 @@ func P_{{sanitize uid}}(
   {{#each outputPorts~}}
   go func(){
     {{#if ../recursesTo}}
-    for o := range chan_{{sanitize ../recursesTo/branch}}_PORT_{{sanitize @key}} {
+    for o := range chan_{{sanitize ../recursesTo/branchPath}}_PORT_{{sanitize @key}} {
     {{else}}
     for o := range chan_{{sanitize ../name}}_PORT_{{sanitize @key}} {
     {{/if}}
@@ -74,8 +74,8 @@ func P_{{sanitize uid}}(
   
   {{#each inputPorts~}}
   {{#if ../recursesTo}}
-  chan_{{sanitize ../recursesTo/branch}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
-  close(chan_{{sanitize ../recursesTo/branch}}_PORT_{{sanitize @key}})
+  chan_{{sanitize ../recursesTo/branchPath}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
+  close(chan_{{sanitize ../recursesTo/branchPath}}_PORT_{{sanitize @key}})
   {{else}}
   chan_{{sanitize ../name}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
   close(chan_{{sanitize ../name}}_PORT_{{sanitize @key}})

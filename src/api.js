@@ -34,7 +34,9 @@ var additionalParameters = (node) => {
 var mapPortsForNode = (n, fn) => {
   return _.merge({}, n, {value: {
     inputPorts: _.mapValues(n.value.inputPorts, fn),
-    outputPorts: _.mapValues(n.value.outputPorts, fn)
+    outputPorts: _.mapValues(n.value.outputPorts, fn),
+    rawInputPorts: n.value.inputPorts,
+    rawOutputPorts: n.value.outputPorts
   }})
 }
 
@@ -47,7 +49,7 @@ var mapPorts = (graphJSON, fn) => {
 var createParameters = (node) => {
   var mapper = _()
     .map((type, key) => ({name: key, type: type}))
-    .sortBy('name')
+    // .sortBy('name')
   return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value(), additionalParameters(node))
 }
 

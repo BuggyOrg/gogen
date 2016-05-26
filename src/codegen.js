@@ -29,9 +29,22 @@ handlebars.registerHelper('lambda', (type) => {
   return types.createLambdaFunctions(type)
 })
 
-handlebars.registerHelper('partialArgs', (partial, port) => {
-  console.error(partial)
-  return 'partial args ' + port
+handlebars.registerHelper('noContinuation', (continuations, type, opts) => {
+  if (!_.find(continuations, (c) => c.port === type)) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
+})
+
+handlebars.registerHelper('partial', (partial, port) => {
+  var callArgs = _.concat(_.keys(partial.rawInputPorts.fn.arguments), _.keys(partial.rawInputPorts.fn.outputs))
+  callArgs[partial.params.partial] = port
+  var callStr = callArgs.join(', ')
+  var funcStr = _.concat(
+    _.map(partial.rawOutputPorts.result.arguments, (type, name) => sanitize(name) + ' chan ' + types.normalize(type)),
+    _.map(partial.rawOutputPorts.result.outputs, (type, name) => sanitize(name) + ' chan ' + types.normalize(type))).join(', ')
+  return 'func (' + funcStr + ') { fn(' + callStr + ') }'
 })
 
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
