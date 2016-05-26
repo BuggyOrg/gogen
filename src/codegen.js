@@ -25,6 +25,15 @@ handlebars.registerHelper('normType', (type) => {
   return types.normalize(type)
 })
 
+handlebars.registerHelper('lambda', (type) => {
+  return types.createLambdaFunctions(type)
+})
+
+handlebars.registerHelper('partialArgs', (partial, port) => {
+  console.error(partial)
+  return 'partial args ' + port
+})
+
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
 var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
 var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound.hb'), 'utf8'), {noEscape: true})

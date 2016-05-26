@@ -29,3 +29,5 @@ func P_{{sanitize uid}}(
   close({{sanitize @key}}_chan)
   {{/each}}
 }
+
+var P_{{sanitize name}} = P_{{sanitize uid}}

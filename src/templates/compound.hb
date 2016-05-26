@@ -95,3 +95,8 @@ func P_{{sanitize uid}}(
   close({{sanitize @key}}_chan)
   {{/each}}
 }
+
+{{#ifEq name uid}}
+{{else}}
+var P_{{sanitize ../name}} = P_{{sanitize ../uid}}
+{{/ifEq}}

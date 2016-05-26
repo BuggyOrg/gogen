@@ -1,8 +1,6 @@
 
 package numbers
 
-import "fmt"
-
 func Increment(input chan int, output chan int) {
   for v := range input {
     output <- v + 1
@@ -56,7 +54,6 @@ type constantProcess  func(chan int)
 func Constant(c int) constantProcess{
   return func(output chan int) {
     for {
-      fmt.Println("constant : " , c)
       output <- c
     }
   }

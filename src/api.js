@@ -51,18 +51,6 @@ var createParameters = (node) => {
   return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value(), additionalParameters(node))
 }
 
-var createLambdaFunctions = (type) => {
-  if (typeof type === 'object' && type.arguments && type.return) {
-    if (typeof type.return !== 'string') {
-      throw new Error('multiple return values in lambda functions are not [yet] supported')
-    }
-    var parameters = _.map(type.arguments, (type, key) => 'chan ' + type)
-    return 'func (' + parameters.join(',') + ', chan ' + type.return + ')'
-  } else {
-    return type
-  }
-}
-
 var safeQuery = (q, failureMessage) => {
   return q.catch(() => {
     throw new Error(failureMessage)
@@ -173,7 +161,7 @@ var api = {
   },
 
   resolveLambdas: (graph) => {
-    return utils.finalize(mapPorts(utils.edit(graph), createLambdaFunctions))
+    return utils.finalize(mapPorts(utils.edit(graph), types.createLambdaFunctions))
   },
 
   preprocess: (graph) => {
