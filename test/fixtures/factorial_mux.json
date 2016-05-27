@@ -9,11 +9,14 @@
       "v": "stdout_8",
       "value": {
         "id": "io/stdout",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "inputPorts": {
           "input": "string"
         },
         "outputPorts": {},
+        "settings": {
+          "sideEffects": true
+        },
         "atomic": true,
         "isSink": true,
         "path": [],
@@ -75,7 +78,7 @@
                 {
                   "meta": "factorial",
                   "branch": "factorial_10",
-                  "path": []
+                  "branchPath": "factorial_10"
                 }
               ],
               "parent": "factorial_10",
@@ -95,7 +98,7 @@
                 {
                   "meta": "factorial",
                   "branch": "factorial_10",
-                  "path": []
+                  "branchPath": "factorial_10"
                 }
               ],
               "params": {
@@ -121,7 +124,7 @@
                 {
                   "meta": "factorial",
                   "branch": "factorial_10",
-                  "path": []
+                  "branchPath": "factorial_10"
                 }
               ],
               "parent": "factorial_10",
@@ -236,7 +239,8 @@
               "recursesTo": {
                 "meta": "factorial",
                 "branch": "factorial_10",
-                "path": []
+                "path": [],
+                "branchPath": "factorial_10"
               },
               "recursive": true
             },
@@ -255,7 +259,7 @@
                 {
                   "meta": "factorial",
                   "branch": "factorial_10",
-                  "path": []
+                  "branchPath": "factorial_10"
                 }
               ],
               "parent": "factorial_10",
@@ -275,7 +279,7 @@
                 {
                   "meta": "factorial",
                   "branch": "factorial_10",
-                  "path": []
+                  "branchPath": "factorial_10"
                 }
               ],
               "params": {
@@ -301,7 +305,7 @@
                 {
                   "meta": "factorial",
                   "branch": "factorial_10",
-                  "path": []
+                  "branchPath": "factorial_10"
                 }
               ],
               "parent": "factorial_10",
@@ -321,7 +325,7 @@
                 {
                   "meta": "factorial",
                   "branch": "factorial_10",
-                  "path": []
+                  "branchPath": "factorial_10"
                 }
               ],
               "params": {
@@ -386,14 +390,14 @@
         "branchPath": "factorial_10",
         "branch": "factorial_10",
         "recursive": false,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "isContinuation": true,
           "recursiveRoot": true
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       }
     },
     {
@@ -415,13 +419,16 @@
           {
             "meta": "factorial",
             "branch": "factorial_10",
-            "path": []
+            "branchPath": "factorial_10"
           }
         ],
         "parent": "factorial_10",
         "branchPath": "factorial_10:mux_0",
         "branch": "mux_0",
         "recursive": false,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "continuations": [
             {
@@ -430,10 +437,7 @@
             }
           ]
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       },
       "parent": "factorial_10"
     },
@@ -451,7 +455,7 @@
           {
             "meta": "factorial",
             "branch": "factorial_10",
-            "path": []
+            "branchPath": "factorial_10"
           }
         ],
         "params": {
@@ -483,7 +487,7 @@
           {
             "meta": "factorial",
             "branch": "factorial_10",
-            "path": []
+            "branchPath": "factorial_10"
           }
         ],
         "parent": "factorial_10",
@@ -604,16 +608,17 @@
         "recursesTo": {
           "meta": "factorial",
           "branch": "factorial_10",
-          "path": []
+          "path": [],
+          "branchPath": "factorial_10"
         },
         "recursive": true,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "isContinuation": true
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       },
       "parent": "factorial_10"
     },
@@ -634,7 +639,7 @@
           {
             "meta": "factorial",
             "branch": "factorial_10",
-            "path": []
+            "branchPath": "factorial_10"
           }
         ],
         "parent": "factorial_10",
@@ -660,7 +665,7 @@
           {
             "meta": "factorial",
             "branch": "factorial_10",
-            "path": []
+            "branchPath": "factorial_10"
           }
         ],
         "params": {
@@ -692,7 +697,7 @@
           {
             "meta": "factorial",
             "branch": "factorial_10",
-            "path": []
+            "branchPath": "factorial_10"
           }
         ],
         "parent": "factorial_10",
@@ -718,7 +723,7 @@
           {
             "meta": "factorial",
             "branch": "factorial_10",
-            "path": []
+            "branchPath": "factorial_10"
           }
         ],
         "params": {
@@ -758,10 +763,13 @@
       "v": "stdin_12",
       "value": {
         "id": "io/stdin",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "inputPorts": {},
         "outputPorts": {
           "output": "string"
+        },
+        "settings": {
+          "sideEffects": true
         },
         "atomic": true,
         "path": [],
@@ -786,10 +794,9 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "factorial_10"
     },
@@ -806,10 +813,9 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "factorial_10"
     },
@@ -818,7 +824,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "string_to_number_11"
+        "process": "string_to_number_11",
+        "type": "string"
       }
     },
     {
@@ -826,7 +833,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "stdin_12"
+        "process": "stdin_12",
+        "type": "string"
       }
     },
     {
@@ -843,7 +851,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "string_to_number_11"
+        "process": "string_to_number_11",
+        "type": "int64"
       }
     },
     {
@@ -851,7 +860,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "number_to_string_9"
+        "process": "number_to_string_9",
+        "type": "int64"
       }
     },
     {
@@ -868,7 +878,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "stdout_8"
+        "process": "stdout_8",
+        "type": "string"
       }
     },
     {
@@ -876,7 +887,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "number_to_string_9"
+        "process": "number_to_string_9",
+        "type": "string"
       }
     },
     {
@@ -884,7 +896,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input1",
-        "process": "factorial_10:mux_0"
+        "process": "factorial_10:mux_0",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -893,7 +906,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "factorial_10:const(1)_1"
+        "process": "factorial_10:const(1)_1",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -902,7 +916,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s2",
-        "process": "factorial_10:add_4"
+        "process": "factorial_10:add_4",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -911,7 +926,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "factorial_10:const(-1)_5"
+        "process": "factorial_10:const(-1)_5",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -920,7 +936,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "n",
-        "process": "factorial_10:factorial_3"
+        "process": "factorial_10:factorial_3",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -929,7 +946,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "sum",
-        "process": "factorial_10:add_4"
+        "process": "factorial_10:add_4",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -938,7 +956,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "m2",
-        "process": "factorial_10:multiply_2"
+        "process": "factorial_10:multiply_2",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -947,7 +966,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "fac",
-        "process": "factorial_10:factorial_3"
+        "process": "factorial_10:factorial_3",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -956,7 +976,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input2",
-        "process": "factorial_10:mux_0"
+        "process": "factorial_10:mux_0",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -965,7 +986,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "product",
-        "process": "factorial_10:multiply_2"
+        "process": "factorial_10:multiply_2",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -974,7 +996,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "than",
-        "process": "factorial_10:less_6"
+        "process": "factorial_10:less_6",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -983,7 +1006,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "factorial_10:const(1)_7"
+        "process": "factorial_10:const(1)_7",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -992,7 +1016,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "control",
-        "process": "factorial_10:mux_0"
+        "process": "factorial_10:mux_0",
+        "type": "bool"
       },
       "parent": "factorial_10"
     },
@@ -1001,7 +1026,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "value",
-        "process": "factorial_10:less_6"
+        "process": "factorial_10:less_6",
+        "type": "bool"
       },
       "parent": "factorial_10"
     },
@@ -1019,7 +1045,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "m1",
-        "process": "factorial_10:multiply_2"
+        "process": "factorial_10:multiply_2",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1028,7 +1055,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "factorial_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1"
+        "process": "factorial_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1037,7 +1065,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s1",
-        "process": "factorial_10:add_4"
+        "process": "factorial_10:add_4",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1046,7 +1075,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "factorial_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1"
+        "process": "factorial_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1055,7 +1085,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "factorial_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1"
+        "process": "factorial_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1064,7 +1095,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "factorial_10_n_DUPLICATE_0_2"
+        "process": "factorial_10_n_DUPLICATE_0_2",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1073,7 +1105,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "isLess",
-        "process": "factorial_10:less_6"
+        "process": "factorial_10:less_6",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1082,7 +1115,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "factorial_10_n_DUPLICATE_0_2"
+        "process": "factorial_10_n_DUPLICATE_0_2",
+        "type": "int64"
       },
       "parent": "factorial_10"
     },
@@ -1091,7 +1125,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "factorial_10_n_DUPLICATE_0_2"
+        "process": "factorial_10_n_DUPLICATE_0_2",
+        "type": "int64"
       },
       "parent": "factorial_10"
     }

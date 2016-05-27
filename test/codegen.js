@@ -7,7 +7,7 @@ var expect = require('chai').expect
 
 describe('Codegen API', () => {
   it('can create code for a process', () => {
-    var code = codegen.createProcess({uid: 'proc', inputPorts: {'in': 'string'}, outputPorts: {'output': 'string'}, code: 'output++', arguments: [{name: 'in', type: 'string'}, {name: 'output', type: 'string'}]})
+    var code = codegen.createProcess({name: 'procc', uid: 'proc', inputPorts: {'in': 'string'}, outputPorts: {'output': 'string'}, code: 'output++', arguments: [{name: 'in', type: 'string'}, {name: 'output', type: 'string'}]})
     expect(code).to.be.a('string')
     expect(code).to.contain('func P_proc')
     expect(code).to.contain('proc(in_chan chan string , output_chan chan string )')

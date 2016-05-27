@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@buggyorg/component-library": "^0.3.2",
-    "@buggyorg/graphtools": "^0.2.15",
+    "@buggyorg/graphtools": "^0.2.18",
     "commander": "^2.9.0",
     "get-stdin": "^5.0.1",
     "handlebars": "^4.0.5",

@@ -9,11 +9,14 @@
       "v": "stdout_18",
       "value": {
         "id": "io/stdout",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "inputPorts": {
           "input": "string"
         },
         "outputPorts": {},
+        "settings": {
+          "sideEffects": true
+        },
         "atomic": true,
         "isSink": true,
         "path": [],
@@ -76,7 +79,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -99,7 +102,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -119,7 +122,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "params": {
@@ -147,7 +150,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -371,7 +374,8 @@
               "recursesTo": {
                 "meta": "ack",
                 "branch": "ack_20",
-                "path": []
+                "path": [],
+                "branchPath": "ack_20"
               },
               "recursive": true
             },
@@ -390,7 +394,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -410,7 +414,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "params": {
@@ -433,7 +437,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "params": {
@@ -660,7 +664,8 @@
               "recursesTo": {
                 "meta": "ack",
                 "branch": "ack_20",
-                "path": []
+                "path": [],
+                "branchPath": "ack_20"
               },
               "recursive": true
             },
@@ -679,7 +684,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -699,7 +704,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "params": {
@@ -926,7 +931,8 @@
               "recursesTo": {
                 "meta": "ack",
                 "branch": "ack_20",
-                "path": []
+                "path": [],
+                "branchPath": "ack_20"
               },
               "recursive": true
             },
@@ -945,7 +951,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -965,7 +971,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "params": {
@@ -992,7 +998,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -1012,7 +1018,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "params": {
@@ -1039,7 +1045,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "parent": "ack_20",
@@ -1059,7 +1065,7 @@
                 {
                   "meta": "ack",
                   "branch": "ack_20",
-                  "path": []
+                  "branchPath": "ack_20"
                 }
               ],
               "params": {
@@ -1180,14 +1186,14 @@
         "branchPath": "ack_20",
         "branch": "ack_20",
         "recursive": false,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "isContinuation": true,
           "recursiveRoot": true
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       }
     },
     {
@@ -1209,13 +1215,16 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
         "branchPath": "ack_20:mux_0",
         "branch": "mux_0",
         "recursive": false,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "continuations": [
             {
@@ -1224,10 +1233,7 @@
             }
           ]
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -1248,7 +1254,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
@@ -1274,7 +1280,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "params": {
@@ -1308,13 +1314,16 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
         "branchPath": "ack_20:mux_3",
         "branch": "mux_3",
         "recursive": false,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "isContinuation": true,
           "continuations": [
@@ -1328,10 +1337,7 @@
             }
           ]
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -1553,16 +1559,17 @@
         "recursesTo": {
           "meta": "ack",
           "branch": "ack_20",
-          "path": []
+          "path": [],
+          "branchPath": "ack_20"
         },
         "recursive": true,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "isContinuation": true
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -1583,7 +1590,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
@@ -1609,7 +1616,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "params": {
@@ -1638,7 +1645,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "params": {
@@ -1871,13 +1878,14 @@
         "recursesTo": {
           "meta": "ack",
           "branch": "ack_20",
-          "path": []
+          "path": [],
+          "branchPath": "ack_20"
         },
         "recursive": true,
         "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -1898,7 +1906,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
@@ -1924,7 +1932,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "params": {
@@ -2157,16 +2165,17 @@
         "recursesTo": {
           "meta": "ack",
           "branch": "ack_20",
-          "path": []
+          "path": [],
+          "branchPath": "ack_20"
         },
         "recursive": true,
+        "typeHint": {},
+        "generic": true,
+        "genericType": "int64",
         "params": {
           "isContinuation": true
         },
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2187,7 +2196,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
@@ -2213,7 +2222,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "params": {
@@ -2246,7 +2255,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
@@ -2254,9 +2263,9 @@
         "branch": "equal_14",
         "recursive": false,
         "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2274,7 +2283,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "params": {
@@ -2307,7 +2316,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "parent": "ack_20",
@@ -2315,9 +2324,9 @@
         "branch": "equal_16",
         "recursive": false,
         "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2335,7 +2344,7 @@
           {
             "meta": "ack",
             "branch": "ack_20",
-            "path": []
+            "branchPath": "ack_20"
           }
         ],
         "params": {
@@ -2397,10 +2406,13 @@
       "v": "stdin_23",
       "value": {
         "id": "io/stdin",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "inputPorts": {},
         "outputPorts": {
           "output": "string"
+        },
+        "settings": {
+          "sideEffects": true
         },
         "atomic": true,
         "path": [],
@@ -2425,10 +2437,9 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2445,10 +2456,9 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2465,10 +2475,9 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2485,10 +2494,9 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2505,10 +2513,9 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
         "generic": true,
-        "genericType": "int64"
+        "genericType": "int64",
+        "nodeType": "process"
       },
       "parent": "ack_20"
     },
@@ -2526,7 +2533,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "const(3)_21"
+        "process": "const(3)_21",
+        "type": "int64"
       }
     },
     {
@@ -2534,7 +2542,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "string_to_number_22"
+        "process": "string_to_number_22",
+        "type": "string"
       }
     },
     {
@@ -2542,7 +2551,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "stdin_23"
+        "process": "stdin_23",
+        "type": "string"
       }
     },
     {
@@ -2559,7 +2569,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "string_to_number_22"
+        "process": "string_to_number_22",
+        "type": "int64"
       }
     },
     {
@@ -2567,7 +2578,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "number_to_string_19"
+        "process": "number_to_string_19",
+        "type": "int64"
       }
     },
     {
@@ -2584,7 +2596,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "stdout_18"
+        "process": "stdout_18",
+        "type": "string"
       }
     },
     {
@@ -2592,7 +2605,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "number_to_string_19"
+        "process": "number_to_string_19",
+        "type": "string"
       }
     },
     {
@@ -2600,7 +2614,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s2",
-        "process": "ack_20:add_1"
+        "process": "ack_20:add_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2609,7 +2624,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:const(1)_2"
+        "process": "ack_20:const(1)_2",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2618,7 +2634,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input1",
-        "process": "ack_20:mux_0"
+        "process": "ack_20:mux_0",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2627,7 +2644,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "sum",
-        "process": "ack_20:add_1"
+        "process": "ack_20:add_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2636,7 +2654,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s2",
-        "process": "ack_20:add_5"
+        "process": "ack_20:add_5",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2645,7 +2664,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:const(-1)_6"
+        "process": "ack_20:const(-1)_6",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2654,7 +2674,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "m",
-        "process": "ack_20:ack_4"
+        "process": "ack_20:ack_4",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2663,7 +2684,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "sum",
-        "process": "ack_20:add_5"
+        "process": "ack_20:add_5",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2672,7 +2694,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "n",
-        "process": "ack_20:ack_4"
+        "process": "ack_20:ack_4",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2681,7 +2704,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:const(1)_7"
+        "process": "ack_20:const(1)_7",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2690,7 +2714,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input1",
-        "process": "ack_20:mux_3"
+        "process": "ack_20:mux_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2699,7 +2724,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "result",
-        "process": "ack_20:ack_4"
+        "process": "ack_20:ack_4",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2708,7 +2734,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s2",
-        "process": "ack_20:add_9"
+        "process": "ack_20:add_9",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2717,7 +2744,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:const(-1)_10"
+        "process": "ack_20:const(-1)_10",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2726,7 +2754,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "m",
-        "process": "ack_20:ack_8"
+        "process": "ack_20:ack_8",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2735,7 +2764,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "sum",
-        "process": "ack_20:add_9"
+        "process": "ack_20:add_9",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2744,7 +2774,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s2",
-        "process": "ack_20:add_12"
+        "process": "ack_20:add_12",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2753,7 +2784,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:const(-1)_13"
+        "process": "ack_20:const(-1)_13",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2762,7 +2794,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "n",
-        "process": "ack_20:ack_11"
+        "process": "ack_20:ack_11",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2771,7 +2804,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "sum",
-        "process": "ack_20:add_12"
+        "process": "ack_20:add_12",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2780,7 +2814,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "n",
-        "process": "ack_20:ack_8"
+        "process": "ack_20:ack_8",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2789,7 +2824,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "result",
-        "process": "ack_20:ack_11"
+        "process": "ack_20:ack_11",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2798,7 +2834,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input2",
-        "process": "ack_20:mux_3"
+        "process": "ack_20:mux_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2807,7 +2844,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "result",
-        "process": "ack_20:ack_8"
+        "process": "ack_20:ack_8",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2816,7 +2854,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "i2",
-        "process": "ack_20:equal_14"
+        "process": "ack_20:equal_14",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2825,7 +2864,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:const(0)_15"
+        "process": "ack_20:const(0)_15",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2834,7 +2874,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "control",
-        "process": "ack_20:mux_3"
+        "process": "ack_20:mux_3",
+        "type": "bool"
       },
       "parent": "ack_20"
     },
@@ -2843,7 +2884,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "eq",
-        "process": "ack_20:equal_14"
+        "process": "ack_20:equal_14",
+        "type": "bool"
       },
       "parent": "ack_20"
     },
@@ -2852,7 +2894,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input2",
-        "process": "ack_20:mux_0"
+        "process": "ack_20:mux_0",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2861,7 +2904,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:mux_3"
+        "process": "ack_20:mux_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2870,7 +2914,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "i2",
-        "process": "ack_20:equal_16"
+        "process": "ack_20:equal_16",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2879,7 +2924,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "ack_20:const(0)_17"
+        "process": "ack_20:const(0)_17",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2888,7 +2934,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "control",
-        "process": "ack_20:mux_0"
+        "process": "ack_20:mux_0",
+        "type": "bool"
       },
       "parent": "ack_20"
     },
@@ -2897,7 +2944,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "eq",
-        "process": "ack_20:equal_16"
+        "process": "ack_20:equal_16",
+        "type": "bool"
       },
       "parent": "ack_20"
     },
@@ -2915,7 +2963,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s1",
-        "process": "ack_20:add_1"
+        "process": "ack_20:add_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2924,7 +2973,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "ack_20_n_DUPLICATE_0_2_d1_DUPLICATE_0_1"
+        "process": "ack_20_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2933,7 +2983,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s1",
-        "process": "ack_20:add_12"
+        "process": "ack_20:add_12",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2942,7 +2993,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "ack_20_n_DUPLICATE_0_2_d1_DUPLICATE_0_1"
+        "process": "ack_20_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2951,7 +3003,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "ack_20_n_DUPLICATE_0_2_d1_DUPLICATE_0_1"
+        "process": "ack_20_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2960,7 +3013,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "ack_20_n_DUPLICATE_0_2"
+        "process": "ack_20_n_DUPLICATE_0_2",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2969,7 +3023,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "i1",
-        "process": "ack_20:equal_14"
+        "process": "ack_20:equal_14",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2978,7 +3033,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "ack_20_n_DUPLICATE_0_2"
+        "process": "ack_20_n_DUPLICATE_0_2",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2987,7 +3043,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "ack_20_n_DUPLICATE_0_2"
+        "process": "ack_20_n_DUPLICATE_0_2",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -2996,7 +3053,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s1",
-        "process": "ack_20:add_5"
+        "process": "ack_20:add_5",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3005,7 +3063,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "ack_20_m_DUPLICATE_0_3_d1_DUPLICATE_0_1"
+        "process": "ack_20_m_DUPLICATE_0_3_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3014,7 +3073,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s1",
-        "process": "ack_20:add_9"
+        "process": "ack_20:add_9",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3023,7 +3083,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "ack_20_m_DUPLICATE_0_3_d1_DUPLICATE_0_1"
+        "process": "ack_20_m_DUPLICATE_0_3_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3032,7 +3093,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "ack_20_m_DUPLICATE_0_3_d1_DUPLICATE_0_1"
+        "process": "ack_20_m_DUPLICATE_0_3_d1_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3041,7 +3103,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "ack_20_m_DUPLICATE_0_3"
+        "process": "ack_20_m_DUPLICATE_0_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3050,7 +3113,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "m",
-        "process": "ack_20:ack_11"
+        "process": "ack_20:ack_11",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3059,7 +3123,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "ack_20_m_DUPLICATE_0_3_d2_DUPLICATE_2_3"
+        "process": "ack_20_m_DUPLICATE_0_3_d2_DUPLICATE_2_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3068,7 +3133,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "i1",
-        "process": "ack_20:equal_16"
+        "process": "ack_20:equal_16",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3077,7 +3143,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "ack_20_m_DUPLICATE_0_3_d2_DUPLICATE_2_3"
+        "process": "ack_20_m_DUPLICATE_0_3_d2_DUPLICATE_2_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3086,7 +3153,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "ack_20_m_DUPLICATE_0_3_d2_DUPLICATE_2_3"
+        "process": "ack_20_m_DUPLICATE_0_3_d2_DUPLICATE_2_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3095,7 +3163,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "ack_20_m_DUPLICATE_0_3"
+        "process": "ack_20_m_DUPLICATE_0_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     },
@@ -3104,7 +3173,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "ack_20_m_DUPLICATE_0_3"
+        "process": "ack_20_m_DUPLICATE_0_3",
+        "type": "int64"
       },
       "parent": "ack_20"
     }
