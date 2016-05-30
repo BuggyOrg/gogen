@@ -151,8 +151,6 @@ export function createCompound (cmpd) {
     var cacheChannels = _.filter(cmpd.channels, (c) => _.has(normalInputs, portName(c.inPort)))
     var arrayOutputs = _.pickBy(cmpd.outputPorts, types.isArrayType)
     var packChannels = _.filter(cmpd.channels, (c) => _.has(arrayOutputs, portName(c.outPort)))
-    console.log(cmpd.channels)
-    console.log(unpackChannels)
     return unpackedTemplate(_.merge({}, cmpd, {
       unpacks: unpackChannels,
       caches: cacheChannels,
