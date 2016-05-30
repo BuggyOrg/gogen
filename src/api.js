@@ -213,12 +213,7 @@ var api = {
         var processName = p.process
         var process = processes[processName]
         var channelType = ((p.nodeType !== 'outPort' && p.hierarchyBorder) ? process.inputPorts : process.outputPorts)[p.portName]
-        return _.map(graph.successors(p.name), (succ) => {
-          let inPort = succ
-          // while (graph.node(inPort).hierarchyBorder === true) {
-            // we can assume there is exactly one successor
-            // inPort = graph.successors(succ)[0]
-          // }
+        return _.map(graph.successors(p.name), (inPort) => {
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
         })
       })

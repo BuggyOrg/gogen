@@ -2,7 +2,8 @@ import graphlib from 'graphlib'
 import api from './api.js'
 import * as codegen from './codegen'
 import _ from 'lodash'
-// import { compoundify } from '@buggyorg/graphtools'
+import { compoundify } from '@buggyorg/graphtools'
+import hash from 'object-hash'
 
 var topsort = (graph) => {
   var g = graphlib.json.read(graphlib.json.write(graph))
@@ -35,10 +36,92 @@ var imports = (processes) => {
     .value()
 }
 
+var cmpndLabel = (graph, cmpd) => {
+  var inputs = {}
+  var outputs = {}
+
+  for (let n of graph.nodes()) {
+    if (graph.parent(n) !== cmpd) { continue }
+    var name = graph.node(n).portName
+    var type = graph.node(n).type
+    // if (graph.predecessors(n).length === 0) { inputs[name] = type }
+    for (let pred of graph.predecessors(n)) {
+      if (graph.parent(pred) !== cmpd) {
+        inputs[name] = type
+        break
+      }
+    }
+    // if (graph.successors(n).length === 0) { outputs[name] = type }
+    for (let succ of graph.successors(n)) {
+      if (graph.parent(succ) !== cmpd) {
+        outputs[name] = type
+        break
+      }
+    }
+  }
+  return {
+    inputPorts: inputs,
+    outputPorts: outputs,
+    atomic: false,
+    name: cmpd,
+    id: cmpd,
+    nodeType: 'process' }
+}
+
+var addPortNodes = (graph, cmpd) => {
+  for (let n of graph.nodes()) {
+    if (graph.parent(n) !== cmpd) { continue }
+    var name = graph.node(n).portName
+    var type = graph.node(n).type
+    for (let pred of graph.predecessors(n)) {
+      if (graph.parent(pred) !== cmpd) {
+        let pname = cmpd + '_PORT_' + graph.node(n).portName
+        let plabel = {
+          nodeType: 'inPort',
+          portName: name,
+          type: type,
+          hierarchyBorder: true,
+          process: cmpd }
+        graph.setNode(pname, plabel)
+        graph.setEdge(pname, n)
+        graph.setEdge(pred, pname)
+        graph.removeEdge(pred, n)
+      }
+    }
+    for (let succ of graph.successors(n)) {
+      if (graph.parent(succ) !== cmpd) {
+        let pname = cmpd + '_PORT_' + graph.node(n).portName
+        let plabel = {
+          nodeType: 'outPort',
+          portName: name,
+          type: type,
+          hierarchyBorder: true,
+          process: cmpd }
+        graph.setNode(pname, plabel)
+        graph.setEdge(n, pname)
+        graph.setEdge(pname, succ)
+        graph.removeEdge(n, succ)
+      }
+    }
+  }
+  return graph
+}
+
 var sequential = {
 
+  compoundify: (graph, subset, name) => {
+    if (!name) { name = 'compound' + hash(graph) }
+    graph = compoundify.compoundify(graph, subset, name)
+    graph.setNode(name, cmpndLabel(graph, name))
+    graph = addPortNodes(graph, name)
+    return graph
+  },
+
+  autoCompoundify: (graph) => {
+    return graph
+  },
+
   compounds: (graph) => {
-    // TODO: Add inputs and outputs if not main. Those are stored in the node itself
     var processes = api.processes(graph)
     var processesByName = _.keyBy(processes, 'name')
     var parentProperty = (process, type, def) => {
