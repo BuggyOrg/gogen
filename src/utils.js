@@ -6,6 +6,9 @@ export function replaceAll (str, search, replacement) {
 }
 
 export function sanitize (str) {
-  var replace = ['/', ':', '>', '[', ']', ' ', '(', ')', ',', '-']
+  if (typeof (str) !== 'string') {
+    return sanitize(JSON.stringify(str))
+  }
+  var replace = ['/', ':', '>', '[', ']', ' ', '(', ')', ',', '-', '{', '}', '"', ' ']
   return _.reduce(replace, replaceAll, str)
 }

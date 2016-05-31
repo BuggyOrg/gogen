@@ -33,8 +33,8 @@ export function typeName (type) {
 }
 
 export function mangle (node) {
-  if (node.generic) {
-    return sanitize(node.genericType)
+  if (node.settings && node.settings.isGeneric) {
+    return hash(_.merge({}, node.inputPorts, node.outputPorts))
   } else {
     return ''
   }
