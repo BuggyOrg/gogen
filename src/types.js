@@ -1,6 +1,5 @@
 
 import hash from 'object-hash'
-import {sanitize} from './utils.js'
 import _ from 'lodash'
 
 export function normalize (type) {
