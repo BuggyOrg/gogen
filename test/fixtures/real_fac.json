@@ -76,7 +76,7 @@
                   "meta": "math/factorial",
                   "branch": "fac",
                   "version": "0.2.1",
-                  "path": []
+                  "branchPath": "fac"
                 }
               ],
               "parent": "fac",
@@ -97,7 +97,7 @@
                   "meta": "math/factorial",
                   "branch": "fac",
                   "version": "0.2.1",
-                  "path": []
+                  "branchPath": "fac"
                 }
               ],
               "params": {
@@ -127,7 +127,7 @@
                   "meta": "math/factorial",
                   "branch": "fac",
                   "version": "0.2.1",
-                  "path": []
+                  "branchPath": "fac"
                 }
               ],
               "parent": "fac",
@@ -148,7 +148,7 @@
                   "meta": "math/factorial",
                   "branch": "fac",
                   "version": "0.2.1",
-                  "path": []
+                  "branchPath": "fac"
                 }
               ],
               "params": {
@@ -175,7 +175,7 @@
                   "meta": "math/factorial",
                   "branch": "fac",
                   "version": "0.2.1",
-                  "path": []
+                  "branchPath": "fac"
                 }
               ],
               "parent": "fac",
@@ -291,7 +291,8 @@
                 "meta": "math/factorial",
                 "branch": "fac",
                 "version": "0.2.1",
-                "path": []
+                "path": [],
+                "branchPath": "fac"
               },
               "recursive": true
             },
@@ -311,7 +312,7 @@
                   "meta": "math/factorial",
                   "branch": "fac",
                   "version": "0.2.1",
-                  "path": []
+                  "branchPath": "fac"
                 }
               ],
               "parent": "fac",
@@ -395,7 +396,7 @@
             "meta": "math/factorial",
             "branch": "fac",
             "version": "0.2.1",
-            "path": []
+            "branchPath": "fac"
           }
         ],
         "parent": "fac",
@@ -403,9 +404,11 @@
         "branch": "is1",
         "recursive": false,
         "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "settings": {
+          "genericType": "int64",
+          "isGeneric": true
+        },
+        "nodeType": "process"
       },
       "parent": "fac"
     },
@@ -424,7 +427,7 @@
             "meta": "math/factorial",
             "branch": "fac",
             "version": "0.2.1",
-            "path": []
+            "branchPath": "fac"
           }
         ],
         "params": {
@@ -460,7 +463,7 @@
             "meta": "math/factorial",
             "branch": "fac",
             "version": "0.2.1",
-            "path": []
+            "branchPath": "fac"
           }
         ],
         "parent": "fac",
@@ -468,9 +471,11 @@
         "branch": "choose",
         "recursive": false,
         "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "settings": {
+          "genericType": "int64",
+          "isGeneric": true
+        },
+        "nodeType": "process"
       },
       "parent": "fac"
     },
@@ -489,7 +494,7 @@
             "meta": "math/factorial",
             "branch": "fac",
             "version": "0.2.1",
-            "path": []
+            "branchPath": "fac"
           }
         ],
         "params": {
@@ -522,7 +527,7 @@
             "meta": "math/factorial",
             "branch": "fac",
             "version": "0.2.1",
-            "path": []
+            "branchPath": "fac"
           }
         ],
         "parent": "fac",
@@ -644,7 +649,8 @@
           "meta": "math/factorial",
           "branch": "fac",
           "version": "0.2.1",
-          "path": []
+          "path": [],
+          "branchPath": "fac"
         },
         "recursive": true,
         "typeHint": {},
@@ -670,7 +676,7 @@
             "meta": "math/factorial",
             "branch": "fac",
             "version": "0.2.1",
-            "path": []
+            "branchPath": "fac"
           }
         ],
         "parent": "fac",
@@ -736,10 +742,11 @@
         },
         "atomic": true,
         "specialForm": true,
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "settings": {
+          "isGeneric": true,
+          "genericType": "int64"
+        },
+        "nodeType": "process"
       },
       "parent": "fac"
     },
@@ -756,10 +763,11 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "settings": {
+          "isGeneric": true,
+          "genericType": "int64"
+        },
+        "nodeType": "process"
       },
       "parent": "fac"
     },
@@ -776,10 +784,11 @@
           "d2": "int64"
         },
         "atomic": true,
-        "typeHint": {},
-        "nodeType": "process",
-        "generic": true,
-        "genericType": "int64"
+        "settings": {
+          "isGeneric": true,
+          "genericType": "int64"
+        },
+        "nodeType": "process"
       },
       "parent": "fac"
     },
@@ -788,7 +797,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "strToNum"
+        "process": "strToNum",
+        "type": "string"
       }
     },
     {
@@ -796,7 +806,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "in"
+        "process": "in",
+        "type": "string"
       }
     },
     {
@@ -813,7 +824,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "strToNum"
+        "process": "strToNum",
+        "type": "int64"
       }
     },
     {
@@ -821,7 +833,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "numToStr"
+        "process": "numToStr",
+        "type": "int64"
       }
     },
     {
@@ -838,7 +851,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "out"
+        "process": "out",
+        "type": "string"
       }
     },
     {
@@ -846,7 +860,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "numToStr"
+        "process": "numToStr",
+        "type": "string"
       }
     },
     {
@@ -854,7 +869,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "i2",
-        "process": "fac:is1"
+        "process": "fac:is1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -863,7 +879,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "fac:c"
+        "process": "fac:c",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -872,7 +889,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "control",
-        "process": "fac:choose"
+        "process": "fac:choose",
+        "type": "bool"
       },
       "parent": "fac"
     },
@@ -881,7 +899,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "eq",
-        "process": "fac:is1"
+        "process": "fac:is1",
+        "type": "bool"
       },
       "parent": "fac"
     },
@@ -890,7 +909,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s2",
-        "process": "fac:dec"
+        "process": "fac:dec",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -899,7 +919,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "output",
-        "process": "fac:c_dec"
+        "process": "fac:c_dec",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -908,7 +929,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "n",
-        "process": "fac:recFac"
+        "process": "fac:recFac",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -917,7 +939,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "sum",
-        "process": "fac:dec"
+        "process": "fac:dec",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -926,7 +949,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "m2",
-        "process": "fac:mul"
+        "process": "fac:mul",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -935,7 +959,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "fac",
-        "process": "fac:recFac"
+        "process": "fac:recFac",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -944,7 +969,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in1",
-        "process": "fac_fac_JOIN_0_1"
+        "process": "fac_fac_JOIN_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -953,7 +979,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "outTrue",
-        "process": "fac:choose"
+        "process": "fac:choose",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -962,7 +989,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in2",
-        "process": "fac_fac_JOIN_0_1"
+        "process": "fac_fac_JOIN_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -971,7 +999,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "product",
-        "process": "fac:mul"
+        "process": "fac:mul",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -989,7 +1018,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "i1",
-        "process": "fac:is1"
+        "process": "fac:is1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -998,7 +1028,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "fac_n_DUPLICATE_0_1"
+        "process": "fac_n_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1007,7 +1038,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "input",
-        "process": "fac:choose"
+        "process": "fac:choose",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1016,7 +1048,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "fac_n_DUPLICATE_0_1"
+        "process": "fac_n_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1025,7 +1058,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "fac_n_DUPLICATE_0_1"
+        "process": "fac_n_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1034,7 +1068,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "s1",
-        "process": "fac:dec"
+        "process": "fac:dec",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1043,7 +1078,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d1",
-        "process": "fac:choose_outFalse_DUPLICATE_0_1"
+        "process": "fac:choose_outFalse_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1052,7 +1088,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "m1",
-        "process": "fac:mul"
+        "process": "fac:mul",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1061,7 +1098,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "d2",
-        "process": "fac:choose_outFalse_DUPLICATE_0_1"
+        "process": "fac:choose_outFalse_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1070,7 +1108,8 @@
       "value": {
         "nodeType": "inPort",
         "portName": "in",
-        "process": "fac:choose_outFalse_DUPLICATE_0_1"
+        "process": "fac:choose_outFalse_DUPLICATE_0_1",
+        "type": "int64"
       },
       "parent": "fac"
     },
@@ -1079,7 +1118,8 @@
       "value": {
         "nodeType": "outPort",
         "portName": "outFalse",
-        "process": "fac:choose"
+        "process": "fac:choose",
+        "type": "int64"
       },
       "parent": "fac"
     }

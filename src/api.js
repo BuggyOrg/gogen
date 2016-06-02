@@ -147,7 +147,7 @@ var api = {
         {name: n, hash: (graph.node(n).params) ? hash(graph.node(n).params) : ''},
         {parent: graph.parent(n) || 'main'}))
     .map(n => _.merge({}, n, {mangle: types.mangle(n)}, {arguments: createParameters(n)}))
-    .map(n => _.merge({}, n, {uid: n.id + n.hash + n.mangle}))
+    .map(n => _.merge({}, n, {uid: (n.atomic) ? (n.id + n.hash + n.mangle) : n.name}))
     .value()
   },
 
@@ -203,12 +203,7 @@ var api = {
         var processName = p.process
         var process = processes[processName]
         var channelType = ((p.nodeType !== 'outPort' && p.hierarchyBorder) ? process.inputPorts : process.outputPorts)[p.portName]
-        return _.map(graph.successors(p.name), (succ) => {
-          let inPort = succ
-          // while (graph.node(inPort).hierarchyBorder === true) {
-            // we can assume there is exactly one successor
-            // inPort = graph.successors(succ)[0]
-          // }
+        return _.map(graph.successors(p.name), (inPort) => {
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
         })
       })
@@ -237,7 +232,7 @@ var api = {
         {
           name: key,
           id: parentProperty(key, 'id'),
-          uid: (parentProperty(key, 'id')) ? parentProperty(key, 'uid') : 'main',
+          uid: (parentProperty(key, 'uid')) ? parentProperty(key, 'uid') : 'main',
           processes: rejectUnconnected(graph, value, _.filter(channels, (c) => c.parent === key)),
           inputPorts: parentProperty(key, 'inputPorts', {}), // FIXME: extend with parents process ports
           outputPorts: parentProperty(key, 'outputPorts', {}),
@@ -249,14 +244,25 @@ var api = {
           continuations: _.filter(continuations, (c) => graph.parent(c.v) === key && graph.parent(c.w) === key)
         }))
       .toPairs()
-      .map((p) => [p[1].id || 'main', p[1]])
+      .map((p) => [p[1].uid || 'main', p[1]])
       .fromPairs()
       .value()
-    var compounds = _(_.concat({id: 'main'}, processes))
+    var compounds = _(_.concat({uid: 'main'}, processes))
       .reject((p) => p.atomic)
-      .map((c) => _.merge({}, metaCompounds[c.id], c))
+      .map((c) => _.merge({}, metaCompounds[c.uid], c))
       .value()
-    return compounds
+    var newCompounds = _.map(compounds, (value, key) => {
+      if (value.recursesTo) {
+        return _.merge({}, value, {
+          processes: metaCompounds[value.recursesTo.branchPath].processes,
+          channels: metaCompounds[value.recursesTo.branchPath].channels,
+          continuations: metaCompounds[value.recursesTo.branchPath].continuations
+        })
+      } else {
+        return value
+      }
+    })
+    return newCompounds
   },
 
   createSourceDescriptor: (graph) => {

@@ -66,7 +66,7 @@ func P_{{sanitize uid}}(
     }
   }()
   {{/if}}
-  go P_{{sanitize uid}}({{#each arguments~}}
+  {{#if recursive}}go /*recursive*/ P_{{sanitize name}}{{else}}go P_{{sanitize uid}}{{/if}}({{#each arguments~}}
   {{#if passingPrefix}}{{passingPrefix}}{{sanitize name}}
   {{~else~}}
   chan_{{sanitize ../name}}_PORT_{{sanitize name}}{{/if}} {{#unless @last}}, {{/unless}}{{/each}})
@@ -74,11 +74,15 @@ func P_{{sanitize uid}}(
   
   {{#each inputPorts~}}
   {{#if ../recursesTo}}
-  chan_{{sanitize ../recursesTo/branchPath}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
-  close(chan_{{sanitize ../recursesTo/branchPath}}_PORT_{{sanitize @key}})
+  go func() {
+    chan_{{sanitize ../recursesTo/branchPath}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
+    close(chan_{{sanitize ../recursesTo/branchPath}}_PORT_{{sanitize @key}})
+  }()
   {{else}}
-  chan_{{sanitize ../name}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
-  close(chan_{{sanitize ../name}}_PORT_{{sanitize @key}})
+  go func() {
+    chan_{{sanitize ../name}}_PORT_{{sanitize @key}} <- {{sanitize @key}}
+    close(chan_{{sanitize ../name}}_PORT_{{sanitize @key}})
+  }()
   {{/if}}
   {{/each}}
   
