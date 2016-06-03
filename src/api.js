@@ -128,9 +128,9 @@ var parent = function (graph, outP, inP) {
   } else if (graph.parent(outP.name) && !graph.parent(inP.name)) {
     return graph.parent(outP.name)
   } else {
-    throw new Error('Don\'t know what parent to use.. Please fix me!\n'
-      + 'Parent output: ' + graph.parent(outP.name) + ', parent input: ' + graph.parent(inP.name) + '\n'
-      + JSON.stringify(outP) + ' , ' + JSON.stringify(inP))
+    throw new Error('Don\'t know what parent to use.. Please fix me!\n' +
+    'Parent output: ' + graph.parent(outP.name) + ', parent input: ' + graph.parent(inP.name) + '\n' +
+    JSON.stringify(outP) + ' , ' + JSON.stringify(inP))
   }
 }
 
