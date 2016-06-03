@@ -121,8 +121,16 @@ var parent = function (graph, outP, inP) {
     return graph.parent(outP.name)
   } else if (graph.parent(outP.name) === inP.process) {
     return inP.process
-  } else {
+  } else if (graph.parent(inP.name) === outP.process) {
     return outP.process
+  } else if (!graph.parent(outP.name) && graph.parent(inP.name)) {
+    return graph.parent(inP.name)
+  } else if (graph.parent(outP.name) && !graph.parent(inP.name)) {
+    return graph.parent(outP.name)
+  } else {
+    throw new Error('Don\'t know what parent to use.. Please fix me!\n'
+      + 'Parent output: ' + graph.parent(outP.name) + ', parent input: ' + graph.parent(inP.name) + '\n'
+      + JSON.stringify(outP) + ' , ' + JSON.stringify(inP))
   }
 }
 
