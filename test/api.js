@@ -48,7 +48,7 @@ describe('Gogen API', () => {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/lambda.json')))
     var lambdaGraph = api.resolveLambdas(graph)
     expect(lambdaGraph.node('apply').inputPorts.fn).to.be.a('string')
-    expect(lambdaGraph.node('apply').inputPorts.fn).to.equal('func (chan int64, chan int64)')
+    expect(lambdaGraph.node('apply').inputPorts.fn).to.equal('func (chan int64,chan int64)')
     expect(lambdaGraph.node('apply').outputPorts.result).to.equal('int64')
   })
 
