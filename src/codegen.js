@@ -47,6 +47,14 @@ handlebars.registerHelper('partial', (partial, port) => {
   return 'func (' + funcStr + ') { fn(' + callStr + ') }'
 })
 
+handlebars.registerHelper('hasOutputParams', (partial, opts) => {
+  if (_.keys(partial.rawOutputPorts.result.arguments).length > 0) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
+})
+
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
 var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
 var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound.hb'), 'utf8'), {noEscape: true})
