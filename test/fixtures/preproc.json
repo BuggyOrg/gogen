@@ -21,7 +21,10 @@
         "dependencies": [
           "fmt",
           "sync"
-        ]
+        ],
+        "settings": {
+          "argumentOrdering": ["output"]
+        }
       }
     },
     {
@@ -41,7 +44,10 @@
         },
         "dependencies": [
           "fmt"
-        ]
+        ],
+        "settings": {
+          "argumentOrdering": ["input"]
+        }
       }
     },
     {

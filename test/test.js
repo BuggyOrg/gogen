@@ -55,50 +55,6 @@ describe('Go Code Generator', function () {
     })
   })
 
-  it('create code for a real example graph', function () {
-    var incGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/real_inc.json')))
-    return api.preprocess(incGraph).then((graph) => {
-      var code = api.generateCode(graph)
-      fs.writeFileSync('test/fixtures/realInc.go', code)
-      return executeCodePromise('echo 7 | go run test/fixtures/realInc.go', '8')
-    })
-  })
-
-  it('create code for a recursive example graph', function () {
-    var incGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/real_fac.json')))
-    return api.preprocess(incGraph).then((graph) => {
-      var code = api.generateCode(graph)
-      fs.writeFileSync('test/fixtures/realFac.go', code)
-      return executeCodePromise('echo 3 | go run test/fixtures/realFac.go', '6')
-    })
-  })
-
-  it('creates code for an example graph with continuations', function () {
-    var incGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/factorial_mux.json')))
-    return api.preprocess(incGraph).then((graph) => {
-      var code = api.generateCode(graph)
-      fs.writeFileSync('test/fixtures/muxFac.go', code)
-      return executeCodePromise('echo 3 | go run test/fixtures/muxFac.go', '6')
-    })
-  })
-
-  it('creates code for the ackermann example', function () {
-    var incGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/ack.json')))
-    return api.preprocess(incGraph).then((graph) => {
-      var code = api.generateCode(graph)
-      fs.writeFileSync('test/fixtures/ack.go', code)
-      return executeCodePromise('echo 3 | go run test/fixtures/ack.go', '61')
-    })
-  })
-
-/* TODO add map example
-  it.only('creates correct code for map example', function () {
-    var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/emptytestgraph.graphlib')))
-    var code = api.generateCode(portGraph)
-    fs.writeFileSync('test/fixtures/emptyOutput.go', code)
-    return executeCodePromise('echo 7 | go run test/fixtures/emptyOutput.go', '')
-  })*/
-
   it('empty graph to golang', function () {
     var portGraph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/emptytestgraph.graphlib')))
     var code = api.generateCode(portGraph)

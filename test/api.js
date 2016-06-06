@@ -47,16 +47,9 @@ describe('Gogen API', () => {
   it('can handle lambda types', () => {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/lambda.json')))
     var lambdaGraph = api.resolveLambdas(graph)
-    expect(lambdaGraph.node('apply').inputPorts.fn).to.be.a('string')
-    expect(lambdaGraph.node('apply').inputPorts.fn).to.equal('func (chan int64,chan int64)')
-    expect(lambdaGraph.node('apply').outputPorts.result).to.equal('int64')
-  })
-
-  it('can get types for channels in lambda functions', () => {
-    var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/lambda.json')))
-    var channels = api.channels(graph)
-    expect(channels).to.be.ok
-    expect(channels[5].channelType).to.equal('int64')
+    expect(lambdaGraph.node('apply_2').inputPorts.fn).to.be.a('string')
+    expect(lambdaGraph.node('apply_2').inputPorts.fn).to.equal('func (chan int64,chan int64)')
+    expect(lambdaGraph.node('apply_2').outputPorts.result).to.equal('int64')
   })
 
   it('compounds do not list not connected parts', () => {
@@ -70,6 +63,6 @@ describe('Gogen API', () => {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/fac.json')))
     var compounds = api.compounds(graph)
     expect(compounds).to.be.ok
-    expect(_.keyBy(_.keyBy(compounds, 'name').main.processes, 'id')['math/faculty']).to.be.ok
+    expect(_.keyBy(_.keyBy(compounds, 'name').main.processes, 'id')['factorial']).to.be.ok
   })
 })

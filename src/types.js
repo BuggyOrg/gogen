@@ -44,7 +44,8 @@ export function createLambdaFunctions (type) {
     if (typeof type.return !== 'string') {
       throw new Error('multiple return values in lambda functions are not [yet] supported\n' + JSON.stringify(type))
     }
-    var parameters = _.concat(_.map(type.arguments, (type, key) => 'chan ' + normalize(type)), ['chan ' + normalize(type.return)])
+    var args = _.intersection(type.argumentOrdering, _.keys(type.arguments))
+    var parameters = _.concat(_.map(args, (key) => 'chan ' + normalize(type.arguments[key])), ['chan ' + normalize(type.return)])
     return 'func (' + parameters.join(',') + ')'
   } else {
     return type

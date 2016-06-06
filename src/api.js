@@ -47,10 +47,13 @@ var mapPorts = (graphJSON, fn) => {
 }
 
 var createParameters = (node) => {
+  var ports = _.merge({}, node.inputPorts, node.outputPorts)
+  var inputs = _.intersection(node.settings.argumentOrdering, _.keys(node.inputPorts))
+  var outputs = _.intersection(node.settings.argumentOrdering, _.keys(node.outputPorts))
   var mapper = _()
-    .map((type, key) => ({name: key, type: type}))
+    .map((key) => ({name: key, type: ports[key]}))
     // .sortBy('name')
-  return _.concat(mapper.plant(node.inputPorts).value(), mapper.plant(node.outputPorts).value(), additionalParameters(node))
+  return _.concat(mapper.plant(inputs).value(), mapper.plant(outputs).value(), additionalParameters(node))
 }
 
 var safeQuery = (q, failureMessage) => {

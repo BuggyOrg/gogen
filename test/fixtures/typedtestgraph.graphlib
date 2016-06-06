@@ -19,7 +19,10 @@
           "stdin/output": "string"
         },
         "atomic": true,
-        "nodeType": "process"
+        "nodeType": "process",
+        "settings": {
+          "argumentOrdering": ["stdin/output"]
+        }
       },
       "parent": "EXAMPLE1"
     },
@@ -35,7 +38,10 @@
           "inc/inc": "int"
         },
         "atomic": false,
-        "nodeType": "process"
+        "nodeType": "process",
+        "settings": {
+          "argumentOrdering": ["inc/i", "inc/inc"]
+        }
       },
       "parent": "EXAMPLE1"
     },
@@ -49,7 +55,10 @@
         },
         "outputPorts": {},
         "atomic": true,
-        "nodeType": "process"
+        "nodeType": "process",
+        "settings": {
+          "argumentOrdering": ["stdout/input"]
+        }
       },
       "parent": "EXAMPLE1"
     },
@@ -66,7 +75,10 @@
           "add/sum": "int"
         },
         "atomic": true,
-        "nodeType": "process"
+        "nodeType": "process",
+        "settings": {
+          "argumentOrdering": ["add/s1", "add/s2", "add/sum"]
+        }
       },
       "parent": "1_INC"
     },
@@ -80,7 +92,10 @@
           "const1/output": "int"
         },
         "atomic": true,
-        "nodeType": "process"
+        "nodeType": "process",
+        "settings": {
+          "argumentOrdering": ["const1/output"]
+        }
       },
       "parent": "1_INC"
     },
@@ -164,7 +179,10 @@
         "atomic": true,
         "nodeType": "process",
         "typeFrom": "string",
-        "typeTo": "int"
+        "typeTo": "int",
+        "settings": {
+          "argumentOrdering": ["string_to_int/input", "string_to_int/output"]
+        }
       },
       "parent": "EXAMPLE1"
     },
@@ -198,7 +216,10 @@
         "atomic": true,
         "nodeType": "process",
         "typeFrom": "int",
-        "typeTo": "string"
+        "typeTo": "string",
+        "settings": {
+          "argumentOrdering": ["int_to_string/input", "int_to_string/output"]
+        }
       },
       "parent": "EXAMPLE1"
     },

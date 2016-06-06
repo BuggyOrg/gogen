@@ -38,12 +38,18 @@ handlebars.registerHelper('noContinuation', (continuations, type, opts) => {
 })
 
 handlebars.registerHelper('partial', (partial, port) => {
-  var callArgs = _.concat(_.keys(partial.rawInputPorts.fn.arguments), _.keys(partial.rawInputPorts.fn.outputs))
+  var inFn = partial.rawInputPorts.fn
+  var inArgs = _.intersection(inFn.argumentOrdering, _.keys(inFn.arguments))
+  var inOuts = _.intersection(inFn.argumentOrdering, _.keys(inFn.outputs))
+  var callArgs = _.concat(inArgs, inOuts)
   callArgs[partial.params.partial] = port
   var callStr = callArgs.join(', ')
+  var res = partial.rawOutputPorts.result
+  var resArgs = _.intersection(res.argumentOrdering, _.keys(res.arguments))
+  var resOuts = _.intersection(res.argumentOrdering, _.keys(res.outputs))
   var funcStr = _.concat(
-    _.map(partial.rawOutputPorts.result.arguments, (type, name) => sanitize(name) + ' chan ' + types.normalize(type)),
-    _.map(partial.rawOutputPorts.result.outputs, (type, name) => sanitize(name) + ' chan ' + types.normalize(type))).join(', ')
+    _.map(resArgs, (name) => sanitize(name) + ' chan ' + types.normalize(res.arguments[name])),
+    _.map(resOuts, (name) => sanitize(name) + ' chan ' + types.normalize(res.outputs[name]))).join(', ')
   return 'func (' + funcStr + ') { fn(' + callStr + ') }'
 })
 
