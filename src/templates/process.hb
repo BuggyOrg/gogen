@@ -15,6 +15,13 @@ func P_{{sanitize uid}}(
       break
     }
     {{/each}}
+    {{#if params.isContinuation}}
+    // continuation
+    cont := <- continuation_{{sanitize name}}_chan
+    if !cont {
+      continue
+    }
+    {{/if}}
     // ### Code from metadata ###
     {{compiledCode}}
     // ### process output ###
