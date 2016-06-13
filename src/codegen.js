@@ -29,6 +29,16 @@ handlebars.registerHelper('lambda', (type) => {
   return types.createLambdaFunctions(type)
 })
 
+handlebars.registerHelper('necessaryForContinuation', (port, node, opts) => {
+  if ((node.params && node.params.isContinuation === true) ||
+    (node.params && node.params.isContinuation && node.params.isContinuation.type === 'recursion') ||
+    (node.params && node.params.isContinuation && _.find(node.params.isContinuation.branchPorts, port))) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
+})
+
 handlebars.registerHelper('noContinuation', (continuations, type, opts) => {
   if (!_.find(continuations, (c) => c.port === type)) {
     return opts.fn(this)

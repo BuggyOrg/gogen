@@ -13,10 +13,12 @@ func P_{{sanitize uid}}(
   {{/each}}
   
   {{#each inputPorts~}}
+  {{#necessaryForContinuation @key ..}}
   {{sanitize @key}},ok{{@index}} := <- {{sanitize @key}}_chan
   if !ok{{@index}} {
     break
   }
+  {{/necessaryForContinuation}}
   {{/each}}
   
   {{#if params.isContinuation}}
@@ -31,6 +33,16 @@ func P_{{sanitize uid}}(
     {{/if}}
   }
   {{/if}}
+
+  {{#each inputPorts~}}
+  {{#necessaryForContinuation @key ..}}
+  {{else}}
+  {{sanitize @key}},ok{{@index}} := <- {{sanitize @key}}_chan
+  if !ok{{@index}} {
+    break
+  }
+  {{/necessaryForContinuation}}
+  {{/each}}
 
   {{#each channels}}
   chan_{{sanitize inPort}} := make(chan {{normType channelType}})

@@ -10,10 +10,12 @@ func P_{{sanitize uid}}(
     var {{sanitize @key}} {{normType this}}
     {{/each}}
     {{#each inputPorts~}}
+    {{#necessaryForContinuation @key ..}}
     {{sanitize @key}},ok{{@index}} := <- {{sanitize @key}}_chan
     if !ok{{@index}} {
       break
     }
+    {{/necessaryForContinuation}}
     {{/each}}
     {{#if params.isContinuation}}
     // continuation
@@ -22,6 +24,15 @@ func P_{{sanitize uid}}(
       continue
     }
     {{/if}}
+    {{#each inputPorts~}}
+    {{#necessaryForContinuation @key ..}}
+    {{else}}
+    {{sanitize @key}},ok{{@index}} := <- {{sanitize @key}}_chan
+    if !ok{{@index}} {
+      break
+    }
+    {{/necessaryForContinuation}}
+    {{/each}}
     // ### Code from metadata ###
     {{compiledCode}}
     // ### process output ###
