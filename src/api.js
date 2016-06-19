@@ -28,6 +28,10 @@ var additionalParameters = (node) => {
     params = _.concat(params,
       _.map(node.params.continuations, (c) => ({name: 'continuation_' + c.node, type: 'bool', passingPrefix: ' '})))
   }
+  if (node.auxilliaryPorts) {
+    params = _.concat(params,
+      _.map(node.auxilliaryPorts, (ap) => ({name: 'continuation_' + ap.node, type: 'bool', passingPrefix: ' '})))
+  }
   return params
 }
 
