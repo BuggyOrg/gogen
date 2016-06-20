@@ -22,6 +22,7 @@ handlebars.registerHelper('arrayType', (type) => {
 })
 
 handlebars.registerHelper('normType', (type) => {
+  type = type || 'TYPE!!!!'
   return types.normalize(type)
 })
 
@@ -82,6 +83,9 @@ var sourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '..
  * @process Expects a process format of {name: String, inputPorts: Array[{name: String, type: String}], outputPorts: Array[{name: String, type: String}], code: String}
  */
 export function createProcess (proc) {
+  if (proc.name === 'factorial_10:if_0:mux_0') {
+    console.error()
+  }
   if (proc.specialForm) {
     proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc)
     return specialFormTemplate(proc)

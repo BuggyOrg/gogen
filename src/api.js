@@ -22,15 +22,15 @@ var additionalParameters = (node) => {
     params = _.concat(params, [{name: 'wg', type: 'sync.WaitGroup', inputPrefix: '*', passingPrefix: '&'}])
   }
   if (node.params && node.params.isContinuation) {
-    params = _.concat(params, [{name: 'continuation_' + node.name, type: 'bool', passingPrefix: ' '}])
+    params = _.concat(params, [{name: 'continuation_' + node.name, type: 'bool', passingPrefix: ' ', callingPostfix: '_chan'}])
   }
   if (node.params && node.params.continuations) {
     params = _.concat(params,
-      _.map(node.params.continuations, (c) => ({name: 'continuation_' + c.node, type: 'bool', passingPrefix: ' '})))
+      _.map(node.params.continuations, (c) => ({name: 'continuation_' + c.node, type: 'bool', passingPrefix: ' ', callingPostfix: '_chan'})))
   }
   if (node.auxilliaryPorts) {
     params = _.concat(params,
-      _.map(node.auxilliaryPorts, (ap) => ({name: 'continuation_' + ap.node, type: 'bool', passingPrefix: ' '})))
+      _.map(node.auxilliaryPorts, (ap) => ({name: 'continuation_' + ap.node, type: 'bool', passingPrefix: ' ', callingPostfix: '_chan'})))
   }
   return params
 }

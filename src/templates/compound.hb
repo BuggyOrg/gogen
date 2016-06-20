@@ -66,7 +66,7 @@ func P_{{sanitize uid}}(
   
   {{#each continuations}}
   // continuation channels
-  continuation_{{sanitize w}} := make(chan bool)
+  continuation_{{sanitize w}}_chan := make(chan bool)
   {{/each}}
 
   {{#each processes}}
@@ -79,7 +79,7 @@ func P_{{sanitize uid}}(
   }()
   {{/if}}
   {{#if recursive}}go /*recursive*/ P_{{sanitize name}}{{else}}go P_{{sanitize uid}}{{/if}}({{#each arguments~}}
-  {{#if passingPrefix}}{{passingPrefix}}{{sanitize name}}
+  {{#if passingPrefix}}{{passingPrefix}}{{sanitize name}}{{#if callingPostfix}}{{callingPostfix}}{{/if}}
   {{~else~}}
   chan_{{sanitize ../name}}_PORT_{{sanitize name}}{{/if}} {{#unless @last}}, {{/unless}}{{/each}})
   {{/each}}
