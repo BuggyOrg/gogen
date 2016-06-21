@@ -71,10 +71,10 @@ func P_{{sanitize uid}}(
 
   {{#each processes}}
   {{#if params.recursiveRoot}}
-  continuation_{{sanitize name}} := make(chan bool)
+  continuation_{{sanitize name}}_chan := make(chan bool)
   go func() {
     for {
-      continuation_{{sanitize name}} <- true
+      continuation_{{sanitize name}}_chan <- true
     }
   }()
   {{/if}}
