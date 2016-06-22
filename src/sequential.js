@@ -2,7 +2,7 @@ import graphlib from 'graphlib'
 import api from './api.js'
 import * as codegen from './codegen'
 import _ from 'lodash'
-import { compoundify } from '@buggyorg/graphtools'
+import { compoundify, utils, walk } from '@buggyorg/graphtools'
 import hash from 'object-hash'
 
 var topsort = (graph) => {
@@ -107,6 +107,36 @@ var addPortNodes = (graph, cmpd) => {
   return graph
 }
 
+var walkMux = (graph, node, port) => {
+  if (graph.node(node).id === 'logic/mux') {
+    return []
+  } else {
+    return _.keys(graph.node(node).outputPorts)
+  }
+}
+
+var cmpndsByContPort = (graph, conts, name) => {
+  if (conts.length < 1) { return }
+  var preNodes = graph.nodes()
+  var subset = _(conts)
+    .map((c) => walk.walk(graph, c.node, walkMux))
+    .flattenDeep()
+    .uniq()
+    .reject((m) => graph.node(m).id === 'logic/mux')
+    .value()
+  subset = []
+  graph = sequential.compoundify(graph, subset, name)
+  var postNodes = graph.nodes()
+  console.error(_.difference(postNodes, preNodes))
+  console.error(graph.node('factorial_9:mux_0_input2'))
+}
+
+var cmpndsByCont = (graph, conts, mux) => {
+  var c = _.groupBy(conts, (c) => c.port)
+  cmpndsByContPort(graph, c.input1 || [], mux + '_input1')
+  cmpndsByContPort(graph, c.input2 || [], mux + '_input2')
+}
+
 var sequential = {
 
   compoundify: (graph, subset, name) => {
@@ -118,6 +148,13 @@ var sequential = {
   },
 
   autoCompoundify: (graph) => {
+    var muxes = utils.getAll(graph, 'logic/mux')
+    _(muxes)
+      .map((m) => graph.node(m))
+      .filter((m) => m.params && m.params.continuations)
+      .each((m) => {
+        cmpndsByCont(graph, m.params.continuations, m.branchPath)
+      })
     return graph
   },
 
