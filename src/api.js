@@ -174,7 +174,8 @@ var api = {
   },
 
   continuations: (graph) => {
-    return _.filter(graph.edges(), (e) => graph.edge(e) && graph.edge(e).continuation)
+    return _.map(_.filter(graph.edges(), (e) => graph.edge(e) && graph.edge(e).continuation),
+      (e) => _.merge({}, e, {value: {target: e.w}}, {value: graph.edge(e)}))
   },
 
   resolveLambdas: (graph) => {

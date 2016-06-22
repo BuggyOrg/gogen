@@ -29,6 +29,34 @@ handlebars.registerHelper('lambda', (type) => {
   return types.createLambdaFunctions(type)
 })
 
+const findPort = (uid, ports, port) => {
+  var keys = _.map(ports, (t, name) => `${uid}_PORT_${name}`)
+  return _.includes(keys, port)
+}
+
+const hasPort = (node, port) =>
+  findPort(node.uid, node.inputPorts, port) || findPort(node.uid, node.outputPorts, port)
+
+handlebars.registerHelper('hasPort', (node, port, opts) => {
+  if (hasPort(node, port)) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
+})
+
+handlebars.registerHelper('log', (value) => {
+  console.error(JSON.stringify(value))
+})
+
+handlebars.registerHelper('cmpdChannel', (node, port1, port2, opts) => {
+  if (hasPort(node, port1) || hasPort(node, port2)) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
+})
+
 handlebars.registerHelper('necessaryForContinuation', (port, node, opts) => {
   if ((node.params && node.params.isContinuation === true) ||
     (node.params && node.params.isContinuation && node.params.isContinuation.type === 'recursion') ||
@@ -74,6 +102,7 @@ handlebars.registerHelper('hasOutputParams', (partial, opts) => {
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
 var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
 var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound.hb'), 'utf8'), {noEscape: true})
+var recursiveTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound_recursive.hb'), 'utf8'), {noEscape: true})
 var unpackedTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/unpack.hb'), 'utf8'), {noEscape: true})
 var sourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/source.hb'), 'utf8'), {noEscape: true})
 
@@ -132,8 +161,10 @@ export function createCompound (cmpd) {
             ? _.merge({}, c, {unpacked: true})
             : c)
     }))
-  } else {
+  } else if (!((cmpd.params && cmpd.params.recursiveRoot) || cmpd.recursive)) {
     return compoundTemplate(cmpd)
+  } else {
+    return recursiveTemplate(cmpd)
   }
 }
 
