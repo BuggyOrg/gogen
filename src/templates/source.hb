@@ -7,6 +7,7 @@ import {{#ifEq this "unsafe"}}unsafe{{/ifEq}} "{{this}}"
 import "runtime"
 
 // global variables
+var __wg__global sync.WaitGroup
 {{#each globals}}
 var {{sanitize name}} {{type}}
 {{/each}}

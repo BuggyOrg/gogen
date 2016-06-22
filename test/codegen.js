@@ -41,7 +41,7 @@ describe('Codegen API', () => {
     expect(code).to.contain('func P_cmpd')
     expect(code).to.contain('out_chan chan string')
     expect(code).to.contain('make(chan string)')
-    expect(code).to.contain('chan_b := chan_a')
+    expect(code).to.contain('chan_a := chan_b')
     expect(code).to.contain('go P_other')
   })
 
