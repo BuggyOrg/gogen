@@ -1,0 +1,1503 @@
+{
+  "options": {
+    "directed": true,
+    "multigraph": true,
+    "compound": true
+  },
+  "nodes": [
+    {
+      "v": "stdout_8",
+      "value": {
+        "id": "io/stdout",
+        "version": "0.3.0",
+        "inputPorts": {
+          "input": "string"
+        },
+        "outputPorts": {},
+        "settings": {
+          "sideEffects": true,
+          "argumentOrdering": [
+            "input"
+          ]
+        },
+        "atomic": true,
+        "isSink": true,
+        "path": [],
+        "branchPath": "stdout_8",
+        "branch": "stdout_8",
+        "name": "stdout_8",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "number_to_string_9",
+      "value": {
+        "id": "translator/number_to_string",
+        "version": "0.2.0",
+        "inputPorts": {
+          "input": "int64"
+        },
+        "outputPorts": {
+          "output": "string"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "input",
+            "output"
+          ]
+        },
+        "path": [],
+        "branchPath": "number_to_string_9",
+        "branch": "number_to_string_9",
+        "name": "number_to_string_9",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "fac_10",
+      "value": {
+        "id": "fac",
+        "inputPorts": {
+          "n": "int64"
+        },
+        "outputPorts": {
+          "value": "int64"
+        },
+        "settings": {
+          "argumentOrdering": [
+            "n",
+            "value"
+          ],
+          "genericType": {
+            "n": "int64",
+            "value": "int64"
+          },
+          "isGeneric": true
+        },
+        "implementation": {
+          "nodes": [
+            {
+              "id": "logic/mux",
+              "inputPorts": {
+                "input1": "generic",
+                "input2": "generic",
+                "control": "bool"
+              },
+              "outputPorts": {
+                "output": "generic"
+              },
+              "atomic": true,
+              "version": "0.3.0",
+              "specialForm": true,
+              "settings": {
+                "argumentOrdering": [
+                  "input1",
+                  "input2",
+                  "control",
+                  "output"
+                ]
+              },
+              "path": [
+                {
+                  "meta": "fac",
+                  "branch": "fac_10",
+                  "branchPath": "fac_10"
+                }
+              ],
+              "parent": "fac_10",
+              "branchPath": "fac_10:mux_0",
+              "branch": "mux_0",
+              "recursive": false
+            },
+            {
+              "id": "math/const",
+              "version": "0.3.0",
+              "inputPorts": {},
+              "outputPorts": {
+                "output": "number"
+              },
+              "atomic": true,
+              "settings": {
+                "argumentOrdering": [
+                  "output"
+                ]
+              },
+              "path": [
+                {
+                  "meta": "fac",
+                  "branch": "fac_10",
+                  "branchPath": "fac_10"
+                }
+              ],
+              "params": {
+                "value": 1
+              },
+              "parent": "fac_10",
+              "branchPath": "fac_10:const(1)_1",
+              "branch": "const(1)_1",
+              "recursive": false
+            },
+            {
+              "id": "math/multiply",
+              "version": "0.3.0",
+              "inputPorts": {
+                "m1": "number",
+                "m2": "number"
+              },
+              "outputPorts": {
+                "product": "number"
+              },
+              "atomic": true,
+              "settings": {
+                "argumentOrdering": [
+                  "m1",
+                  "m2",
+                  "product"
+                ]
+              },
+              "path": [
+                {
+                  "meta": "fac",
+                  "branch": "fac_10",
+                  "branchPath": "fac_10"
+                }
+              ],
+              "parent": "fac_10",
+              "branchPath": "fac_10:multiply_2",
+              "branch": "multiply_2",
+              "recursive": false
+            },
+            {
+              "id": "fac",
+              "inputPorts": {
+                "n": "generic"
+              },
+              "outputPorts": {
+                "value": "generic"
+              },
+              "settings": {
+                "argumentOrdering": [
+                  "n",
+                  "value"
+                ]
+              },
+              "implementation": {
+                "nodes": [
+                  {
+                    "meta": "logic/mux",
+                    "name": "mux_0"
+                  },
+                  {
+                    "meta": "math/const",
+                    "name": "const(1)_1",
+                    "params": {
+                      "value": 1
+                    }
+                  },
+                  {
+                    "meta": "math/multiply",
+                    "name": "multiply_2"
+                  },
+                  {
+                    "meta": "fac",
+                    "name": "fac_3"
+                  },
+                  {
+                    "meta": "math/add",
+                    "name": "+_4"
+                  },
+                  {
+                    "meta": "math/const",
+                    "name": "const(-1)_5",
+                    "params": {
+                      "value": -1
+                    }
+                  },
+                  {
+                    "meta": "math/less",
+                    "name": "<_6"
+                  },
+                  {
+                    "meta": "math/const",
+                    "name": "const(1)_7",
+                    "params": {
+                      "value": 1
+                    }
+                  }
+                ],
+                "edges": [
+                  {
+                    "from": "const(1)_1:output",
+                    "to": "mux_0:input1"
+                  },
+                  {
+                    "from": "n",
+                    "to": "multiply_2:m1"
+                  },
+                  {
+                    "from": "n",
+                    "to": "+_4:s1"
+                  },
+                  {
+                    "from": "const(-1)_5:output",
+                    "to": "+_4:s2"
+                  },
+                  {
+                    "from": "+_4:sum",
+                    "to": "fac_3:n"
+                  },
+                  {
+                    "from": "fac_3:value",
+                    "to": "multiply_2:m2"
+                  },
+                  {
+                    "from": "multiply_2:product",
+                    "to": "mux_0:input2"
+                  },
+                  {
+                    "from": "n",
+                    "to": "<_6:isLess"
+                  },
+                  {
+                    "from": "const(1)_7:output",
+                    "to": "<_6:than"
+                  },
+                  {
+                    "from": "<_6:value",
+                    "to": "mux_0:control"
+                  },
+                  {
+                    "from": "mux_0:output",
+                    "to": "value"
+                  }
+                ]
+              },
+              "name": "fac_10",
+              "externalComponent": true,
+              "parent": "fac_10",
+              "branchPath": "fac_10:fac_3",
+              "branch": "fac_3",
+              "recursesTo": {
+                "meta": "fac",
+                "branch": "fac_10",
+                "path": [],
+                "branchPath": "fac_10"
+              },
+              "recursive": true
+            },
+            {
+              "id": "math/add",
+              "version": "0.3.0",
+              "inputPorts": {
+                "s1": "number",
+                "s2": "number"
+              },
+              "outputPorts": {
+                "sum": "number"
+              },
+              "atomic": true,
+              "settings": {
+                "argumentOrdering": [
+                  "s1",
+                  "s2",
+                  "sum"
+                ]
+              },
+              "path": [
+                {
+                  "meta": "fac",
+                  "branch": "fac_10",
+                  "branchPath": "fac_10"
+                }
+              ],
+              "parent": "fac_10",
+              "branchPath": "fac_10:+_4",
+              "branch": "+_4",
+              "recursive": false
+            },
+            {
+              "id": "math/const",
+              "version": "0.3.0",
+              "inputPorts": {},
+              "outputPorts": {
+                "output": "number"
+              },
+              "atomic": true,
+              "settings": {
+                "argumentOrdering": [
+                  "output"
+                ]
+              },
+              "path": [
+                {
+                  "meta": "fac",
+                  "branch": "fac_10",
+                  "branchPath": "fac_10"
+                }
+              ],
+              "params": {
+                "value": -1
+              },
+              "parent": "fac_10",
+              "branchPath": "fac_10:const(-1)_5",
+              "branch": "const(-1)_5",
+              "recursive": false
+            },
+            {
+              "id": "math/less",
+              "version": "0.2.1",
+              "inputPorts": {
+                "isLess": "number",
+                "than": "number"
+              },
+              "outputPorts": {
+                "value": "bool"
+              },
+              "atomic": true,
+              "settings": {
+                "argumentOrdering": [
+                  "isLess",
+                  "than",
+                  "value"
+                ]
+              },
+              "path": [
+                {
+                  "meta": "fac",
+                  "branch": "fac_10",
+                  "branchPath": "fac_10"
+                }
+              ],
+              "parent": "fac_10",
+              "branchPath": "fac_10:<_6",
+              "branch": "<_6",
+              "recursive": false
+            },
+            {
+              "id": "math/const",
+              "version": "0.3.0",
+              "inputPorts": {},
+              "outputPorts": {
+                "output": "number"
+              },
+              "atomic": true,
+              "settings": {
+                "argumentOrdering": [
+                  "output"
+                ]
+              },
+              "path": [
+                {
+                  "meta": "fac",
+                  "branch": "fac_10",
+                  "branchPath": "fac_10"
+                }
+              ],
+              "params": {
+                "value": 1
+              },
+              "parent": "fac_10",
+              "branchPath": "fac_10:const(1)_7",
+              "branch": "const(1)_7",
+              "recursive": false
+            }
+          ],
+          "edges": [
+            {
+              "from": "const(1)_1:output",
+              "to": "mux_0:input1"
+            },
+            {
+              "from": "n",
+              "to": "multiply_2:m1"
+            },
+            {
+              "from": "n",
+              "to": "+_4:s1"
+            },
+            {
+              "from": "const(-1)_5:output",
+              "to": "+_4:s2"
+            },
+            {
+              "from": "+_4:sum",
+              "to": "fac_3:n"
+            },
+            {
+              "from": "fac_3:value",
+              "to": "multiply_2:m2"
+            },
+            {
+              "from": "multiply_2:product",
+              "to": "mux_0:input2"
+            },
+            {
+              "from": "n",
+              "to": "<_6:isLess"
+            },
+            {
+              "from": "const(1)_7:output",
+              "to": "<_6:than"
+            },
+            {
+              "from": "<_6:value",
+              "to": "mux_0:control"
+            },
+            {
+              "from": "mux_0:output",
+              "to": "value"
+            }
+          ]
+        },
+        "name": "fac_10",
+        "externalComponent": true,
+        "path": [],
+        "branchPath": "fac_10",
+        "branch": "fac_10",
+        "recursive": false,
+        "recursiveRoot": true,
+        "typeHint": {},
+        "params": {
+          "isContinuation": true,
+          "recursiveRoot": true
+        },
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "fac_10:mux_0",
+      "value": {
+        "id": "logic/mux",
+        "inputPorts": {
+          "input1": "int64",
+          "input2": "int64",
+          "control": "bool"
+        },
+        "outputPorts": {
+          "output": "int64"
+        },
+        "atomic": true,
+        "version": "0.3.0",
+        "specialForm": true,
+        "settings": {
+          "argumentOrdering": [
+            "input1",
+            "input2",
+            "control",
+            "output"
+          ],
+          "genericType": "int64",
+          "isGeneric": true
+        },
+        "path": [
+          {
+            "meta": "fac",
+            "branch": "fac_10",
+            "branchPath": "fac_10"
+          }
+        ],
+        "parent": "fac_10",
+        "branchPath": "fac_10:mux_0",
+        "branch": "mux_0",
+        "recursive": false,
+        "typeHint": {},
+        "params": {
+          "continuations": [
+            {
+              "node": "fac_10:fac_3",
+              "port": "input2",
+              "type": "recursion"
+            },
+            {
+              "node": "fac_10:multiply_2",
+              "port": "input2",
+              "type": "branching",
+              "branchPorts": [
+                "m1"
+              ]
+            }
+          ]
+        },
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:const(1)_1",
+      "value": {
+        "id": "math/const",
+        "version": "0.3.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "output": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "output"
+          ]
+        },
+        "path": [
+          {
+            "meta": "fac",
+            "branch": "fac_10",
+            "branchPath": "fac_10"
+          }
+        ],
+        "params": {
+          "value": 1
+        },
+        "parent": "fac_10",
+        "branchPath": "fac_10:const(1)_1",
+        "branch": "const(1)_1",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:multiply_2",
+      "value": {
+        "id": "math/multiply",
+        "version": "0.3.0",
+        "inputPorts": {
+          "m1": "int64",
+          "m2": "int64"
+        },
+        "outputPorts": {
+          "product": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "m1",
+            "m2",
+            "product"
+          ]
+        },
+        "path": [
+          {
+            "meta": "fac",
+            "branch": "fac_10",
+            "branchPath": "fac_10"
+          }
+        ],
+        "parent": "fac_10",
+        "branchPath": "fac_10:multiply_2",
+        "branch": "multiply_2",
+        "recursive": false,
+        "typeHint": {},
+        "params": {
+          "isContinuation": {
+            "node": "fac_10:multiply_2",
+            "port": "input2",
+            "type": "branching",
+            "branchPorts": [
+              "m1"
+            ]
+          }
+        },
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:fac_3",
+      "value": {
+        "id": "fac",
+        "inputPorts": {
+          "n": "int64"
+        },
+        "outputPorts": {
+          "value": "int64"
+        },
+        "settings": {
+          "argumentOrdering": [
+            "n",
+            "value"
+          ]
+        },
+        "implementation": {
+          "nodes": [
+            {
+              "meta": "logic/mux",
+              "name": "mux_0"
+            },
+            {
+              "meta": "math/const",
+              "name": "const(1)_1",
+              "params": {
+                "value": 1
+              }
+            },
+            {
+              "meta": "math/multiply",
+              "name": "multiply_2"
+            },
+            {
+              "meta": "fac",
+              "name": "fac_3"
+            },
+            {
+              "meta": "math/add",
+              "name": "+_4"
+            },
+            {
+              "meta": "math/const",
+              "name": "const(-1)_5",
+              "params": {
+                "value": -1
+              }
+            },
+            {
+              "meta": "math/less",
+              "name": "<_6"
+            },
+            {
+              "meta": "math/const",
+              "name": "const(1)_7",
+              "params": {
+                "value": 1
+              }
+            }
+          ],
+          "edges": [
+            {
+              "from": "const(1)_1:output",
+              "to": "mux_0:input1"
+            },
+            {
+              "from": "n",
+              "to": "multiply_2:m1"
+            },
+            {
+              "from": "n",
+              "to": "+_4:s1"
+            },
+            {
+              "from": "const(-1)_5:output",
+              "to": "+_4:s2"
+            },
+            {
+              "from": "+_4:sum",
+              "to": "fac_3:n"
+            },
+            {
+              "from": "fac_3:value",
+              "to": "multiply_2:m2"
+            },
+            {
+              "from": "multiply_2:product",
+              "to": "mux_0:input2"
+            },
+            {
+              "from": "n",
+              "to": "<_6:isLess"
+            },
+            {
+              "from": "const(1)_7:output",
+              "to": "<_6:than"
+            },
+            {
+              "from": "<_6:value",
+              "to": "mux_0:control"
+            },
+            {
+              "from": "mux_0:output",
+              "to": "value"
+            }
+          ]
+        },
+        "name": "fac_10",
+        "externalComponent": true,
+        "parent": "fac_10",
+        "branchPath": "fac_10:fac_3",
+        "branch": "fac_3",
+        "recursesTo": {
+          "meta": "fac",
+          "branch": "fac_10",
+          "path": [],
+          "branchPath": "fac_10"
+        },
+        "recursive": true,
+        "typeHint": {},
+        "params": {
+          "isContinuation": {
+            "node": "fac_10:fac_3",
+            "port": "input2",
+            "type": "recursion"
+          }
+        },
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:+_4",
+      "value": {
+        "id": "math/add",
+        "version": "0.3.0",
+        "inputPorts": {
+          "s1": "int64",
+          "s2": "int64"
+        },
+        "outputPorts": {
+          "sum": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "s1",
+            "s2",
+            "sum"
+          ]
+        },
+        "path": [
+          {
+            "meta": "fac",
+            "branch": "fac_10",
+            "branchPath": "fac_10"
+          }
+        ],
+        "parent": "fac_10",
+        "branchPath": "fac_10:+_4",
+        "branch": "+_4",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:const(-1)_5",
+      "value": {
+        "id": "math/const",
+        "version": "0.3.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "output": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "output"
+          ]
+        },
+        "path": [
+          {
+            "meta": "fac",
+            "branch": "fac_10",
+            "branchPath": "fac_10"
+          }
+        ],
+        "params": {
+          "value": -1
+        },
+        "parent": "fac_10",
+        "branchPath": "fac_10:const(-1)_5",
+        "branch": "const(-1)_5",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:<_6",
+      "value": {
+        "id": "math/less",
+        "version": "0.2.1",
+        "inputPorts": {
+          "isLess": "int64",
+          "than": "int64"
+        },
+        "outputPorts": {
+          "value": "bool"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "isLess",
+            "than",
+            "value"
+          ]
+        },
+        "path": [
+          {
+            "meta": "fac",
+            "branch": "fac_10",
+            "branchPath": "fac_10"
+          }
+        ],
+        "parent": "fac_10",
+        "branchPath": "fac_10:<_6",
+        "branch": "<_6",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:const(1)_7",
+      "value": {
+        "id": "math/const",
+        "version": "0.3.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "output": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "output"
+          ]
+        },
+        "path": [
+          {
+            "meta": "fac",
+            "branch": "fac_10",
+            "branchPath": "fac_10"
+          }
+        ],
+        "params": {
+          "value": 1
+        },
+        "parent": "fac_10",
+        "branchPath": "fac_10:const(1)_7",
+        "branch": "const(1)_7",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "string_to_number_11",
+      "value": {
+        "id": "translator/string_to_number",
+        "version": "0.2.0",
+        "inputPorts": {
+          "input": "string"
+        },
+        "outputPorts": {
+          "output": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "input",
+            "output"
+          ]
+        },
+        "path": [],
+        "branchPath": "string_to_number_11",
+        "branch": "string_to_number_11",
+        "name": "string_to_number_11",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "stdin_12",
+      "value": {
+        "id": "io/stdin",
+        "version": "0.3.0",
+        "inputPorts": {},
+        "outputPorts": {
+          "output": "string"
+        },
+        "settings": {
+          "sideEffects": true,
+          "argumentOrdering": [
+            "output"
+          ]
+        },
+        "atomic": true,
+        "path": [],
+        "branchPath": "stdin_12",
+        "branch": "stdin_12",
+        "name": "stdin_12",
+        "recursive": false,
+        "typeHint": {},
+        "nodeType": "process"
+      }
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2",
+      "value": {
+        "id": "control/duplicate",
+        "version": "0.3.0",
+        "inputPorts": {
+          "in": "int64"
+        },
+        "outputPorts": {
+          "d1": "int64",
+          "d2": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "in",
+            "d1",
+            "d2"
+          ],
+          "isGeneric": true,
+          "genericType": "int64"
+        },
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+      "value": {
+        "id": "control/duplicate",
+        "version": "0.3.0",
+        "inputPorts": {
+          "in": "int64"
+        },
+        "outputPorts": {
+          "d1": "int64",
+          "d2": "int64"
+        },
+        "atomic": true,
+        "settings": {
+          "argumentOrdering": [
+            "in",
+            "d1",
+            "d2"
+          ],
+          "isGeneric": true,
+          "genericType": "int64"
+        },
+        "nodeType": "process"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "string_to_number_11_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "string_to_number_11",
+        "type": "string"
+      }
+    },
+    {
+      "v": "stdin_12_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "stdin_12",
+        "type": "string"
+      }
+    },
+    {
+      "v": "fac_10_PORT_n",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "n",
+        "hierarchyBorder": true,
+        "process": "fac_10"
+      }
+    },
+    {
+      "v": "string_to_number_11_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "string_to_number_11",
+        "type": "int64"
+      }
+    },
+    {
+      "v": "number_to_string_9_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "number_to_string_9",
+        "type": "int64"
+      }
+    },
+    {
+      "v": "fac_10_PORT_value",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "value",
+        "hierarchyBorder": true,
+        "process": "fac_10"
+      }
+    },
+    {
+      "v": "stdout_8_PORT_input",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input",
+        "process": "stdout_8",
+        "type": "string"
+      }
+    },
+    {
+      "v": "number_to_string_9_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "number_to_string_9",
+        "type": "string"
+      }
+    },
+    {
+      "v": "fac_10:mux_0_PORT_input1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input1",
+        "process": "fac_10:mux_0",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:const(1)_1_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "fac_10:const(1)_1",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:+_4_PORT_s2",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "s2",
+        "process": "fac_10:+_4",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:const(-1)_5_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "fac_10:const(-1)_5",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:fac_3_PORT_n",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "n",
+        "process": "fac_10:fac_3",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:+_4_PORT_sum",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "sum",
+        "process": "fac_10:+_4",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:multiply_2_PORT_m2",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "m2",
+        "process": "fac_10:multiply_2",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:fac_3_PORT_value",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "value",
+        "process": "fac_10:fac_3",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:mux_0_PORT_input2",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "input2",
+        "process": "fac_10:mux_0",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:multiply_2_PORT_product",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "product",
+        "process": "fac_10:multiply_2",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:<_6_PORT_than",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "than",
+        "process": "fac_10:<_6",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:const(1)_7_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "fac_10:const(1)_7",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:mux_0_PORT_control",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "control",
+        "process": "fac_10:mux_0",
+        "type": "bool"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:<_6_PORT_value",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "value",
+        "process": "fac_10:<_6",
+        "type": "bool"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:mux_0_PORT_output",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "output",
+        "process": "fac_10:mux_0"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:multiply_2_PORT_m1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "m1",
+        "process": "fac_10:multiply_2",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_d1",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d1",
+        "process": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:+_4_PORT_s1",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "s1",
+        "process": "fac_10:+_4",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_d2",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d2",
+        "process": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_in",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "in",
+        "process": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_PORT_d1",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d1",
+        "process": "fac_10_n_DUPLICATE_0_2",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10:<_6_PORT_isLess",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "isLess",
+        "process": "fac_10:<_6",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_PORT_d2",
+      "value": {
+        "nodeType": "outPort",
+        "portName": "d2",
+        "process": "fac_10_n_DUPLICATE_0_2",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_PORT_in",
+      "value": {
+        "nodeType": "inPort",
+        "portName": "in",
+        "process": "fac_10_n_DUPLICATE_0_2",
+        "type": "int64"
+      },
+      "parent": "fac_10"
+    }
+  ],
+  "edges": [
+    {
+      "v": "string_to_number_11_PORT_input",
+      "w": "string_to_number_11"
+    },
+    {
+      "v": "stdin_12",
+      "w": "stdin_12_PORT_output"
+    },
+    {
+      "v": "stdin_12_PORT_output",
+      "w": "string_to_number_11_PORT_input"
+    },
+    {
+      "v": "string_to_number_11",
+      "w": "string_to_number_11_PORT_output"
+    },
+    {
+      "v": "string_to_number_11_PORT_output",
+      "w": "fac_10_PORT_n"
+    },
+    {
+      "v": "number_to_string_9_PORT_input",
+      "w": "number_to_string_9"
+    },
+    {
+      "v": "fac_10_PORT_value",
+      "w": "number_to_string_9_PORT_input"
+    },
+    {
+      "v": "stdout_8_PORT_input",
+      "w": "stdout_8"
+    },
+    {
+      "v": "number_to_string_9",
+      "w": "number_to_string_9_PORT_output"
+    },
+    {
+      "v": "number_to_string_9_PORT_output",
+      "w": "stdout_8_PORT_input"
+    },
+    {
+      "v": "fac_10:mux_0_PORT_input1",
+      "w": "fac_10:mux_0"
+    },
+    {
+      "v": "fac_10:const(1)_1",
+      "w": "fac_10:const(1)_1_PORT_output"
+    },
+    {
+      "v": "fac_10:const(1)_1_PORT_output",
+      "w": "fac_10:mux_0_PORT_input1"
+    },
+    {
+      "v": "fac_10:+_4_PORT_s2",
+      "w": "fac_10:+_4"
+    },
+    {
+      "v": "fac_10:const(-1)_5",
+      "w": "fac_10:const(-1)_5_PORT_output"
+    },
+    {
+      "v": "fac_10:const(-1)_5_PORT_output",
+      "w": "fac_10:+_4_PORT_s2"
+    },
+    {
+      "v": "fac_10:fac_3_PORT_n",
+      "w": "fac_10:fac_3"
+    },
+    {
+      "v": "fac_10:+_4",
+      "w": "fac_10:+_4_PORT_sum"
+    },
+    {
+      "v": "fac_10:+_4_PORT_sum",
+      "w": "fac_10:fac_3_PORT_n"
+    },
+    {
+      "v": "fac_10:multiply_2_PORT_m2",
+      "w": "fac_10:multiply_2"
+    },
+    {
+      "v": "fac_10:fac_3",
+      "w": "fac_10:fac_3_PORT_value"
+    },
+    {
+      "v": "fac_10:fac_3_PORT_value",
+      "w": "fac_10:multiply_2_PORT_m2"
+    },
+    {
+      "v": "fac_10:mux_0_PORT_input2",
+      "w": "fac_10:mux_0"
+    },
+    {
+      "v": "fac_10:multiply_2",
+      "w": "fac_10:multiply_2_PORT_product"
+    },
+    {
+      "v": "fac_10:multiply_2_PORT_product",
+      "w": "fac_10:mux_0_PORT_input2"
+    },
+    {
+      "v": "fac_10:<_6_PORT_than",
+      "w": "fac_10:<_6"
+    },
+    {
+      "v": "fac_10:const(1)_7",
+      "w": "fac_10:const(1)_7_PORT_output"
+    },
+    {
+      "v": "fac_10:const(1)_7_PORT_output",
+      "w": "fac_10:<_6_PORT_than"
+    },
+    {
+      "v": "fac_10:mux_0_PORT_control",
+      "w": "fac_10:mux_0"
+    },
+    {
+      "v": "fac_10:<_6",
+      "w": "fac_10:<_6_PORT_value"
+    },
+    {
+      "v": "fac_10:<_6_PORT_value",
+      "w": "fac_10:mux_0_PORT_control"
+    },
+    {
+      "v": "fac_10:mux_0",
+      "w": "fac_10:mux_0_PORT_output"
+    },
+    {
+      "v": "fac_10:mux_0_PORT_output",
+      "w": "fac_10_PORT_value"
+    },
+    {
+      "v": "fac_10:multiply_2_PORT_m1",
+      "w": "fac_10:multiply_2"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+      "w": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_d1"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_d1",
+      "w": "fac_10:multiply_2_PORT_m1"
+    },
+    {
+      "v": "fac_10:+_4_PORT_s1",
+      "w": "fac_10:+_4"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1",
+      "w": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_d2"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_d2",
+      "w": "fac_10:+_4_PORT_s1"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_in",
+      "w": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2",
+      "w": "fac_10_n_DUPLICATE_0_2_PORT_d1"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_PORT_d1",
+      "w": "fac_10_n_DUPLICATE_0_2_d1_DUPLICATE_0_1_PORT_in"
+    },
+    {
+      "v": "fac_10:<_6_PORT_isLess",
+      "w": "fac_10:<_6"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2",
+      "w": "fac_10_n_DUPLICATE_0_2_PORT_d2"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_PORT_d2",
+      "w": "fac_10:<_6_PORT_isLess"
+    },
+    {
+      "v": "fac_10_n_DUPLICATE_0_2_PORT_in",
+      "w": "fac_10_n_DUPLICATE_0_2"
+    },
+    {
+      "v": "fac_10_PORT_n",
+      "w": "fac_10_n_DUPLICATE_0_2_PORT_in"
+    },
+    {
+      "v": "fac_10:mux_0",
+      "w": "fac_10:fac_3",
+      "name": "fac_10:mux_0→→fac_10:fac_3@input2",
+      "value": {
+        "continuation": true
+      }
+    },
+    {
+      "v": "fac_10:mux_0",
+      "w": "fac_10:multiply_2",
+      "name": "fac_10:mux_0→→fac_10:multiply_2@input2",
+      "value": {
+        "continuation": true
+      }
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import graphlib from 'graphlib'
 import api from './api.js'
 import * as codegen from './codegen'
 import _ from 'lodash'
-import { compoundify, utils, walk } from '@buggyorg/graphtools'
+import { compoundify, utils, walk, graph as graphAPI } from '@buggyorg/graphtools'
 import hash from 'object-hash'
 
 var topsort = (graph) => {
@@ -17,7 +17,7 @@ var topsort = (graph) => {
       g.setEdge(p, node)
     }
   }
-  var sorted = graphlib.alg.topsort(g)
+  var sorted = graphAPI.topoSort(g)
   var count = 0
   for (let node of sorted) {
     graph.node(node).topSort = count++
@@ -42,20 +42,26 @@ var cmpndLabel = (graph, cmpd) => {
 
   for (let n of graph.nodes()) {
     if (graph.parent(n) !== cmpd) { continue }
-    var name = graph.node(n).portName
-    var type = graph.node(n).type
-    // if (graph.predecessors(n).length === 0) { inputs[name] = type }
-    for (let pred of graph.predecessors(n)) {
-      if (graph.parent(pred) !== cmpd) {
-        inputs[name] = type
-        break
-      }
-    }
-    // if (graph.successors(n).length === 0) { outputs[name] = type }
-    for (let succ of graph.successors(n)) {
-      if (graph.parent(succ) !== cmpd) {
-        outputs[name] = type
-        break
+    if (utils.isPortNode(n)) {
+      var curNode = graph.node(n)
+      var name = curNode.portName
+      var type = curNode.type
+      var port = utils.portNodePort(n)
+      var process = utils.portNodeName(n)
+      if (curNode.nodeType === 'inPort') {
+        for (let pred of walk.predecessor(graph, process, port)) {
+          if (graph.parent(pred) !== cmpd) {
+            inputs[name] = type
+            break
+          }
+        }
+      } else if (curNode.nodeType === 'outPort') {
+        for (let succ of walk.successor(graph, process, port)) {
+          if (graph.parent(succ) !== cmpd) {
+            outputs[name] = type
+            break
+          }
+        }
       }
     }
   }
@@ -70,12 +76,12 @@ var cmpndLabel = (graph, cmpd) => {
 
 var addPortNodes = (graph, cmpd) => {
   for (let n of graph.nodes()) {
-    if (graph.parent(n) !== cmpd) { continue }
+    if (graph.parent(n) !== cmpd || !utils.isPortNode(n)) { continue }
     var name = graph.node(n).portName
     var type = graph.node(n).type
     for (let pred of graph.predecessors(n)) {
       if (graph.parent(pred) !== cmpd) {
-        let pname = cmpd + '_PORT_' + graph.node(n).portName
+        let pname = cmpd + '_PORT_' + name
         let plabel = {
           nodeType: 'inPort',
           portName: name,
@@ -90,7 +96,7 @@ var addPortNodes = (graph, cmpd) => {
     }
     for (let succ of graph.successors(n)) {
       if (graph.parent(succ) !== cmpd) {
-        let pname = cmpd + '_PORT_' + graph.node(n).portName
+        let pname = cmpd + '_PORT_' + name
         let plabel = {
           nodeType: 'outPort',
           portName: name,
@@ -116,46 +122,43 @@ var walkMux = (graph, node, port) => {
 }
 
 var cmpndsByContPort = (graph, conts, name) => {
-  if (conts.length < 1) { return }
-  var preNodes = graph.nodes()
+  if (conts.length < 1) { return graph }
   var subset = _(conts)
     .map((c) => walk.walk(graph, c.node, walkMux))
     .flattenDeep()
     .uniq()
     .reject((m) => graph.node(m).id === 'logic/mux')
     .value()
-  subset = []
-  graph = sequential.compoundify(graph, subset, name)
-  var postNodes = graph.nodes()
-  console.error(_.difference(postNodes, preNodes))
-  console.error(graph.node('factorial_9:mux_0_input2'))
+  return sequential.compoundify(graph, subset, name, conts)
 }
 
 var cmpndsByCont = (graph, conts, mux) => {
   var c = _.groupBy(conts, (c) => c.port)
-  cmpndsByContPort(graph, c.input1 || [], mux + '_input1')
-  cmpndsByContPort(graph, c.input2 || [], mux + '_input2')
+  graph = cmpndsByContPort(graph, c.input1 || [], mux + '_input1')
+  return cmpndsByContPort(graph, c.input2 || [], mux + '_input2')
 }
 
 var sequential = {
 
-  compoundify: (graph, subset, name) => {
+  compoundify: (graph, subset, name, continuations) => {
     if (!name) { name = 'compound' + hash(graph) }
+    var preParent = graph.parent(subset[0])
     graph = compoundify.compoundify(graph, subset, name)
     graph.setNode(name, cmpndLabel(graph, name))
+    graph.setParent(name, preParent)
     graph = addPortNodes(graph, name)
+    _.each(continuations, (c) => {
+      c.node = name
+    })
     return graph
   },
 
   autoCompoundify: (graph) => {
     var muxes = utils.getAll(graph, 'logic/mux')
-    _(muxes)
+    return _(muxes)
       .map((m) => graph.node(m))
       .filter((m) => m.params && m.params.continuations)
-      .each((m) => {
-        cmpndsByCont(graph, m.params.continuations, m.branchPath)
-      })
-    return graph
+      .reduce((acc, m) => cmpndsByCont(acc, m.params.continuations, m.branchPath), graph)
   },
 
   compounds: (graph) => {
@@ -197,7 +200,7 @@ var sequential = {
   },
 
   generateCode: graph => {
-    return codegen.createSeqSource(sequential.createSourceDescriptor(topsort(graph)))
+    return codegen.createSeqSource(sequential.createSourceDescriptor(topsort(sequential.autoCompoundify(graph))))
   }
 }
 

@@ -57,18 +57,19 @@ describe('Sequential Go Code Generator', function () {
     })
   })
 
-  it.only('automatic compoundify', function () {
+  it('automatic compoundify', function () {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/simple-rec.json')))
     graph = sequential.autoCompoundify(graph)
-    // fs.writeFileSync('test/fixtures/seq-auto-comp.json', JSON.stringify(graphlib.json.write(graph)))
-    /*
-    return api.preprocess(graph).then((newGraph) => {
-      var code = sequential.generateCode(newGraph)
-      fs.writeFileSync('test/fixtures/seq-auto-compound.go', code)
-      return executeCodePromise('echo 4 | go run test/fixtures/seq-auto-compound.go', '21').then(() => {
-        return executeCodePromise('go fmt test/fixtures/seq-auto-compound.go', 'test/fixtures/seq-auto-compound.go\n')
-      })
-    }) */
+    expect(graph.node('factorial_9:mux_0_input2')).to.be.ok
+    expect(_.keys(graph.node('factorial_9:mux_0_input2').inputPorts)).to.have.length(1)
+    expect(_.keys(graph.node('factorial_9:mux_0_input2').outputPorts)).to.have.length(1)
+    expect(graph.parent('factorial_9:mux_0_input2')).to.equal('factorial_9')
+  })
+
+  it.only('creates function calls for recursions', function () {
+    var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/fac_mux.json')))
+    var code = sequential.generateCode(graph)
+    console.log(code)
   })
 
   /*
