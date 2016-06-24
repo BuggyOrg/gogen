@@ -75,6 +75,36 @@ handlebars.registerHelper('noContinuation', (continuations, type, opts) => {
   }
 })
 
+const isPacked = (port, node) => {
+  return node.params && node.params.packedContinuations && node.params.packedContinuations[port]
+}
+
+handlebars.registerHelper('isNotPacked', (port, node, opts) => {
+  if (!isPacked(port, node)) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
+})
+
+handlebars.registerHelper('isPacked', (port, node, opts) => {
+  if (!isPacked(port, node)) {
+    return opts.fn(this)
+  } else {
+    return opts.inverse(this)
+  }
+})
+
+handlebars.registerHelper('isPackedMux', (port, node, opts) => {
+  if (isPacked(port, node)) {
+    var cont = node.params.packedContinuations[port]
+    var functionCall = 'P_' + sanitize(cont.node) + '(' + _.map(cont.value.settings.argumentOrdering, (a) => '&' + a).join(', ') + ')'
+    return opts.fn({call: functionCall, node: cont.value, name: cont.node})
+  } else {
+    return opts.inverse(this)
+  }
+})
+
 handlebars.registerHelper('partial', (partial, port) => {
   var inFn = partial.rawInputPorts.fn
   var inArgs = _.intersection(inFn.argumentOrdering, _.keys(inFn.arguments))
@@ -185,7 +215,5 @@ export function createSeqCompound (cmpd) {
   }
   return seqCompoundTemplate(cmpd)
 }
-
-
 
 export { seqSourceTemplate as createSeqSource }

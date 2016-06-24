@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import * as codegen from './codegen'
 import graphlib from 'graphlib'
-import {utils, walk} from '@buggyorg/graphtools'
+import {walk, graph as graphAPI} from '@buggyorg/graphtools'
 import hash from 'object-hash'
 import * as types from './types'
 
@@ -16,19 +16,19 @@ var isPort = (graph, n) => {
   return graph.node(n).nodeType === 'inPort' || graph.node(n).nodeType === 'outPort'
 }
 
-var additionalParameters = (node) => {
+var additionalParameters = (node, ignoreContinuations) => {
   var params = []
   if (node.properties && node.properties.needsWaitGroup) {
     params = _.concat(params, [{name: 'wg', type: 'sync.WaitGroup', inputPrefix: '*', passingPrefix: '&'}])
   }
-  if (node.params && node.params.isContinuation) {
+  if (!ignoreContinuations && node.params && node.params.isContinuation) {
     params = _.concat(params, [{name: 'continuation_' + node.name, type: 'bool', passingPrefix: ' ', callingPostfix: '_chan'}])
   }
-  if (node.params && node.params.continuations) {
+  if (!ignoreContinuations && node.params && node.params.continuations) {
     params = _.concat(params,
       _.map(node.params.continuations, (c) => ({name: 'continuation_' + c.node, type: 'bool', passingPrefix: ' ', callingPostfix: '_chan'})))
   }
-  if (node.auxilliaryPorts) {
+  if (!ignoreContinuations && node.auxilliaryPorts) {
     params = _.concat(params,
       _.map(node.auxilliaryPorts, (ap) => ({name: 'continuation_' + ap.node, type: 'bool', passingPrefix: ' ', callingPostfix: '_chan'})))
   }
@@ -50,14 +50,14 @@ var mapPorts = (graphJSON, fn) => {
   })
 }
 
-var createParameters = (node) => {
+var createParameters = (node, ignoreContinuations) => {
   var ports = _.merge({}, node.inputPorts, node.outputPorts)
   var inputs = _.intersection(node.settings.argumentOrdering, _.keys(node.inputPorts))
   var outputs = _.intersection(node.settings.argumentOrdering, _.keys(node.outputPorts))
   var mapper = _()
     .map((key) => ({name: key, type: ports[key]}))
     // .sortBy('name')
-  return _.concat(mapper.plant(inputs).value(), mapper.plant(outputs).value(), additionalParameters(node))
+  return _.concat(mapper.plant(inputs).value(), mapper.plant(outputs).value(), additionalParameters(node, ignoreContinuations))
 }
 
 var safeQuery = (q, failureMessage) => {
@@ -141,7 +141,6 @@ var parent = function (graph, outP, inP) {
   }
 }
 
-
 var rejectUnconnected = (graph, processes, channels) => {
   var newProcs = _(processes)
     .reject((p) => {
@@ -156,13 +155,13 @@ var rejectUnconnected = (graph, processes, channels) => {
 
 var api = {
 
-  processes: (graph) => {
+  processes: (graph, ignoreContinuations = false) => {
     return _(graph.nodes()).chain()
     .filter(_.partial(isProcess, graph))
     .map(n => _.merge({}, graph.node(n),
         {name: n, hash: (graph.node(n).params) ? hash(graph.node(n).params) : ''},
         {parent: graph.parent(n) || 'main'}))
-    .map(n => _.merge({}, n, {mangle: types.mangle(n)}, {arguments: createParameters(n)}))
+    .map(n => _.merge({}, n, {mangle: types.mangle(n)}, {arguments: createParameters(n, ignoreContinuations)}))
     .map(n => _.merge({}, n, {uid: (n.atomic) ? (n.id + n.hash + n.mangle) : n.name}))
     .value()
   },
@@ -180,7 +179,7 @@ var api = {
   },
 
   resolveLambdas: (graph) => {
-    return utils.finalize(mapPorts(utils.edit(graph), types.createLambdaFunctions))
+    return graphAPI.importJSON(mapPorts(graphAPI.toJSON(graph), types.createLambdaFunctions))
   },
 
   preprocess: (graph) => {

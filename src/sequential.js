@@ -50,14 +50,14 @@ var cmpndLabel = (graph, cmpd) => {
       var process = utils.portNodeName(n)
       if (curNode.nodeType === 'inPort') {
         for (let pred of walk.predecessor(graph, process, port)) {
-          if (graph.parent(pred) !== cmpd) {
+          if (graph.parent(pred.node) !== cmpd) {
             inputs[name] = type
             break
           }
         }
       } else if (curNode.nodeType === 'outPort') {
         for (let succ of walk.successor(graph, process, port)) {
-          if (graph.parent(succ) !== cmpd) {
+          if (graph.parent(succ.node) !== cmpd) {
             outputs[name] = type
             break
           }
@@ -71,6 +71,7 @@ var cmpndLabel = (graph, cmpd) => {
     atomic: false,
     name: cmpd,
     id: cmpd,
+    settings: {argumentOrdering: _.concat(_.keys(inputs), _.keys(outputs)), packagedContinuation: true},
     nodeType: 'process' }
 }
 
@@ -121,21 +122,24 @@ var walkMux = (graph, node, port) => {
   }
 }
 
-var cmpndsByContPort = (graph, conts, name) => {
-  if (conts.length < 1) { return graph }
+var cmpndsByContPort = (graph, conts, name, mux) => {
+  if (conts.length < 1) { return {graph} }
   var subset = _(conts)
     .map((c) => walk.walk(graph, c.node, walkMux))
     .flattenDeep()
     .uniq()
     .reject((m) => graph.node(m).id === 'logic/mux')
     .value()
-  return sequential.compoundify(graph, subset, name, conts)
+  var newGraph = sequential.compoundify(graph, subset, name, conts)
+  return {graph: newGraph, package: {node: name, value: cmpndLabel(newGraph, name)}}
 }
 
 var cmpndsByCont = (graph, conts, mux) => {
   var c = _.groupBy(conts, (c) => c.port)
-  graph = cmpndsByContPort(graph, c.input1 || [], mux + '_input1')
-  return cmpndsByContPort(graph, c.input2 || [], mux + '_input2')
+  var {graph: graph1, package: input1} = cmpndsByContPort(graph, c.input1 || [], mux + '_input1')
+  var {graph: graph2, package: input2} = cmpndsByContPort(graph1, c.input2 || [], mux + '_input2')
+  graph2.node(mux).params.packedContinuations = {input1, input2}
+  return graph2
 }
 
 var sequential = {
@@ -162,7 +166,7 @@ var sequential = {
   },
 
   compounds: (graph) => {
-    var processes = api.processes(graph)
+    var processes = api.processes(graph, true)
     var processesByName = _.keyBy(processes, 'name')
     var parentProperty = (process, type, def) => {
       if (_.has(processesByName, process)) {

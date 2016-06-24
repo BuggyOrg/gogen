@@ -7,6 +7,9 @@ export function replaceAll (str, search, replacement) {
 
 export function sanitize (str) {
   if (typeof (str) !== 'string') {
+    if (typeof JSON.stringify(str) !== 'string') {
+      return '~non value~'
+    }
     return sanitize(JSON.stringify(str))
   }
   var replace = ['/', ':', '>', '[', ']', ' ', '(', ')', ',', '-', '{', '}', '"', ' ', '+', '→', '<', '=']

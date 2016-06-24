@@ -15,11 +15,19 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
     {{/unless}}
 
     {{#each processes}}
-    // ###### {{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}} ######
+    // ###### {{#if id}}{{id}}{{else}}{{name}}{{/if}} ######
+    {{#if settings.packagedContinuation}}
+    // packaged continuation
+    {{else}}
     {
+      // conts
       // inputs
       {{#each inputPorts}}
-      {{sanitize @key}} := *{{sanitize ../name}}_PORT_{{sanitize @key}}
+      {{#isNotPacked @key ..}}
+      {{sanitize @key}} := *{{sanitize ../../name}}_PORT_{{sanitize @key}}
+      {{else}}
+      // packed port {{@key}}
+      {{/isNotPacked}}
       {{/each}}
       // outputs
       {{#each outputPorts}}
@@ -27,7 +35,59 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
       {{/each}}
       {{#if atomic}}
       // code
-      {{compiledCode}}
+      {{#ifEq id 'logic/mux'}}
+        // mux Code!!
+        if (control) {
+          {{#isPackedMux 'input1' ..}}
+          {{sanitize ../../name}}_PORT_input1 = {{sanitize ../../name}}_PORT_input1
+          {{#each node.inputPorts}}
+          {{#isPacked @key ..}}
+          {{sanitize @key}} := *{{sanitize ../../name}}_PORT_{{sanitize @key}}
+          {{/isPacked}}
+          {{/each}}
+          // outputs
+          {{#each node.outputPorts}}
+          var {{sanitize @key}} {{this}}
+          {{/each}}
+          // packed input1
+          {{call}}
+          // outputs
+          {{#each node.outputPorts}}
+          output = {{sanitize @key}}
+          {{/each}}
+          {{else}}
+          output = input1
+          {{/isPackedMux}}
+        } else {
+          {{#isPackedMux 'input2' ..}}
+          {{sanitize ../../name}}_PORT_input2 = {{sanitize ../../name}}_PORT_input2
+          {{#each node.inputPorts}}
+          {{#isPacked @key ..}}
+          {{sanitize @key}} := *{{sanitize ../../name}}_PORT_{{sanitize @key}}
+          {{/isPacked}}
+          {{/each}}
+          // outputs
+          {{#each node.outputPorts}}
+          var {{sanitize @key}} {{this}}
+          {{/each}}
+          // packed input2 
+          {{call}}
+          // outputs
+          {{#each node.outputPorts}}
+          output = {{sanitize @key}}
+          {{/each}}
+          {{else}}
+          output = input2
+          {{/isPackedMux}}
+        }
+        {{#each inputPorts}}
+        {{#isPacked @key ..}}
+        // packed port {{@key}}
+        {{/isPacked}}
+        {{/each}}
+      {{else}}
+        {{../compiledCode}}
+      {{/ifEq}}
       {{else}}
       // function call
       P_{{sanitize id}}(
@@ -40,6 +100,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
       {{sanitize ../name}}_PORT_{{sanitize @key}}  = {{sanitize @key}}
       {{/each}}
     }
+    {{/if}}
   {{/each}}
   {{#unless atomic}}
   {{#each outputPorts}}
