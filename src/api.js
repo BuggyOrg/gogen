@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import * as codegen from './codegen'
+import * as sequential from './sequential'
 import graphlib from 'graphlib'
 import {walk, graph as graphAPI} from '@buggyorg/graphtools'
 import hash from 'object-hash'
@@ -294,6 +295,10 @@ var api = {
 
   generateCode: graph => {
     return codegen.createSource(api.createSourceDescriptor(graph))
+  },
+
+  generateSequentialCode: (graph) => {
+    return sequential.generateCode(graph)
   }
 }
 
