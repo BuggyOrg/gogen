@@ -1,11 +1,11 @@
 func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
 {{~#each arguments~}}
-{{sanitize name}} {{#if inputPrefix}}{{inputPrefix}}{{/if}}{{type}} {{#unless @last}}, {{/unless}}
+{{sanitize name}} {{#if inputPrefix}}{{inputPrefix}}{{/if}}{{normType type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
   {{#ifEq name "main"~}}for { {{~/ifEq}}
     {{#each channels}}
-    var {{sanitize outPort}} {{channelType}}
+    var {{sanitize outPort}} {{normType channelType}}
     {{sanitize inPort}} := &{{sanitize outPort}}
     {{/each}}
     {{#unless atomic}}
@@ -31,7 +31,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
       {{/each}}
       // outputs
       {{#each outputPorts}}
-      var {{sanitize @key}} {{this}}
+      var {{sanitize @key}} {{normType this}}
       {{/each}}
       {{#if atomic}}
       // code
@@ -47,7 +47,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
           {{/each}}
           // outputs
           {{#each node.outputPorts}}
-          var {{sanitize @key}} {{this}}
+          var {{sanitize @key}} {{normType this}}
           {{/each}}
           // packed input1
           {{call}}
@@ -68,7 +68,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
           {{/each}}
           // outputs
           {{#each node.outputPorts}}
-          var {{sanitize @key}} {{this}}
+          var {{sanitize @key}} {{normType this}}
           {{/each}}
           // packed input2 
           {{call}}
@@ -109,3 +109,4 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
   {{/unless}}
   {{#ifEq name "main"~}} } {{~/ifEq}}
 }
+

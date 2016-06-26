@@ -22,6 +22,7 @@ handlebars.registerHelper('arrayType', (type) => {
 })
 
 handlebars.registerHelper('normType', (type) => {
+  if (typeof (type) === 'undefined') return '~undefined-type~'
   return types.normalize(type)
 })
 
@@ -98,7 +99,7 @@ handlebars.registerHelper('isPacked', (port, node, opts) => {
 handlebars.registerHelper('isPackedMux', (port, node, opts) => {
   if (isPacked(port, node)) {
     var cont = node.params.packedContinuations[port]
-    var functionCall = 'P_' + sanitize(cont.node) + '(' + _.map(cont.value.settings.argumentOrdering, (a) => '&' + a).join(', ') + ')'
+    var functionCall = 'P_' + sanitize(cont.node) + '(' + _.map(cont.value.settings.argumentOrdering, (a) => '&' + sanitize(a)).join(', ') + ')'
     return opts.fn({call: functionCall, node: cont.value, name: cont.node})
   } else {
     return opts.inverse(this)
@@ -209,7 +210,9 @@ export function createSeqCompound (cmpd) {
         arg.passingPrefix = '&'
       }
     }
-    if (proc.code) {
+    if (proc.specialForm) {
+      proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc)
+    } else if (proc.code) {
       proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({}, proc.params, {ports: _.merge({}, proc.inputPorts, proc.outputPorts)}))
     }
   }

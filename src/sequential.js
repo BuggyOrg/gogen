@@ -51,14 +51,14 @@ var cmpndLabel = (graph, cmpd) => {
       if (curNode.nodeType === 'inPort') {
         for (let pred of walk.predecessor(graph, process, port)) {
           if (graph.parent(pred.node) !== cmpd) {
-            inputs[name] = type
+            inputs[name + '__' + curNode.process] = type
             break
           }
         }
       } else if (curNode.nodeType === 'outPort') {
         for (let succ of walk.successor(graph, process, port)) {
           if (graph.parent(succ.node) !== cmpd) {
-            outputs[name] = type
+            outputs[name + '__' + curNode.process] = type
             break
           }
         }
@@ -78,14 +78,15 @@ var cmpndLabel = (graph, cmpd) => {
 var addPortNodes = (graph, cmpd) => {
   for (let n of graph.nodes()) {
     if (graph.parent(n) !== cmpd || !utils.isPortNode(n)) { continue }
+    var curNode = graph.node(n)
     var name = graph.node(n).portName
     var type = graph.node(n).type
     for (let pred of graph.predecessors(n)) {
       if (graph.parent(pred) !== cmpd) {
-        let pname = cmpd + '_PORT_' + name
+        let pname = cmpd + '_PORT_' + name + '__' + curNode.process
         let plabel = {
           nodeType: 'inPort',
-          portName: name,
+          portName: name + '__' + curNode.process,
           type: type,
           hierarchyBorder: true,
           process: cmpd }
@@ -97,10 +98,10 @@ var addPortNodes = (graph, cmpd) => {
     }
     for (let succ of graph.successors(n)) {
       if (graph.parent(succ) !== cmpd) {
-        let pname = cmpd + '_PORT_' + name
+        let pname = cmpd + '_PORT_' + name + '__' + curNode.process
         let plabel = {
           nodeType: 'outPort',
-          portName: name,
+          portName: name + '__' + curNode.process,
           type: type,
           hierarchyBorder: true,
           process: cmpd }
@@ -179,7 +180,7 @@ var sequential = {
     if (processes.length === 0) {
       return [{ name: 'main', processes: [], inputs: [], outputs: [], prefixes: [], channels: [] }]
     }
-    return _(processes)
+    var metaCompounds = _(processes)
       .groupBy('parent')
       .map((value, key) => (
         {
@@ -191,7 +192,26 @@ var sequential = {
           arguments: parentProperty(key, 'arguments', []),
           channels: _.filter(channels, (c) => c.parent === key)
         }))
+      .toPairs()
+      .map((p) => [p[1].uid || 'main', p[1]])
+      .fromPairs()
       .value()
+    var compounds = _(_.concat({uid: 'main'}, processes))
+      .reject((p) => p.atomic)
+      .map((c) => _.merge({}, metaCompounds[c.uid], c))
+      .value()
+    var newCompounds = _.map(compounds, (value, key) => {
+      if (value.recursesTo) {
+        return _.merge({}, value, {
+          processes: metaCompounds[value.recursesTo.branchPath].processes,
+          channels: metaCompounds[value.recursesTo.branchPath].channels,
+          continuations: metaCompounds[value.recursesTo.branchPath].continuations
+        })
+      } else {
+        return value
+      }
+    })
+    return newCompounds
   },
 
   createSourceDescriptor: (graph) => {
