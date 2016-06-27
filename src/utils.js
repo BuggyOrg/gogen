@@ -15,3 +15,4 @@ export function sanitize (str) {
   var replace = ['/', ':', '>', '[', ']', ' ', '(', ')', ',', '-', '{', '}', '"', ' ', '+', '→', '<', '=']
   return _.reduce(replace, replaceAll, str)
 }
+

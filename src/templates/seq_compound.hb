@@ -1,11 +1,17 @@
-func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
+func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
 {{~#each arguments~}}
-{{sanitize name}} {{#if inputPrefix}}{{inputPrefix}}{{/if}}{{type}} {{#unless @last}}, {{/unless}}
+{{sanitize name}} *{{#if inputPrefix}}{{inputPrefix}}{{/if}}{{normType type}} {{#unless @last}}, {{/unless}}
 {{~/each}}
 ) {
+  {{#if recursesTo}}
+  P_{{sanitize recursesTo.branchPath}}({{~#each arguments~}}
+{{sanitize name}}{{#unless @last}}, {{/unless}}
+{{~/each}})
+  return
+  {{else}}
   {{#ifEq name "main"~}}for { {{~/ifEq}}
     {{#each channels}}
-    var {{sanitize outPort}} {{channelType}}
+    var {{sanitize outPort}} {{normType channelType}}
     {{sanitize inPort}} := &{{sanitize outPort}}
     {{/each}}
     {{#unless atomic}}
@@ -15,7 +21,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
     {{/unless}}
 
     {{#each processes}}
-    // ###### {{#if id}}{{id}}{{else}}{{name}}{{/if}} ######
+    // ###### {{#if uid}}{{uid}}{{else}}{{name}}{{/if}} ######
     {{#if settings.packagedContinuation}}
     // packaged continuation
     {{else}}
@@ -31,7 +37,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
       {{/each}}
       // outputs
       {{#each outputPorts}}
-      var {{sanitize @key}} {{this}}
+      var {{sanitize @key}} {{normType this}}
       {{/each}}
       {{#if atomic}}
       // code
@@ -47,7 +53,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
           {{/each}}
           // outputs
           {{#each node.outputPorts}}
-          var {{sanitize @key}} {{this}}
+          var {{sanitize @key}} {{normType this}}
           {{/each}}
           // packed input1
           {{call}}
@@ -68,7 +74,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
           {{/each}}
           // outputs
           {{#each node.outputPorts}}
-          var {{sanitize @key}} {{this}}
+          var {{sanitize @key}} {{normType this}}
           {{/each}}
           // packed input2 
           {{call}}
@@ -90,7 +96,7 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
       {{/ifEq}}
       {{else}}
       // function call
-      P_{{sanitize id}}(
+      P_{{sanitize uid}}(
       {{~#each arguments~}}
       {{#if passingPrefix}}{{passingPrefix}}{{/if}}{{sanitize name}}{{#unless @last}}, {{/unless}}
       {{~/each}})
@@ -108,4 +114,5 @@ func P_{{#if id}}{{sanitize id}}{{else}}{{sanitize name}}{{/if}}(
   {{/each}}
   {{/unless}}
   {{#ifEq name "main"~}} } {{~/ifEq}}
+  {{/if}}
 }
