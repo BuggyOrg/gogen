@@ -2,11 +2,11 @@
 import hash from 'object-hash'
 import _ from 'lodash'
 
-export function normalize (type) {
+export function normalize (type, typePrefix) {
   if (type[0] === '[' && type[type.length - 1] === ']') {
     return '[]' + type.slice(1, -1)
   } else if (typeof (type) === 'object' && type.type === 'function') {
-    return createLambdaFunctions(type)
+    return createLambdaFunctions(type, typePrefix)
   } else {
     return type
   }
@@ -39,13 +39,19 @@ export function mangle (node) {
   }
 }
 
-export function createLambdaFunctions (type) {
+export function createLambdaFunctions (type, typePrefix) {
   if (typeof type === 'object' && type.arguments && type.return) {
     if (typeof type.return !== 'string') {
       throw new Error('multiple return values in lambda functions are not [yet] supported\n' + JSON.stringify(type))
     }
+    if (typePrefix) {
+      type.typePrefix = typePrefix
+    }
+    typePrefix = type.typePrefix
     var args = _.intersection(type.argumentOrdering, _.keys(type.arguments))
-    var parameters = _.concat(_.map(args, (key) => 'chan ' + normalize(type.arguments[key])), ['chan ' + normalize(type.return)])
+    var parameters = _.concat(_.map(args, (key) =>
+      typePrefix + ' ' + normalize(type.arguments[key], typePrefix))
+      , [typePrefix + ' ' + normalize(type.return, typePrefix)])
     return 'func (' + parameters.join(',') + ')'
   } else {
     return type

@@ -179,12 +179,13 @@ var api = {
       (e) => _.merge({}, e, {value: {target: e.w}}, {value: graph.edge(e)}))
   },
 
-  resolveLambdas: (graph) => {
-    return graphAPI.importJSON(mapPorts(graphAPI.toJSON(graph), types.createLambdaFunctions))
+  resolveLambdas: (graph, typePrefix) => {
+    return graphAPI.importJSON(mapPorts(graphAPI.toJSON(graph), _.partial(types.createLambdaFunctions, _, typePrefix)))
   },
 
-  preprocess: (graph) => {
-    var lambdaGraph = api.resolveLambdas(graph)
+  preprocess: (graph, sequential) => {
+    var typePrefix = (sequential) ? '*' : 'chan '
+    var lambdaGraph = api.resolveLambdas(graph, typePrefix)
     var graphJSON = graphlib.json.write(lambdaGraph)
     return getCode(api.processes(graph))
       .then((atomics) => {
@@ -220,9 +221,9 @@ var api = {
         var processName = p.process
         var process = processes[processName]
         var channelType = ((p.nodeType !== 'outPort' && p.hierarchyBorder) ? process.inputPorts : process.outputPorts)[p.portName]
-        return _.map(graph.successors(p.name), (inPort) => {
+        return _.compact(_.map(graph.successors(p.name), (inPort) => {
           return { 'outPort': p.name, 'inPort': inPort, 'channelType': channelType, parent: parent(graph, p, portsByName[inPort]) || 'main' }
-        })
+        }))
       })
       .flatten()
       .value()

@@ -16,18 +16,20 @@ handlebars.registerHelper('ifEq', (s1, s2, opts) => {
   }
 })
 
+var typePrefix = 'chan '
+
 handlebars.registerHelper('arrayType', (type) => {
   // improve replacement, use typify for that!?
   return types.arrayType(type)
 })
 
 handlebars.registerHelper('normType', (type) => {
-  if (typeof (type) === 'undefined') return '~undefined-type~'
-  return types.normalize(type)
+  if (typeof (type) === 'undefined') { return '~undefined-type~' }
+  return types.normalize(type, typePrefix)
 })
 
 handlebars.registerHelper('lambda', (type) => {
-  return types.createLambdaFunctions(type)
+  return types.createLambdaFunctions(type, typePrefix)
 })
 
 const findPort = (uid, ports, port) => {
@@ -76,6 +78,67 @@ handlebars.registerHelper('noContinuation', (continuations, type, opts) => {
   }
 })
 
+const setupChannels = (handlebars) => {
+  typePrefix = 'chan '
+  handlebars.unregisterHelper('chanValue')
+  handlebars.unregisterHelper('chanName')
+  handlebars.unregisterHelper('putValue')
+  handlebars.unregisterHelper('createChan')
+  handlebars.unregisterHelper('closeChan')
+  handlebars.unregisterHelper('checkOk')
+  handlebars.registerHelper('chanValue', (varName, okName, channelName) => {
+    return `${varName}, ${okName} := <- ${channelName}_chan`
+  })
+  handlebars.registerHelper('chanName', (channelName) => {
+    return `${channelName}_chan`
+  })
+  handlebars.registerHelper('putChan', (channelName, value) => {
+    return `${channelName}_chan <- ${value}`
+  })
+  handlebars.registerHelper('createChan', (channelName, type) => {
+    return `${channelName}_chan := make(chan ${type})`
+  })
+  handlebars.registerHelper('closeChan', (channelName) => {
+    return `close(${channelName}_chan)`
+  })
+  handlebars.registerHelper('checkOk', (okName) => {
+    return `if !${okName} {
+      break
+    }`
+  })
+}
+
+const setupSeq = (handlebars) => {
+  typePrefix = '*'
+  handlebars.unregisterHelper('chanValue')
+  handlebars.unregisterHelper('chanName')
+  handlebars.unregisterHelper('putValue')
+  handlebars.unregisterHelper('createChan')
+  handlebars.unregisterHelper('closeChan')
+  handlebars.unregisterHelper('checkOk')
+  handlebars.registerHelper('chanValue', (varName, okName, channelName) => {
+    if (varName === channelName) { return `` }
+    return `${varName} := ${channelName}`
+  })
+  handlebars.registerHelper('chanName', (channelName) => {
+    return `${channelName}`
+  })
+  handlebars.registerHelper('putChan', (channelName, value) => {
+    if (value.indexOf('func') !== -1) { return `${channelName} = ${value}` }
+    return `${channelName} = &${value}`
+  })
+  handlebars.registerHelper('createChan', (channelName, type) => {
+    return `var ${channelName}_tmp ${type}
+    ${channelName} := &${channelName}_tmp`
+  })
+  handlebars.registerHelper('closeChan', (channelName) => {
+    return ``
+  })
+  handlebars.registerHelper('checkOk', (okName) => {
+    return ``
+  })
+}
+
 const isPacked = (port, node) => {
   return node.params && node.params.packedContinuations && node.params.packedContinuations[port]
 }
@@ -117,8 +180,8 @@ handlebars.registerHelper('partial', (partial, port) => {
   var resArgs = _.intersection(res.argumentOrdering, _.keys(res.arguments))
   var resOuts = _.intersection(res.argumentOrdering, _.keys(res.outputs))
   var funcStr = _.concat(
-    _.map(resArgs, (name) => sanitize(name) + ' chan ' + types.normalize(res.arguments[name])),
-    _.map(resOuts, (name) => sanitize(name) + ' chan ' + types.normalize(res.outputs[name]))).join(', ')
+    _.map(resArgs, (name) => sanitize(name) + ' ' + typePrefix + types.normalize(res.arguments[name], typePrefix)),
+    _.map(resOuts, (name) => sanitize(name) + ' ' + typePrefix + types.normalize(res.outputs[name], typePrefix))).join(', ')
   return 'func (' + funcStr + ') { fn(' + callStr + ') }'
 })
 
@@ -144,6 +207,7 @@ var seqCompoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname
  * @process Expects a process format of {name: String, inputPorts: Array[{name: String, type: String}], outputPorts: Array[{name: String, type: String}], code: String}
  */
 export function createProcess (proc) {
+  setupChannels(handlebars)
   if (proc.specialForm) {
     proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc)
     return specialFormTemplate(proc)
@@ -175,6 +239,7 @@ function portName (portNode) {
  * }
  */
 export function createCompound (cmpd) {
+  setupChannels(handlebars)
   if (cmpd.settings && cmpd.settings.unpacked) {
     var arrayInputs = _.pickBy(cmpd.inputPorts, types.isArrayType)
     var normalInputs = _.pickBy(cmpd.inputPorts, _.negate(types.isArrayType))
@@ -202,6 +267,7 @@ export function createCompound (cmpd) {
 export { sourceTemplate as createSource }
 
 export function createSeqCompound (cmpd) {
+  setupSeq(handlebars)
   cmpd.processes = _.sortBy(cmpd.processes, p => p.topSort)
   for (let proc of cmpd.processes) {
     if (!proc.atomic) {
@@ -211,7 +277,7 @@ export function createSeqCompound (cmpd) {
       }
     }
     if (proc.specialForm) {
-      proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(proc)
+      proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({sequential: true}, proc))
     } else if (proc.code) {
       proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({}, proc.params, {ports: _.merge({}, proc.inputPorts, proc.outputPorts)}))
     }

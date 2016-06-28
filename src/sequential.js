@@ -51,14 +51,14 @@ var cmpndLabel = (graph, cmpd) => {
       if (curNode.nodeType === 'inPort') {
         for (let pred of walk.predecessor(graph, process, port)) {
           if (graph.parent(pred.node) !== cmpd) {
-            inputs[name + '__' + curNode.process] = type
+            inputs[name + '__' + process] = type
             break
           }
         }
       } else if (curNode.nodeType === 'outPort') {
         for (let succ of walk.successor(graph, process, port)) {
           if (graph.parent(succ.node) !== cmpd) {
-            outputs[name + '__' + curNode.process] = type
+            outputs[name + '__' + process] = type
             break
           }
         }
@@ -78,15 +78,15 @@ var cmpndLabel = (graph, cmpd) => {
 var addPortNodes = (graph, cmpd) => {
   for (let n of graph.nodes()) {
     if (graph.parent(n) !== cmpd || !utils.isPortNode(n)) { continue }
-    var curNode = graph.node(n)
     var name = graph.node(n).portName
     var type = graph.node(n).type
+    var process = utils.portNodeName(n)
     for (let pred of graph.predecessors(n)) {
       if (graph.parent(pred) !== cmpd) {
-        let pname = cmpd + '_PORT_' + name + '__' + curNode.process
+        let pname = cmpd + '_PORT_' + name + '__' + process
         let plabel = {
           nodeType: 'inPort',
-          portName: name + '__' + curNode.process,
+          portName: name + '__' + process,
           type: type,
           hierarchyBorder: true,
           process: cmpd }
@@ -98,10 +98,10 @@ var addPortNodes = (graph, cmpd) => {
     }
     for (let succ of graph.successors(n)) {
       if (graph.parent(succ) !== cmpd) {
-        let pname = cmpd + '_PORT_' + name + '__' + curNode.process
+        let pname = cmpd + '_PORT_' + name + '__' + process
         let plabel = {
           nodeType: 'outPort',
-          portName: name + '__' + curNode.process,
+          portName: name + '__' + process,
           type: type,
           hierarchyBorder: true,
           process: cmpd }
@@ -131,16 +131,57 @@ var cmpndsByContPort = (graph, conts, name, mux) => {
     .uniq()
     .reject((m) => graph.node(m).id === 'logic/mux')
     .value()
+  console.error('subset', subset)
   var newGraph = sequential.compoundify(graph, subset, name, conts)
   return {graph: newGraph, package: {node: name, value: cmpndLabel(newGraph, name)}}
 }
 
+const resolveMuxMuxContinuations = (graph, input) => {
+  return _.flatten(_.map(input, (i) => {
+    if (!i.type) {
+      return graph.node(i.node).params.continuations
+    } else {
+      return i
+    }
+  }))
+}
+
 var cmpndsByCont = (graph, conts, mux) => {
   var c = _.groupBy(conts, (c) => c.port)
-  var {graph: graph1, package: input1} = cmpndsByContPort(graph, c.input1 || [], mux + '_input1')
-  var {graph: graph2, package: input2} = cmpndsByContPort(graph1, c.input2 || [], mux + '_input2')
+  var in1 = resolveMuxMuxContinuations(graph, c.input1)
+  var in2 = resolveMuxMuxContinuations(graph, c.input2)
+  var {graph: graph1, package: input1} = cmpndsByContPort(graph, in1 || [], mux + '_input1')
+  var {graph: graph2, package: input2} = cmpndsByContPort(graph1, in2 || [], mux + '_input2')
   graph2.node(mux).params.packedContinuations = {input1, input2}
   return graph2
+}
+
+const hasContinuations = (node) => {
+  return node.params && node.params.continuations
+}
+
+const isMuxMuxContinuation = (node) => {
+  return node.params.continuations.length === 1 && !node.params.continuations[0].type
+}
+
+const muxMuxContinuation = (node) => {
+  return node.params.continuations[0].node
+}
+
+const isPacked = (node) => {
+  return node.params.packedContinuations
+}
+
+const isPackedMux = (graph, node) => {
+  return !!isPacked(graph.node(muxMuxContinuation(node))) // && node.params.packedContinuations[node.params.continuations[0].port]
+}
+
+const activeMuxes = (graph, muxes) => {
+  return _(muxes)
+    .map((m) => graph.node(m))
+    .filter((m) => hasContinuations(m) && !isPacked(m) &&
+      (!isMuxMuxContinuation(m) || isPackedMux(graph, m)))
+    .value()
 }
 
 var sequential = {
@@ -160,10 +201,13 @@ var sequential = {
 
   autoCompoundify: (graph) => {
     var muxes = utils.getAll(graph, 'logic/mux')
-    return _(muxes)
-      .map((m) => graph.node(m))
-      .filter((m) => m.params && m.params.continuations)
-      .reduce((acc, m) => cmpndsByCont(acc, m.params.continuations, m.branchPath), graph)
+    var actives = activeMuxes(graph, muxes)
+    while (actives.length > 0) {
+      console.error(_.map(actives, (a) => a.params.continuations))
+      graph = _.reduce(actives, (acc, m) => cmpndsByCont(acc, m.params.continuations, m.branchPath), graph)
+      actives = activeMuxes(graph, muxes)
+    }
+    return graph
   },
 
   compounds: (graph) => {
@@ -186,10 +230,12 @@ var sequential = {
         {
           name: key,
           id: parentProperty(key, 'id'),
+          uid: (parentProperty(key, 'uid')) ? parentProperty(key, 'uid') : 'main',
           processes: value,
           inputPorts: parentProperty(key, 'inputPorts', {}),
           outputPorts: parentProperty(key, 'outputPorts', {}),
           arguments: parentProperty(key, 'arguments', []),
+          settings: parentProperty(key, 'settings', {}),
           channels: _.filter(channels, (c) => c.parent === key)
         }))
       .toPairs()
@@ -219,7 +265,7 @@ var sequential = {
     var compounds = sequential.compounds(graph)
     return {
       imports: imports(processes),
-      compounds: _.map(_.uniqBy(compounds, 'id'), codegen.createSeqCompound)
+      compounds: _.map(_.uniqBy(compounds, 'uid'), codegen.createSeqCompound)
     }
   },
 
