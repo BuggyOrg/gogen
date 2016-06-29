@@ -4,7 +4,6 @@ import * as codegen from './codegen'
 import _ from 'lodash'
 import { compoundify, utils, walk, graph as graphAPI } from '@buggyorg/graphtools'
 import hash from 'object-hash'
-import fs from 'fs'
 
 var topsort = (graph) => {
   var g = graphlib.json.read(graphlib.json.write(graph))
@@ -209,11 +208,9 @@ var sequential = {
     var muxes = utils.getAll(graph, 'logic/mux')
     var actives = activeMuxes(graph, muxes)
     var idx = 0
-    fs.writeFileSync('teststart.json', JSON.stringify(graphlib.json.write(graphAPI.removeContinuations(graph))))
     while (actives.length > 0) {
       graph = _.reduce(actives, (acc, m) => cmpndsByCont(acc, m.params.continuations, m.branchPath), graph)
       actives = activeMuxes(graph, muxes)
-      fs.writeFileSync('test' + idx + '.json', JSON.stringify(graphlib.json.write(graphAPI.removeContinuations(graph))))
       idx++
     }
     return graph
