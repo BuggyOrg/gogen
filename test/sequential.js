@@ -1,6 +1,7 @@
 /* global describe, it */
 var graphlib = require('graphlib')
 var fs = require('fs')
+import tempfile from 'tempfile'
 var sequential = require('../src/sequential.js')
 var expect = require('chai').expect
 const exec = require('child_process').exec
@@ -71,7 +72,9 @@ describe('Sequential Go Code Generator', function () {
     return api.preprocess(graph)
     .then((graph) => {
       var code = sequential.generateCode(graph)
-      console.log(code)
+      var goFile = tempfile('.go')
+      fs.writeFileSync(goFile, code)
+      return executeCodePromise('echo 6 | go run ' + goFile, '720')
     })
   })
 
