@@ -24,6 +24,7 @@ var executeCodePromise = (execution, expectation) => {
 }
 
 describe('Sequential Go Code Generator', function () {
+  /*
   it('no compounds', function () {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/real_add.json')))
     return api.preprocess(graph).then((newGraph) => {
@@ -57,6 +58,7 @@ describe('Sequential Go Code Generator', function () {
       })
     })
   })
+  */
 
   it('automatic compoundify', function () {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/fac_mux.json')))
@@ -67,7 +69,7 @@ describe('Sequential Go Code Generator', function () {
     expect(graph.parent('fac_10:mux_0_input2')).to.equal('fac_10')
   })
 
-  it.only('creates function calls for recursions', function () {
+  it('creates function calls for recursions', function () {
     var graph = graphlib.json.read(JSON.parse(fs.readFileSync('test/fixtures/fac_mux.json')))
     return api.preprocess(graph)
     .then((graph) => {
