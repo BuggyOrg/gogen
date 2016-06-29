@@ -4,6 +4,7 @@ import * as codegen from './codegen'
 import _ from 'lodash'
 import { compoundify, utils, walk, graph as graphAPI } from '@buggyorg/graphtools'
 import hash from 'object-hash'
+import fs from 'fs'
 
 var topsort = (graph) => {
   var g = graphlib.json.read(graphlib.json.write(graph))
@@ -72,7 +73,8 @@ var cmpndLabel = (graph, cmpd) => {
     name: cmpd,
     id: cmpd,
     settings: {argumentOrdering: _.concat(_.keys(inputs), _.keys(outputs)), packagedContinuation: true},
-    nodeType: 'process' }
+    nodeType: 'process'
+  }
 }
 
 var addPortNodes = (graph, cmpd) => {
@@ -81,42 +83,47 @@ var addPortNodes = (graph, cmpd) => {
     var name = graph.node(n).portName
     var type = graph.node(n).type
     var process = utils.portNodeName(n)
-    for (let pred of graph.predecessors(n)) {
-      if (graph.parent(pred) !== cmpd) {
-        let pname = cmpd + '_PORT_' + name + '__' + process
-        let plabel = {
-          nodeType: 'inPort',
-          portName: name + '__' + process,
-          type: type,
-          hierarchyBorder: true,
-          process: cmpd }
-        graph.setNode(pname, plabel)
-        graph.setEdge(pname, n)
-        graph.setEdge(pred, pname)
-        graph.removeEdge(pred, n)
+    if (graph.node(n).nodeType === 'inPort') {
+      for (let pred of graph.predecessors(n)) {
+        if (graph.parent(pred) !== cmpd) {
+          let pname = cmpd + '_PORT_' + name + '__' + process
+          let plabel = {
+            nodeType: 'inPort',
+            portName: name + '__' + process,
+            type: type,
+            hierarchyBorder: true,
+            process: cmpd }
+          graph.setNode(pname, plabel)
+          graph.setEdge(pname, n)
+          graph.setEdge(pred, pname)
+          graph.setParent(pname, graph.parent(cmpd))
+          graph.removeEdge(pred, n)
+        }
       }
-    }
-    for (let succ of graph.successors(n)) {
-      if (graph.parent(succ) !== cmpd) {
-        let pname = cmpd + '_PORT_' + name + '__' + process
-        let plabel = {
-          nodeType: 'outPort',
-          portName: name + '__' + process,
-          type: type,
-          hierarchyBorder: true,
-          process: cmpd }
-        graph.setNode(pname, plabel)
-        graph.setEdge(n, pname)
-        graph.setEdge(pname, succ)
-        graph.removeEdge(n, succ)
+    } else {
+      for (let succ of graph.successors(n)) {
+        if (graph.parent(succ) !== cmpd) {
+          let pname = cmpd + '_PORT_' + name + '__' + process
+          let plabel = {
+            nodeType: 'outPort',
+            portName: name + '__' + process,
+            type: type,
+            hierarchyBorder: true,
+            process: cmpd }
+          graph.setNode(pname, plabel)
+          graph.setEdge(n, pname)
+          graph.setEdge(pname, succ)
+          graph.setParent(pname, graph.parent(cmpd))
+          graph.removeEdge(n, succ)
+        }
       }
     }
   }
   return graph
 }
 
-var walkMux = (graph, node, port) => {
-  if (graph.node(node).id === 'logic/mux') {
+var walkMux = (graph, node, port, mux) => {
+  if (node === mux) {
     return []
   } else {
     return _.keys(graph.node(node).outputPorts)
@@ -126,12 +133,11 @@ var walkMux = (graph, node, port) => {
 var cmpndsByContPort = (graph, conts, name, mux) => {
   if (conts.length < 1) { return {graph} }
   var subset = _(conts)
-    .map((c) => walk.walk(graph, c.node, walkMux))
+    .map((c) => walk.walk(graph, c.node, _.partial(walkMux, _, _, _, mux)))
     .flattenDeep()
     .uniq()
-    .reject((m) => graph.node(m).id === 'logic/mux')
+    .reject((m) => m === mux)
     .value()
-  console.error('subset', subset)
   var newGraph = sequential.compoundify(graph, subset, name, conts)
   return {graph: newGraph, package: {node: name, value: cmpndLabel(newGraph, name)}}
 }
@@ -150,8 +156,8 @@ var cmpndsByCont = (graph, conts, mux) => {
   var c = _.groupBy(conts, (c) => c.port)
   var in1 = resolveMuxMuxContinuations(graph, c.input1)
   var in2 = resolveMuxMuxContinuations(graph, c.input2)
-  var {graph: graph1, package: input1} = cmpndsByContPort(graph, in1 || [], mux + '_input1')
-  var {graph: graph2, package: input2} = cmpndsByContPort(graph1, in2 || [], mux + '_input2')
+  var {graph: graph1, package: input1} = cmpndsByContPort(graph, in1 || [], mux + '_input1', mux)
+  var {graph: graph2, package: input2} = cmpndsByContPort(graph1, in2 || [], mux + '_input2', mux)
   graph2.node(mux).params.packedContinuations = {input1, input2}
   return graph2
 }
@@ -202,10 +208,13 @@ var sequential = {
   autoCompoundify: (graph) => {
     var muxes = utils.getAll(graph, 'logic/mux')
     var actives = activeMuxes(graph, muxes)
+    var idx = 0
+    fs.writeFileSync('teststart.json', JSON.stringify(graphlib.json.write(graphAPI.removeContinuations(graph))))
     while (actives.length > 0) {
-      console.error(_.map(actives, (a) => a.params.continuations))
       graph = _.reduce(actives, (acc, m) => cmpndsByCont(acc, m.params.continuations, m.branchPath), graph)
       actives = activeMuxes(graph, muxes)
+      fs.writeFileSync('test' + idx + '.json', JSON.stringify(graphlib.json.write(graphAPI.removeContinuations(graph))))
+      idx++
     }
     return graph
   },
