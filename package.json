@@ -1,6 +1,6 @@
 {
   "name": "@buggyorg/gogen",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Creates go code from buggy graphs",
   "main": "lib/api.js",
   "esnext:main": "src/api.js",
