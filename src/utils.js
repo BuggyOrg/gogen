@@ -12,7 +12,7 @@ export function sanitize (str) {
     }
     return sanitize(JSON.stringify(str))
   }
-  var replace = ['/', ':', '>', '[', ']', ' ', '(', ')', ',', '-', '{', '}', '"', ' ', '+', '→', '<', '=']
-  return _.reduce(replace, replaceAll, str)
+  // replace all but characters and numbers
+  return str.replace(/([^0-9^A-Z^a-z_])/g, (c) => c.charCodeAt(0))
 }
 
