@@ -7,6 +7,7 @@ import "{{this}}"
 
 // global variables
 var wg sync.WaitGroup
+var global_op_count int64
 {{#each globals}}
 var {{sanitize name}} {{type}}
 {{/each}}
@@ -19,5 +20,8 @@ var {{sanitize name}} {{type}}
 {{/each}}
 
 func main() {
+  global_op_count = 0
   P_main()
+  fmt.Println()
+  fmt.Print("#Operations: ", global_op_count)
 }

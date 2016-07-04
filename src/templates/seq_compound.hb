@@ -42,6 +42,7 @@ func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
       {{#if atomic}}
       // code
       {{#ifEq id 'logic/mux'}}
+        global_op_count++
         // mux Code!!
         if (control) {
           {{#isPackedMux 'input1' ..}}
@@ -92,6 +93,7 @@ func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
         {{/isPacked}}
         {{/each}}
       {{else}}
+        global_op_count++
         {{../compiledCode}}
       {{/ifEq}}
       {{else}}
