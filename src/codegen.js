@@ -193,6 +193,15 @@ handlebars.registerHelper('hasOutputParams', (partial, opts) => {
   }
 })
 
+handlebars.registerHelper('argList', (argArray) => {
+  return argArray.map((cur) => '&' + cur).join(', ')
+})
+
+handlebars.registerHelper('argListCall', (argArray) => {
+  return _.concat(argArray.map((cur) => '&' + cur),
+    argArray.map((cur) => '&' + cur)).join(', ')
+})
+
 var processTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/process.hb'), 'utf8'), {noEscape: true})
 var specialFormTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/special_form.hb'), 'utf8'), {noEscape: true})
 var compoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/compound.hb'), 'utf8'), {noEscape: true})
@@ -201,6 +210,7 @@ var unpackedTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '
 var sourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/source.hb'), 'utf8'), {noEscape: true})
 var seqSourceTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/seq_source.hb'), 'utf8'), {noEscape: true})
 var seqCompoundTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/seq_compound.hb'), 'utf8'), {noEscape: true})
+var seqTailrecTemplate = handlebars.compile(fs.readFileSync(path.join(__dirname, '../src/templates/seq_tailrec.hb'), 'utf8'), {noEscape: true})
 
 /**
  * Create the source for a process
@@ -266,7 +276,29 @@ export function createCompound (cmpd) {
 
 export { sourceTemplate as createSource }
 
-export function createSeqCompound (cmpd) {
+const createTailrecCode = (proc) => {
+  var payload = {
+    predicates:
+      _(proc.tailrecConfig.predicateCount)
+        .range()
+        .map((id) => ({
+          name: 'p_' + id,
+          call: 'f_' + id,
+          tailcall: _.includes(proc.tailrecConfig.tailcalls, 'f_' + id)
+        }))
+        .concat([{
+          name: 'true',
+          call: 'f_' + proc.tailrecConfig.predicateCount,
+          tailcall: _.includes(proc.tailrecConfig.tailcalls, 'f_' + proc.tailrecConfig.predicateCount),
+        }])
+        .value(),
+    arguments: proc.tailrecConfig.inputPorts,
+    returnPort: proc.tailrecConfig.returnPort
+  }
+  return seqTailrecTemplate(payload)
+}
+
+export function createSeqCompound (cmpd, options) {
   setupSeq(handlebars)
   cmpd.processes = _.sortBy(cmpd.processes, p => p.topSort)
   for (let proc of cmpd.processes) {
@@ -278,6 +310,8 @@ export function createSeqCompound (cmpd) {
     }
     if (proc.specialForm) {
       proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({sequential: true}, proc))
+    } else if (proc.id === 'tailrec') {
+      proc.compiledCode = createTailrecCode(proc)
     } else if (proc.code) {
       proc.compiledCode = handlebars.compile(proc.code, {noEscape: true})(_.merge({}, proc.params, {ports: _.merge({}, proc.inputPorts, proc.outputPorts)}))
     }
@@ -285,4 +319,7 @@ export function createSeqCompound (cmpd) {
   return seqCompoundTemplate(cmpd)
 }
 
-export { seqSourceTemplate as createSeqSource }
+export function createSeqSource (srcDesc, options) {
+  srcDesc.options = options
+  return seqSourceTemplate(srcDesc)
+}

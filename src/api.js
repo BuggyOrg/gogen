@@ -71,6 +71,7 @@ var getCode = (arrayOfAtomics) => {
   return Promise.all(
     _(arrayOfAtomics)
     .filter((p) => p.atomic)
+    .reject((p) => p.id === 'tailrec')
     .map(n => [
       n.id,
       safeQuery(lib.getCode(n.id, n.version, 'golang'), `Unable to query code for ${n.id}@${n.version}`),
@@ -154,6 +155,15 @@ var rejectUnconnected = (graph, processes, channels) => {
   return newProcs
 }
 
+const setLambdaImplementation = (graph, node) => {
+  if (node.id === 'functional/lambda' &&
+    (!node.params || !node.params.implementation)) {
+    node.params = node.params || {}
+    node.params.implementation = graph.children(node.name)[0]
+  }
+  return node
+}
+
 var api = {
 
   processes: (graph, ignoreContinuations = false) => {
@@ -164,6 +174,7 @@ var api = {
         {parent: graph.parent(n) || 'main'}))
     .map(n => _.merge({}, n, {mangle: types.mangle(n)}, {arguments: createParameters(n, ignoreContinuations)}))
     .map(n => _.merge({}, n, {uid: (n.atomic) ? (n.id + n.hash + n.mangle) : n.name}))
+    .map(n => setLambdaImplementation(graph, n))
     .value()
   },
 
@@ -280,7 +291,7 @@ var api = {
         return value
       }
     })
-    return newCompounds
+    return api.removeUnusedPorts(newCompounds)
   },
 
   createSourceDescriptor: (graph) => {

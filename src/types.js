@@ -40,18 +40,18 @@ export function mangle (node) {
 }
 
 export function createLambdaFunctions (type, typePrefix) {
-  if (typeof type === 'object' && type.arguments && type.return) {
-    if (typeof type.return !== 'string') {
-      throw new Error('multiple return values in lambda functions are not [yet] supported\n' + JSON.stringify(type))
-    }
+  if (typeof type === 'object' && type.arguments) {
     if (typePrefix) {
       type.typePrefix = typePrefix
     }
     typePrefix = type.typePrefix
     var args = _.intersection(type.argumentOrdering, _.keys(type.arguments))
-    var parameters = _.concat(_.map(args, (key) =>
-      typePrefix + ' ' + normalize(type.arguments[key], typePrefix))
-      , [typePrefix + ' ' + normalize(type.return, typePrefix)])
+    var outArgs = _.intersection(type.argumentOrdering, _.keys(type.outputs))
+    var parameters = _.concat(
+        _.map(args, (key) =>
+          typePrefix + ' ' + normalize(type.arguments[key], typePrefix)),
+        _.map(outArgs, (key) =>
+          typePrefix + ' ' + normalize(type.outputs[key], typePrefix)))
     return 'func (' + parameters.join(',') + ')'
   } else {
     return type

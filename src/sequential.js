@@ -266,17 +266,19 @@ var sequential = {
     return newCompounds
   },
 
-  createSourceDescriptor: (graph) => {
+  createSourceDescriptor: (graph, options) => {
     var processes = api.atomics(graph)
     var compounds = sequential.compounds(graph)
     return {
       imports: imports(processes),
-      compounds: _.map(_.uniqBy(compounds, 'uid'), codegen.createSeqCompound)
+      compounds: _.map(_.uniqBy(compounds, 'uid'), _.partial(codegen.createSeqCompound, _, options))
     }
   },
 
-  generateCode: graph => {
-    return codegen.createSeqSource(sequential.createSourceDescriptor(topsort(sequential.autoCompoundify(graph))))
+  generateCode: (graph, options) => {
+    return codegen.createSeqSource(
+      sequential.createSourceDescriptor(
+        topsort(sequential.autoCompoundify(graph)), options), options)
   }
 }
 
