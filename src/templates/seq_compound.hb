@@ -1,3 +1,4 @@
+// {{id}}
 func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
 {{~#each arguments~}}
 {{sanitize name}} *{{#if inputPrefix}}{{inputPrefix}}{{/if}}{{normType type}} {{#unless @last}}, {{/unless}}
@@ -42,7 +43,9 @@ func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
       {{#if atomic}}
       // code
       {{#ifEq id 'logic/mux'}}
+        {{#if countOperations}}
         global_op_count++
+        {{/if}}
         // mux Code!!
         if (control) {
           {{#isPackedMux 'input1' ..}}
@@ -93,7 +96,9 @@ func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
         {{/isPacked}}
         {{/each}}
       {{else}}
+        {{#if countOperations}}
         global_op_count++
+        {{/if}}
         {{../compiledCode}}
       {{/ifEq}}
       {{else}}
