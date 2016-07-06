@@ -291,7 +291,7 @@ var api = {
         return value
       }
     })
-    return api.removeUnusedPorts(newCompounds)
+    return newCompounds
   },
 
   createSourceDescriptor: (graph) => {
