@@ -44,14 +44,15 @@ export function createLambdaFunctions (type, typePrefix) {
     if (typePrefix) {
       type.typePrefix = typePrefix
     }
+    var outputs = type.outputs
     typePrefix = type.typePrefix
     var args = _.intersection(type.argumentOrdering, _.keys(type.arguments))
-    var outArgs = _.intersection(type.argumentOrdering, _.keys(type.outputs))
+    var outArgs = _.intersection(type.argumentOrdering, _.keys(outputs))
     var parameters = _.concat(
         _.map(args, (key) =>
           typePrefix + ' ' + normalize(type.arguments[key], typePrefix)),
         _.map(outArgs, (key) =>
-          typePrefix + ' ' + normalize(type.outputs[key], typePrefix)))
+          typePrefix + ' ' + normalize(outputs[key], typePrefix)))
     return 'func (' + parameters.join(',') + ')'
   } else {
     return type
