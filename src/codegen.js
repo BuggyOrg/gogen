@@ -289,7 +289,7 @@ const createTailrecCode = (proc) => {
         .concat([{
           name: 'true',
           call: 'f_' + proc.tailrecConfig.predicateCount,
-          tailcall: _.includes(proc.tailrecConfig.tailcalls, 'f_' + proc.tailrecConfig.predicateCount),
+          tailcall: _.includes(proc.tailrecConfig.tailcalls, 'f_' + proc.tailrecConfig.predicateCount)
         }])
         .value(),
     arguments: proc.tailrecConfig.inputPorts,

@@ -10,7 +10,7 @@ func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
 {{~/each}})
   return
   {{else}}
-  {{#ifEq name "main"~}}for { {{~/ifEq}}
+  for {
     {{#each channels}}
     var {{sanitize outPort}} {{normType channelType}}
     {{sanitize inPort}} := &{{sanitize outPort}}
@@ -120,6 +120,7 @@ func P_{{#if uid}}{{sanitize uid}}{{else}}{{sanitize name}}{{/if}}(
   *{{sanitize @key}} = *{{sanitize ../name}}_PORT_{{sanitize @key}}
   {{/each}}
   {{/unless}}
-  {{#ifEq name "main"~}} } {{~/ifEq}}
+  {{#ifEq name "main"~}}{{else}}break{{~/ifEq}}
+  }
   {{/if}}
 }
