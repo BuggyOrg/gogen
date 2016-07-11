@@ -132,7 +132,7 @@ var walkMux = (graph, node, port, mux) => {
 var cmpndsByContPort = (graph, conts, name, mux) => {
   if (conts.length < 1) { return {graph} }
   var subset = _(conts)
-    .map((c) => walk.walk(graph, c.node, _.partial(walkMux, _, _, _, mux)))
+    .map((c) => walk.walk(graph, c.node, _.partial(walkMux, _, _, _, mux), {keepDuplicates: true}))
     .flattenDeep()
     .uniq()
     .reject((m) => m === mux)
